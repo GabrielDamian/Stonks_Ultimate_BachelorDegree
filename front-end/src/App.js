@@ -1,24 +1,27 @@
-import logo from './logo.svg';
-import './App.css';
+import React,{useState} from 'react';
+import { BrowserRouter,Routes, Route } from 'react-router-dom';
+import Dashboard from "./Pages/Dashboard";
+import IDE from './Pages/IDE';
+import NodeStore from './Pages/NodeStore';
+import Overview from './Pages/Overview';
 
 function App() {
+  
+  const [tabs, setTabs] = useState({
+    options: ['/','/ide','/drag'],
+    selected: '/ide'
+  })
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Routes>
+          <Route exact path="/" element={<Dashboard tabIndex={0} tabs={tabs} setTabs={setTabs}/>} />
+          <Route exact path="/ide" element={<IDE tabIndex={1} tabs={tabs} setTabs={setTabs}/>}/>
+          <Route exact path="/drag" element={<NodeStore tabIndex={2} tabs={tabs} setTabs={setTabs}/>} />
+          <Route exact path="/overview" element={<Overview tabIndex={2} tabs={tabs} setTabs={setTabs}/>} />
+      </Routes>
+    </BrowserRouter>
+    
   );
 }
 

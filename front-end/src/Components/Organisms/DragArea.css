@@ -1,0 +1,60 @@
+.drag-area-container
+{
+    height:100%;
+    width: 100%;
+    display: flex;
+
+}
+.drag-area-info-panel-drag
+{
+    height: 100%;
+    width: 100%;
+    overflow-y: scroll;
+    padding: 10px;
+}
+.drag-area-info-panel
+{
+    width: 30%;
+}
+.header-item-list
+{
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+}
+.header-item-list img 
+{
+    height: 25px;
+}
+.drag-area-info-panel-header
+{
+    height: 10%;
+    border: 1px solid blue;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.drag-area-data
+{
+    height: 90%;
+    border: 1px solid magenta;
+}
+.drag-info-panel 
+{
+    height: 100%;
+    width: 20%;
+    border:1px solid red;
+    padding: 20px;
+    overflow-y: scroll;
+}
+.drag-playground
+{
+    height: 100%;
+    width: 70%;
+    border: 1px solid green;
+    padding: 40px;
+    overflow-y: scroll;
+}
