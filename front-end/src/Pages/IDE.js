@@ -34,6 +34,7 @@ export default function IDE({tabIndex,setTabs,tabs})
     const handleChange = (newValue)=>{
         setValue(newValue);
     }
+    
     return (
         <div className='ide-container'>
             <LeftMenu tabIndex={tabIndex} setTabs={setTabs} tabs={tabs}/>
@@ -78,7 +79,6 @@ export default function IDE({tabIndex,setTabs,tabs})
                             <Button variant="contained">Contained</Button>
                         </div>
                     </div>
-                    
                 </div>
             </div>
         </div>

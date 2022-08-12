@@ -1,0 +1,13 @@
+.dashboard-container
+{
+    height:100vh;
+    width:100%;
+    border:1px solid magenta;
+    display: flex;
+}
+.dashboard-content
+{
+    width: 85%;
+    border:1px solid green;
+    height:100vh;
+}
