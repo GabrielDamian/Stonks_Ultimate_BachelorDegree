@@ -58,7 +58,7 @@ export default function IDE({tabIndex,setTabs,tabs})
                         <div className='ide-deploy-field'>
                             <TextField 
                                 id="outlined-basic" 
-                                label="Outlined" 
+                                label="Name" 
                                 variant="outlined" 
                                 sx={{
                                     width:'70%'
@@ -68,7 +68,7 @@ export default function IDE({tabIndex,setTabs,tabs})
                         <div className='ide-deploy-field'>
                             <TextField 
                                 id="outlined-basic" 
-                                label="Outlined" 
+                                label="Description" 
                                 variant="outlined" 
                                 sx={{
                                     width:'70%'
@@ -76,7 +76,7 @@ export default function IDE({tabIndex,setTabs,tabs})
                             />
                         </div>
                         <div className='ide-deploy-action'>
-                            <Button variant="contained">Contained</Button>
+                            <Button variant="contained">Deploy</Button>
                         </div>
                     </div>
                 </div>

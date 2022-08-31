@@ -22,6 +22,8 @@ import InfoIcon from '@mui/icons-material/Info';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import Icon1 from '../Media/Icons/artificial-intelligence.png';
 import {ChartComponent} from '../Components/Organisms/ChartComponent';
+import Switch from '@mui/material/Switch';
+import Button from '@mui/material/Button';
 
 
 export default function Overview({tabIndex,setTabs,tabs})
@@ -87,6 +89,8 @@ export default function Overview({tabIndex,setTabs,tabs})
     )
 }
 
+const label = { inputProps: { 'aria-label': 'Switch demo' } };
+
 function NodeListElem({obj})
 {
     const [open, setOpen] = React.useState(false);
@@ -126,6 +130,14 @@ function NodeListElem({obj})
         </ListItemButton>
         <Collapse in={open2} timeout="auto" unmountOnExit>
           <div style={{height:'200px', border:'1px solid red'}}>
+            <div className="node-list-elem-row">
+              <span>Open to marketplace:</span>
+              <Switch {...label} defaultChecked />
+            </div>
+            <div className="node-list-elem-row">
+              <span>Delete node:</span>
+              <Button variant="contained" sx={{backgroundColor:'red', marginLeft:'20px'}}>Stop Node</Button>
+            </div>
           </div>
         </Collapse>
       </List>
