@@ -17,7 +17,7 @@ function AddBlock({tabIndex,setTabs,tabs})
             <LeftMenu tabIndex={tabIndex} setTabs={setTabs} tabs={tabs}/>
             <div className='add-block-content'>
                 <div className="add-block-content-header">
-                    <span>Add Data Flow Block Area</span>
+                    <span>Add Data Flow Block Area (ADMIN)</span>
                 </div>
                 <div className="add-block-content-data">
                     <div className='add-block-content-data-center'>

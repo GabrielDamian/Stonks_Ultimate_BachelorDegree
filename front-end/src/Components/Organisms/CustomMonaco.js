@@ -6,9 +6,7 @@ import { ClockLoader as Loader } from "react-spinners";
 
 // import examples from "./examples";
 
-let code = `ceva = 'damian';
-for a in ceva:
-    print(a)`
+let code = `model.add(LSTM(units=100, return_sequences=True, input_shape=(x_train.shape[1],1)))`
 
 export default function CustomMonaco() {
   const [theme, setTheme] = useState("vs-dark");
