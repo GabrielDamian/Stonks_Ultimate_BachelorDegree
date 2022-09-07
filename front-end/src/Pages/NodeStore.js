@@ -4,6 +4,7 @@ import LeftMenu from '../Components/Organisms/LeftMenu';
 import {DragDropContext,Draggable,Droppable} from 'react-beautiful-dnd';
 import DragArea from '../Components/Organisms/DragArea';
 import DragItem from '../Components/Molecules/DragItem';
+import DeployArea from '../Components/Organisms/DeployArea';
 
 function NodeStore({tabIndex,setTabs,tabs})
 {
@@ -19,7 +20,7 @@ function NodeStore({tabIndex,setTabs,tabs})
                         <DragArea/>
                     </div>
                     <div className='node-store-content-submit'>
-                        <span>submit area</span>
+                        <DeployArea />
                     </div>
                 </div>
             </div>

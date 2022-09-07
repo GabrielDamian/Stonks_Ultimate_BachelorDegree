@@ -44,16 +44,7 @@ const botsPerformanceTemp = [
     }
 ]
 
-let markets = [
-    {
-        name: 'BTC',
-        price: '45.000'
-    },
-    {
-        name: 'ETH',
-        price: '200'
-    }
-]
+
 export default function Dashboard({tabIndex,setTabs,tabs})
 {
     return (
@@ -164,27 +155,7 @@ export default function Dashboard({tabIndex,setTabs,tabs})
                         </div>
                     </div>
                     <div className="dashboard-content-data-box">
-                        <div className="dashboard-content-data-box-center">
-                        <div className="data-box-center-header">
-                                <span>Lastest markets:</span>
-                            </div>
-                            <div className="data-box-center-content">
-                            {
-                               markets.map((el)=>{
-                                return(
-                                    <div className='data-box-center-content-item'>
-                                    <div className='data-box-center-content-item-market-left'>
-                                        <span>{el.name}</span>
-                                    </div>
-                                    <div className='data-box-center-content-item-market-right'>
-                                        <span>{el.price}</span>
-                                    </div>
-                                </div>
-                                )
-                               })
-                            }
-                            </div>
-                        </div>
+                        
                     </div>
                 </div>
             </div>

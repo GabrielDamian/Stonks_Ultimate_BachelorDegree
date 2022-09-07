@@ -101,6 +101,7 @@ function AddMarket({tabIndex,setTabs,tabs}){
                             <TextField id="outlined-basic" label="Name" variant="outlined" />
                             <TextField id="outlined-basic" label="Price" variant="outlined" />
                             <TextField id="outlined-basic" label="Description" variant="outlined" />
+                            <TextField id="outlined-basic" label="API" variant="outlined" />
                         </div>
                         <div className="add-market-content-data-new-action">
                             <Button variant="contained">ADD MARKET</Button>

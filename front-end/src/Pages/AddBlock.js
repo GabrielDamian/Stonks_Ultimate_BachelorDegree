@@ -5,6 +5,7 @@ import TextField from '@mui/material/TextField';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
 import CustomMonaco from '../Components/Organisms/CustomMonaco';
 import Button from '@mui/material/Button';
+import Hyperparameters from '../Components/Molecules/Hyperparameters';
 
 function AddBlock({tabIndex,setTabs,tabs})
 {
@@ -21,20 +22,42 @@ function AddBlock({tabIndex,setTabs,tabs})
                 </div>
                 <div className="add-block-content-data">
                     <div className='add-block-content-data-center'>
-                        <div className='content-data-center-row'>
-                            <TextField
-                                id="outlined-required"
-                                label="Name"
-                                sx={TextAreaStyle}
-                            />
+                        <div className='add-block-content-data-center-inputs'>
+                            
+                            <div className='add-block-content-data-center-left'>
+                                <div className='content-data-center-row'>
+                                    <TextField
+                                        id="outlined-required"
+                                        label="Name"
+                                        sx={TextAreaStyle}
+                                    />
+                                </div>
+                                <div className='content-data-center-row'>
+                                    <TextField
+                                        id="outlined-required"
+                                        label="Description"
+                                        sx={TextAreaStyle}
+                                    />
+                                </div>
+                                <div className='content-data-center-row'>
+                                    <TextField
+                                        id="outlined-required"
+                                        label="Icon link"
+                                        sx={TextAreaStyle}
+                                    />
+                                </div>
+                            </div>
+
+                            <div className='add-block-content-data-center-right'>
+                                <Hyperparameters />
+                            </div>
+
                         </div>
-                        <div className='content-data-center-row'>
-                            <TextField
-                                id="outlined-required"
-                                label="Description"
-                                sx={TextAreaStyle}
-                            />
-                        </div>
+                      
+
+                        
+
+
                         <div className='content-data-center-row' style={{height:'300px', padding:'20px'}}>
                            <CustomMonaco/>
                         </div>

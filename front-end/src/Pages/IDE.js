@@ -3,9 +3,9 @@ import LeftMenu from '../Components/Organisms/LeftMenu';
 import './IDE.css';
 import MonacoEditor from 'react-monaco-editor'
 import CustomMonaco from '../Components/Organisms/CustomMonaco';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
+
 import DocsSection from '../Components/Organisms/DocsSection';
+import DeployArea from '../Components/Organisms/DeployArea';
 
 
 const code =
@@ -51,7 +51,9 @@ export default function IDE({tabIndex,setTabs,tabs})
                     </div>
                 </div>
                 <div className='ide-deploy'>
-                    <div className='ide-deploy-header'>
+                    <DeployArea/>
+
+                    {/* <div className='ide-deploy-header'>
                         <span>Deployment Area:</span>
                     </div>
                     <div className='ide-deploy-content'>
@@ -78,7 +80,10 @@ export default function IDE({tabIndex,setTabs,tabs})
                         <div className='ide-deploy-action'>
                             <Button variant="contained">Deploy</Button>
                         </div>
-                    </div>
+                    </div> */}
+
+
+
                 </div>
             </div>
         </div>

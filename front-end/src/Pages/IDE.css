@@ -50,11 +50,12 @@
 }
 .ide-deploy
 {
-    height:23%;
+    height:20%;
     border:1px solid magenta;
-    padding: 30px;
 }
-.ide-deploy-header
+
+
+/* .ide-deploy-header
 {
     height:30%;
     border:1px solid blue;
@@ -85,4 +86,4 @@
     display: flex;
     align-items: center;
     justify-content: center;
-}
+} */
