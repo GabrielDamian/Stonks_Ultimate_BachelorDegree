@@ -14,21 +14,21 @@ function createData(name, calories, fat, ) {
     return { name, calories, fat};
 }
 const rows = [
-    createData('BTC', 159, 6.0),
-    createData('BTC', 159, 6.0),
-    createData('BTC', 159, 6.0),
-    createData('BTC', 159, 6.0),
-    createData('BTC', 159, 6.0),
+    createData('BTC', '25/12/2019'),
+    createData('BTC', '25/12/2019'),
+    createData('BTC', '25/12/2019'),
+    createData('BTC', '25/12/2019'),
+    createData('BTC', '25/12/2019'),
   ];
 
 const newRows = [
-    createData('ETH', 200, 6.0),
-    createData('ETH', 200, 6.0),
-    createData('ETH', 200, 6.0),
-    createData('ETH', 200, 6.0),
-    createData('ETH', 200, 6.0),
-    createData('ETH', 200, 6.0),
-    createData('ETH', 200, 6.0),
+    createData('ETH', 200, '5$'),
+    createData('ETH', 200, '5$'),
+    createData('ETH', 200, '5$'),
+    createData('ETH', 200, '5$'),
+    createData('ETH', 200, '5$'),
+    createData('ETH', 200, '5$'),
+    createData('ETH', 200, '5$'),
 ]
 function BuyMarkets({tabIndex,setTabs,tabs}){
     return(
@@ -50,7 +50,6 @@ function BuyMarkets({tabIndex,setTabs,tabs}){
                                 <TableRow>
                                     <TableCell >Name</TableCell>
                                     <TableCell align="right">Date unlocked</TableCell>
-                                    <TableCell align="right">Price now:</TableCell>
                                 </TableRow>
                                 </TableHead>
                                 <TableBody>
@@ -63,7 +62,6 @@ function BuyMarkets({tabIndex,setTabs,tabs}){
                                         {row.name}
                                     </TableCell>
                                     <TableCell align="right">{row.calories}</TableCell>
-                                    <TableCell align="right">{row.fat}</TableCell>
                                     </TableRow>
                                 ))}
                                 </TableBody>

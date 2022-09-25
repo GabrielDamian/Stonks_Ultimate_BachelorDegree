@@ -131,10 +131,6 @@ function NodeListElem({obj})
         <Collapse in={open2} timeout="auto" unmountOnExit>
           <div style={{height:'200px', border:'1px solid red'}}>
             <div className="node-list-elem-row">
-              <span>Open to marketplace:</span>
-              <Switch {...label} defaultChecked />
-            </div>
-            <div className="node-list-elem-row">
               <span>Delete node:</span>
               <Button variant="contained" sx={{backgroundColor:'red', marginLeft:'20px'}}>Stop Node</Button>
             </div>

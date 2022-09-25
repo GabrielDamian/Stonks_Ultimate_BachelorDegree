@@ -22,6 +22,7 @@
     align-items: center;
     justify-content: flex-start;
     padding:0px 10px;
+    border:1px solid red;
 }
 .ide-deploy-action
 {
@@ -29,17 +30,14 @@
     display: flex;
     align-items: center;
     justify-content: center;
-}
 
-.ide-deploy-field-price-top
+}
+.ide-deploy-field-row
 {
-    height: 50%;
+    height: 30px;
+    width: 50%;
+    border: 1px solid green;
+    font-family: Arial, Helvetica, sans-serif;  
     display: flex;
     align-items: center;
-    font-family: Arial, Helvetica, sans-serif;  
-
-}
-.ide-deploy-field-price-bot
-{
-    height: 50%;
 }

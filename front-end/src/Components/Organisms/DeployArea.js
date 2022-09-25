@@ -3,6 +3,9 @@ import './DeployArea.css'
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Switch from '@mui/material/Switch';
+import Checkbox from '@mui/material/Checkbox';
+
+const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
 function DeployArea ()
 {
@@ -33,24 +36,14 @@ function DeployArea ()
                                 }}    
                             />
                         </div>
-                        <div className='ide-deploy-field'>
-                            <TextField 
-                                id="outlined-basic" 
-                                label="Price ($)" 
-                                variant="outlined" 
-                                sx={{
-                                    width:'100%'
-                                }}   
-                                type="number" 
-                            />
-                        </div>
                         <div className='ide-deploy-field' style={{flexDirection: 'column'}}>
-                            
-                            <div className='ide-deploy-field-price-top'>
-                                <span>Open to marketplace:</span>
+                            <div className='ide-deploy-field-row'>
+                                <span>BTC</span>
+                                <Checkbox {...label} />
                             </div>
-                            <div className='ide-deploy-field-price-bot'>
-                                <Switch />
+                            <div className='ide-deploy-field-row'>
+                                <span>ETH</span>
+                                <Checkbox {...label} />
                             </div>
                         </div>
                         <div className='ide-deploy-action'>
