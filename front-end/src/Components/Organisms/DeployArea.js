@@ -7,7 +7,7 @@ import Checkbox from '@mui/material/Checkbox';
 
 const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
-function DeployArea ()
+function DeployArea ({deployCode})
 {
     return(
         <div className='deployment-area-container'>
@@ -47,7 +47,7 @@ function DeployArea ()
                             </div>
                         </div>
                         <div className='ide-deploy-action'>
-                            <Button variant="contained">Deploy</Button>
+                            <Button variant="contained" onClick={deployCode}>Deploy</Button>
                         </div>
                     </div>
         </div>

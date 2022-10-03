@@ -34,6 +34,11 @@ export default function IDE({tabIndex,setTabs,tabs})
     const handleChange = (newValue)=>{
         setValue(newValue);
     }
+
+    const deployCode = ()=>{
+        console.log("deply code")
+
+    }
     
     return (
         <div className='ide-container'>
@@ -51,7 +56,7 @@ export default function IDE({tabIndex,setTabs,tabs})
                     </div>
                 </div>
                 <div className='ide-deploy'>
-                    <DeployArea/>
+                    <DeployArea deployCode={deployCode}/>
 
                     {/* <div className='ide-deploy-header'>
                         <span>Deployment Area:</span>
