@@ -1,6 +1,7 @@
 from flask import Flask
 from flask import request
 import os 
+import subprocess
 
 app = Flask(__name__)
 app.config['CORS_HEADERS'] = 'Content-Type'
@@ -45,8 +46,10 @@ def createFile(fileName,content):
 def createImageContaiener():
     pass
 
-def runImage():
-    pass
+def runImage(nodeName):
+    imageRunOutput = subprocess.Popen(["docker", "run", nodeName], stdout=subprocess.PIPE)
+    output = imageRunOutput.communicate()[0]
+    print("output images:", output)
 
 def createDockerFile(code,name):
     print("Start createDockerFile")
@@ -69,10 +72,15 @@ def createDockerFile(code,name):
     # Create dockerfile
     createFile(newPath + "/"+"requirements.txt", requirementsTemplate)
 
+    return newPath
 
-
-
-
+def createDockerImage(dockerFilePath, nodeName):
+    print("create docker image from:", dockerFilePath)
+    print("node name:", nodeName)
+    print("final docker command:",["docker","build", "--tag",f"{nodeName}", dockerFilePath])
+    test = subprocess.Popen(["docker","build", "--tag",f"{nodeName}", dockerFilePath], stdout=subprocess.PIPE)
+    output = test.communicate()[0]
+    print("out:", output)
 
 
 @app.route('/deploy-code',methods = ['POST'])
@@ -80,18 +88,22 @@ def deployCode():
     data = request.get_json()
     print("datA:",data)
 
-    code = data.get('code')
+    codeRaw = data.get('code')
     name = data.get('name')
 
+    #add unique code 
+    code = f"#Code node ${name}\n\n" + codeRaw
 
-    createDockerFile(code,name)
+    print("Test name:",name)
 
-
+    dockerFilePath = createDockerFile(code,name)
+    createDockerImage(dockerFilePath,name)
+    runImage(name)
     return "OK"
 
 
 
 if (__name__ == "__main__"):
-    app.run(host='0.0.0.0', port=81)
+    app.run(host='0.0.0.0', port=81, debug=True)
 
 
