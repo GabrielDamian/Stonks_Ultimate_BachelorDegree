@@ -2,6 +2,7 @@ from flask import Flask
 from flask import request
 import os 
 import subprocess
+from deployArea import *
 
 app = Flask(__name__)
 app.config['CORS_HEADERS'] = 'Content-Type'
@@ -91,14 +92,16 @@ def deployCode():
     codeRaw = data.get('code')
     name = data.get('name')
 
-    #add unique code 
+    # #add unique code 
     code = f"#Code node ${name}\n\n" + codeRaw
 
-    print("Test name:",name)
+    th = threading.Thread(target=deployNode, args=(name, code))
+    th.start()
 
-    dockerFilePath = createDockerFile(code,name)
-    createDockerImage(dockerFilePath,name)
-    runImage(name)
+    # dockerFilePath = createDockerFile(code,name)
+    # createDockerImage(dockerFilePath,name)
+    # runImage(name)
+    
     return "OK"
 
 
