@@ -8,6 +8,9 @@ import AddBlock from './Pages/AddBlock';
 import BuyMarkets from './Pages/Buy Markets';
 import AddMarket from './Pages/AddMarket';
 import AddCredit from './Pages/AddCredit';
+import Login from './Pages/Login';
+import Signup from './Pages/Signup';
+import PrivateRoute from './Pages/PrivateRoute';
 
 function App() {
   
@@ -19,6 +22,10 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+          <Route exact path="/login" element={<Login/>} />
+          <Route exact path="/signup" element={<Signup/>} />
+          <Route exact path="/private" element={<PrivateRoute/>}/>
+          
           <Route exact path="/" element={<Dashboard tabIndex={0} tabs={tabs} setTabs={setTabs}/>} />
           <Route exact path="/ide" element={<IDE tabIndex={1} tabs={tabs} setTabs={setTabs}/>}/>
           <Route exact path="/drag" element={<NodeStore tabIndex={2} tabs={tabs} setTabs={setTabs}/>} />
