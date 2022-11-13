@@ -8,8 +8,7 @@ const jwt = require('jsonwebtoken')
 app.use(cors())
 app.use(express.json())
 
-mongoose.connect('mongodb://localhost:2717/auth') //create 'auth' database if doesn't exists
-
+mongoose.connect('mongodb://localhost:27017/auth') //create 'auth' database if doesn't exists
 
 app.get('/',(req,res)=>{
     res.send('test')
