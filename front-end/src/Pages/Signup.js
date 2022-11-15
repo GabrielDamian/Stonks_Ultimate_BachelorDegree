@@ -1,15 +1,19 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 function Signup()
 {
-
+    const navigate = useNavigate();
     const [userData, setUserData] = useState({
         name: '',
         email:'',
         password: '',
         repeatPass: ''
     })
+
+    const [errors,setErrors] = useState('');
+
     useEffect(()=>{
         console.log("userData update",userData)
     },[userData])
@@ -17,21 +21,54 @@ function Signup()
     const SignupHandler = async ()=>{
         if(userData.name !== '' && userData.password != '' && (userData.password == userData.repeatPass))
         {
-            console.log("ok siignup check")
-            let resp = await axios.post(
-                'http://localhost:1337/signup',
-                userData
-            )
-            console.log("resp:", resp)
+            try {
+                const res = await fetch('http://localhost:3000/signup', { 
+                  method: 'POST', 
+                  body: JSON.stringify({ 
+                    name: userData.name,
+                    email:userData.email, 
+                    password: userData.password 
+                }),
+                  headers: {'Content-Type': 'application/json'}
+                });
+
+                console.log("fill resp:",res)
+                const data = await res.json();
+                if(data.errors)
+                {
+                    let extractErrors = ""
+                    Object.keys(data.errors).forEach((key)=>{
+                        console.log("key:", data.errors[key])    
+                        if(data.errors[key] !== '')
+                        {
+                            extractErrors += data.errors[key] + " // "
+                        }
+                    })
+
+                    setErrors(extractErrors)
+                    console.log("extracted:",extractErrors)
+
+                }
+                else 
+                {
+                    navigate(`/`);
+                }
+                console.log("datA:",data)
+              }
+              catch (err) {
+                console.log(err);
+              }
         }
         else 
         {
+            setErrors('Please complete all fields!')
             console.log("wrong signup data")
         }
     }
 
     const handleInputChange = (e)=>{
-
+        
+        setErrors('');
         setUserData((prev)=>{
             let newState = {...prev}
             newState[e.target.name] = e.target.value
@@ -46,6 +83,7 @@ function Signup()
             <input name="password" type="password" placeholder='password' onChange={handleInputChange}></input>
             <input name="repeatPass" type="password" placeholder='repeatPass' onChange={handleInputChange}></input>
             <button onClick={SignupHandler}>signup</button>
+            <span>{errors}</span>
         </div>
     )
 } 
