@@ -26,7 +26,7 @@ function Login()
         if(userData.email !== '' && userData.password !== '')
         {
             try {
-                const res = await fetch('http://localhost:3000/login', { 
+                const res = await fetch('http://localhost:3001/login', { 
                   method: 'POST', 
                   
                   body: JSON.stringify({ 
@@ -36,8 +36,10 @@ function Login()
                   headers: {
                     'Content-Type': 'application/json',
                     Accept: 'application/json',
-                },
-                withCredentials: true
+                    'Access-Control-Allow-Credentials':true
+                    },
+                    withCredentials: true,
+                    credentials: 'include'
                 });
                 console.log("full res:",res)
                 console.log("header:", res.headers)
@@ -60,6 +62,7 @@ function Login()
                 }
                 if (data.user) {
                     //set cookies
+                    console.log("body:", data)
                     let token = data.token;
                     cookies.set('jwt',token,{secure: true, sameSite: 'none'})
                     console.log("raw token:", token)

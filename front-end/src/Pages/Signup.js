@@ -1,9 +1,12 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import Cookies from 'universal-cookie';
 
 function Signup()
 {
+    const cookies = new Cookies();
+
     const navigate = useNavigate();
     const [userData, setUserData] = useState({
         name: '',
@@ -22,7 +25,7 @@ function Signup()
         if(userData.name !== '' && userData.password != '' && (userData.password == userData.repeatPass))
         {
             try {
-                const res = await fetch('http://localhost:3000/signup', { 
+                const res = await fetch('http://localhost:3003/signup', { 
                   method: 'POST', 
                   body: JSON.stringify({ 
                     name: userData.name,
@@ -51,6 +54,10 @@ function Signup()
                 }
                 else 
                 {
+                    console.log("body:", data)
+                    let token = data.token;
+                    cookies.set('jwt',token,{secure: true, sameSite: 'none'})
+                    console.log("raw token:", token)
                     navigate(`/`);
                 }
                 console.log("datA:",data)

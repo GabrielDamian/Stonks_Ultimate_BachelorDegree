@@ -3,7 +3,8 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 var cors = require('cors');
 const morgan = require("morgan");
-
+const axios = require('axios')
+const  { Proxy } = require('axios-express-proxy');
 const app = express();
 const setupLogging = (app) => {
     app.use(morgan('combined'));
@@ -11,26 +12,71 @@ const setupLogging = (app) => {
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors());
-setupLogging(app);
+app.use(cors({
+    credentials: true,
+    origin: [
+    [
+      "http://localhost:3000",
+      "http://localhost:3001",
+      "http://localhost:3002",
+      "http://localhost:3003",
+    ]
+  ]}))
+// setupLogging(app);
 
 const ROUTES = {
-    'login':{
-        // TODO
-        // method: 'POST',
+    'login_POST':{
+        needsAuth: false,
+        roles: [],
+        service: "http://localhost:3002/login"
+    },
+    'signup_POST':{
         needsAuth: false,
     },
-    'dashboard':{
-        needsAuth: true,
-    }
 }
+let mapIndexSeparator = "_";
 
-app.get('/:destination',(req,res)=>{
-    console.log("original url:", req.originalUrl)
+app.post('/:destination',async (req,res)=>{
     let url = req.originalUrl.slice(1)
-    if(ROUTES[url])
+    let method = req.method;
+
+    let mapIndex = url + mapIndexSeparator + method; 
+
+    if(ROUTES[mapIndex])
     {
-        res.send("ruta exista")
+        // TODO:
+        if(ROUTES[mapIndex].needsAuth == true)
+        {
+            let token = req.cookies.jwt;
+            if(!token)
+            {
+                return res.status(401).send("Please provide a token!")
+            }
+            console.log("ceva:")
+            try{
+                let reps_token_check = await axios.post(
+                    "http://localhost:3003/check-token",
+                    {token}
+                )
+               console.log(reps_token_check.data)
+            }
+            catch(e)
+            {
+                console.log("err:")
+                return res.send(403).send("Wrong token!")
+            }
+           
+        }
+        return Proxy(ROUTES[mapIndex].service, req, res)
+
+        // console.log("SKIP auth")
+        // let resp = await axios({
+        //     method: method,
+        //     url: ROUTES[mapIndex].service,
+        //     data: {...req.body}
+        //   });
+        //   console.log("RESP:",resp)
+        
     }
     else 
     {
