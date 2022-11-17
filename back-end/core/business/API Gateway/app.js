@@ -32,21 +32,32 @@ const ROUTES = {
     },
     'signup_POST':{
         needsAuth: false,
+        roles: [],
+        service: "http://localhost:3002/signup"
     },
+    'check-token_POST':{
+        needsAuth: false,
+        roles:[],
+        service: "http://localhost:3002/check-token"
+    }
 }
 let mapIndexSeparator = "_";
 
 app.post('/:destination',async (req,res)=>{
+    console.log("token:", req.cookies.jwt);
+
     let url = req.originalUrl.slice(1)
     let method = req.method;
 
     let mapIndex = url + mapIndexSeparator + method; 
-
+    console.log("before:",mapIndex)
     if(ROUTES[mapIndex])
     {
+        console.log("cas 1")
         // TODO:
         if(ROUTES[mapIndex].needsAuth == true)
         {
+            console.log("private route")
             let token = req.cookies.jwt;
             if(!token)
             {
@@ -55,7 +66,7 @@ app.post('/:destination',async (req,res)=>{
             console.log("ceva:")
             try{
                 let reps_token_check = await axios.post(
-                    "http://localhost:3003/check-token",
+                    "http://localhost:3002/check-token",
                     {token}
                 )
                console.log(reps_token_check.data)
@@ -67,7 +78,24 @@ app.post('/:destination',async (req,res)=>{
             }
            
         }
-        return Proxy(ROUTES[mapIndex].service, req, res)
+        try{
+            console.log("route public:", ROUTES[mapIndex].service)
+            Proxy(ROUTES[mapIndex].service, req, res)
+            .then((el)=>{
+                console.log("ok")
+                return el
+            })
+            .catch((err)=>{
+                console.log("ERR:")
+                console.log("status:", err.response.status)
+                console.log("err:",err.response.data)
+                return res.status(err.response.status).send(JSON.stringify(err.response.data))
+            })
+        }
+        catch(e)
+        {
+            console.log("ERR:")
+        }
 
         // console.log("SKIP auth")
         // let resp = await axios({
@@ -80,6 +108,7 @@ app.post('/:destination',async (req,res)=>{
     }
     else 
     {
+        console.log("case 404")
         res.status(404).send("404")
     }
 })

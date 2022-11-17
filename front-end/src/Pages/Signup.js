@@ -25,7 +25,7 @@ function Signup()
         if(userData.name !== '' && userData.password != '' && (userData.password == userData.repeatPass))
         {
             try {
-                const res = await fetch('http://localhost:3003/signup', { 
+                const res = await fetch('http://localhost:3001/signup', { 
                   method: 'POST', 
                   body: JSON.stringify({ 
                     name: userData.name,

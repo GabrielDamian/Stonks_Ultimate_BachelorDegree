@@ -12,6 +12,7 @@ import Login from './Pages/Login';
 import Signup from './Pages/Signup';
 import PrivateRoute from './Pages/PrivateRoute';
 
+import ProtectedRoute from './Pages/PrivateWrapper/ProtectedRoute';
 function App() {
   
   const [tabs, setTabs] = useState({
@@ -24,17 +25,42 @@ function App() {
       <Routes>
           <Route exact path="/login" element={<Login/>} />
           <Route exact path="/signup" element={<Signup/>} />
-          <Route exact path="/private" element={<PrivateRoute/>}/>
           
-          <Route exact path="/" element={<Dashboard tabIndex={0} tabs={tabs} setTabs={setTabs}/>} />
-          <Route exact path="/ide" element={<IDE tabIndex={1} tabs={tabs} setTabs={setTabs}/>}/>
-          <Route exact path="/drag" element={<NodeStore tabIndex={2} tabs={tabs} setTabs={setTabs}/>} />
-          <Route exact path="/overview" element={<Overview tabIndex={3} tabs={tabs} setTabs={setTabs}/>} />
-          <Route exact path="/buy-credit" element={<AddCredit tabIndex={4} tabs={tabs} setTabs={setTabs}/>} />
-          <Route exact path="/add-block" element={<AddBlock tabIndex={5} tabs={tabs} setTabs={setTabs}/>} />
+          <Route exact path="/" element={
+            <ProtectedRoute>
+              <Dashboard tabIndex={0} tabs={tabs} setTabs={setTabs}/>
+            </ProtectedRoute>
+          }/>
 
-          {/* <Route exact path="/buy-markets" element={<BuyMarkets tabIndex={4} tabs={tabs} setTabs={setTabs}/>} /> */}
-          {/* <Route exact path="/add-market" element={<AddMarket tabIndex={6} tabs={tabs} setTabs={setTabs}/>} /> */}
+          <Route exact path="/ide" element={
+            <ProtectedRoute>
+              <IDE tabIndex={1} tabs={tabs} setTabs={setTabs}/>
+            </ProtectedRoute>
+          }/>
+
+          <Route exact path="/drag" element={
+            <ProtectedRoute>
+              <NodeStore tabIndex={2} tabs={tabs} setTabs={setTabs}/>
+            </ProtectedRoute>
+          }/>
+
+          <Route exact path="/overview" element={
+            <ProtectedRoute>
+              <Overview tabIndex={3} tabs={tabs} setTabs={setTabs}/>
+            </ProtectedRoute>
+          }/>
+
+          <Route exact path="/buy-credit" element={
+            <ProtectedRoute>
+              <AddCredit tabIndex={4} tabs={tabs} setTabs={setTabs}/>
+            </ProtectedRoute>
+          }/>
+
+          <Route exact path="/add-block" element={
+            <ProtectedRoute>
+              <AddBlock tabIndex={5} tabs={tabs} setTabs={setTabs}/>
+            </ProtectedRoute>
+          }/>
 
       </Routes>
     </BrowserRouter>

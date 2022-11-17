@@ -60,7 +60,7 @@ function Login()
                     setErrors(extractErrors)
                     console.log("extracted:",extractErrors)
                 }
-                if (data.user) {
+                else{
                     //set cookies
                     console.log("body:", data)
                     let token = data.token;
