@@ -39,7 +39,12 @@ const ROUTES = {
         needsAuth: false,
         roles:[],
         service: "http://localhost:3002/check-token"
-    }
+    },
+    'deploy-node_POST':{
+        needsAuth: true,
+        roles:[],
+        service: "http://localhost:3004/deploy-node"
+    },
 }
 let mapIndexSeparator = "_";
 
