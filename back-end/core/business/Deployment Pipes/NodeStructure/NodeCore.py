@@ -5,8 +5,12 @@ class Pipe_Node:
         self.name = name
         self.nextTopic = nextTopic
         self.resources = resources
-        self.result = None
+    def nodeTask(self):
+        result = {
+            'pipe': self.resources['pipe'],
+            'payload': self.resources['payload'] +"_"+ self.name
+        }
+        print("nodeTask return:", result)
+        return result
 
-    def node_core(self,param):
-        time.sleep(2)
-        self.result = param
+

@@ -5,7 +5,7 @@ from kafka import KafkaAdminClient, KafkaConsumer,KafkaProducer
 from json import dumps
 from NodeStructure import NodeCore
 from threading import Thread, Lock
-
+import json
 class NodesMap:
     def __init__(self):
         self.dict = {
@@ -28,7 +28,6 @@ class NodesMap:
 
 
 def releasePipe(nodesMapEl):
-    print("Release thread started:")
     releaser_consumer = KafkaConsumer(
         'balancer-releaser',
         bootstrap_servers=['localhost : 9092'],
@@ -37,20 +36,21 @@ def releasePipe(nodesMapEl):
         group_id='my-group',
         # value_deserializer=lambda x: loads(x.decode('utf-8'))
     )
-    print("release before FOR")
     for message in releaser_consumer:
-        print("BALANCER RELEASER---")
-        decodedMsg = message.value
-        print("msg:",decodedMsg)
-        nodesMapEl.releaseNode(decodedMsg)
+        print("--Balancer Releaser received:",message.value)
+        bytes = message.value
+        bytesDecoded = bytes.decode()
+        objectEl = json.loads(bytesDecoded)
+        nodesMapEl.releaseNode(objectEl['pipe'])
 
 if __name__ == '__main__':
+    print("Balancer listening")
     nodesMapEl = NodesMap()
-    KafkaAdminClient(bootstrap_servers='localhost : 9092').delete_topics(['to-balancer'])
+    # KafkaAdminClient(bootstrap_servers='localhost : 9092').delete_topics(['to-balancer'])
     front_end_consumer = KafkaConsumer(
         'to-balancer',
         bootstrap_servers=['localhost : 9092'],
-        auto_offset_reset='earliest',
+        auto_offset_reset='latest',
         enable_auto_commit=True,
         group_id='my-group',
         # value_deserializer=lambda x: loads(x.decode('utf-8'))
@@ -62,24 +62,25 @@ if __name__ == '__main__':
     releaserThread = threading.Thread(target=releasePipe,args=(nodesMapEl,))
     releaserThread.start()
     for message in front_end_consumer:
-        print("balancer received from front end:", message.value)
+        print("Balancer received:", message.value)
         emptySlot = False
         while emptySlot == False:
             nodeId = nodesMapEl.giveMeSlot()
             emptySlot = False if nodeId is None else nodeId
+            print("Slot chosed:",emptySlot)
             print("All pipes busy, retrying in 2 seconds")
             time.sleep(2)
 
-        node = NodeCore.Pipe_Node(emptySlot,'pipe_1_stage_1',message.value.decode())
-        node.node_core(emptySlot)
-        # message = message.value
-        print("Node result:",node.result)
-        to_send = node.result
-        try:
-            to_send = node.result.decode()
-        except (UnicodeDecodeError, AttributeError):
-            pass
+        packet = {
+            'pipe': emptySlot,
+            'payload': message.value.decode()
+        }
 
+        node = NodeCore.Pipe_Node('balancer','pipe_1_stage_1',packet)
+
+        to_send = json.dumps(node.nodeTask())
+        print("Packet to send:", to_send)
+        print("type to send:",type(to_send))
         my_producer.send(node.nextTopic, value=to_send.encode())
 
 
