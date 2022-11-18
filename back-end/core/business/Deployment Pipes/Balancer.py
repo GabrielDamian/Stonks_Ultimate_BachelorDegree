@@ -9,8 +9,7 @@ from threading import Thread, Lock
 class NodesMap:
     def __init__(self):
         self.dict = {
-            1: True,
-            2: True
+            'pipe_1_stage_1': True,
         }
         self.lock = Lock()
     def lockNode(self,id):
@@ -21,12 +20,11 @@ class NodesMap:
             self.dict[id] = True
 
     def giveMeSlot(self):
-        with self.lock:
-            for a in self.dict:
-                if(self.dict[a]):
-                    self.dict[a] = False
-                    return a
-            return None
+        for a in self.dict:
+            if(self.dict[a]):
+                self.lockNode(a)
+                return a
+        return None
 
 
 def releasePipe(nodesMapEl):
@@ -39,18 +37,18 @@ def releasePipe(nodesMapEl):
         group_id='my-group',
         # value_deserializer=lambda x: loads(x.decode('utf-8'))
     )
+    print("release before FOR")
     for message in releaser_consumer:
-        decodedMsg = message.value.decode('utf-8')
+        print("BALANCER RELEASER---")
+        decodedMsg = message.value
+        print("msg:",decodedMsg)
         nodesMapEl.releaseNode(decodedMsg)
 
-
-
 if __name__ == '__main__':
-
     nodesMapEl = NodesMap()
     KafkaAdminClient(bootstrap_servers='localhost : 9092').delete_topics(['to-balancer'])
     front_end_consumer = KafkaConsumer(
-        'to-stage-1',
+        'to-balancer',
         bootstrap_servers=['localhost : 9092'],
         auto_offset_reset='earliest',
         enable_auto_commit=True,
@@ -59,21 +57,29 @@ if __name__ == '__main__':
     )
     my_producer = KafkaProducer(
         bootstrap_servers=['localhost:9092'],
-        value_serializer=lambda x: dumps(x).encode('utf-8')
+        # value_serializer=lambda x: dumps(x).encode('utf-8')
     )
     releaserThread = threading.Thread(target=releasePipe,args=(nodesMapEl,))
+    releaserThread.start()
     for message in front_end_consumer:
         print("balancer received from front end:", message.value)
         emptySlot = False
-        while not emptySlot:
-            emptySlot = False if nodesMapEl.giveMeSlot() == None else True
+        while emptySlot == False:
+            nodeId = nodesMapEl.giveMeSlot()
+            emptySlot = False if nodeId is None else nodeId
             print("All pipes busy, retrying in 2 seconds")
             time.sleep(2)
 
-        node = NodeCore.Pipe_Node('Stage 1','to-stage-2',message.value.decode('utf-8'))
-        node.node_core()
+        node = NodeCore.Pipe_Node(emptySlot,'pipe_1_stage_1',message.value.decode())
+        node.node_core(emptySlot)
         # message = message.value
-        print("out stage 1:", node.result)
-        my_producer.send(node.nextTopic, value=node.result)
+        print("Node result:",node.result)
+        to_send = node.result
+        try:
+            to_send = node.result.decode()
+        except (UnicodeDecodeError, AttributeError):
+            pass
+
+        my_producer.send(node.nextTopic, value=to_send.encode())
 
 

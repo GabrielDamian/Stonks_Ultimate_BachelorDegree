@@ -7,7 +7,6 @@ class Pipe_Node:
         self.resources = resources
         self.result = None
 
-    def node_core(self):
+    def node_core(self,param):
         time.sleep(2)
-        print("core action for nore" + self.name)
-        self.result = self.resources + self.name
+        self.result = param
