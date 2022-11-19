@@ -4,22 +4,6 @@
     border:1px solid magenta;
     display: flex;
 }
-.overview-content
-{
-    width: 85%;
-    border:1px solid green;
-    height:100vh;
-  }
-.overview-content-header
-{   
-    height: 10%;
-    border: 1px solid red;
-    font-family: Arial, Helvetica, sans-serif;
-    display: flex;
-    align-items: center;
-    padding: 0px 20px;
-    font-size: 1.4rem;
-}
 .overview-content-data
 {
     height: 90%;

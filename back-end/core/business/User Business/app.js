@@ -77,10 +77,13 @@ app.post('/signup',async(req,res)=>{
   return res.status(200).send(JSON.stringify({token}))
 
 })
+
+//used in apy gateway
 app.post('/check-token',async(req,res)=>{
   console.log("check-token")
 
-  let token = req.cookies.jwt;
+  let {token} = req.body;
+
   console.log("token:",token)
 
   if(token)
@@ -96,14 +99,15 @@ app.post('/check-token',async(req,res)=>{
       {
         console.log("decoded token:", decodedToken)
         //user user id from token to find user role
-        let userRole = await axios.post("http://localhost:3003/get-user-role",{id:decodedToken.id})
+        let userRole = await axios.post("http://localhost:3003/collect-user-data",{id:decodedToken.id})
         console.log("userRole resp:", userRole.data.role)
 
         let user_rank = {
-          rank: userRole.data.role
+          id:decodedToken.id,
+          role: userRole.data.role
         }
 
-        return res.status(200).send(JSON.stringify({user_rank}));
+        return res.status(200).send(JSON.stringify({...user_rank}));
       }
     })
   }
@@ -114,7 +118,25 @@ app.post('/check-token',async(req,res)=>{
   }
 });
 
+app.post('/collect-user-data', async(req,res)=>{
+  
+  console.log("collect user data:", req.body.id)
+  let userId = req.body.id;
+
+  //user user id from token to find user role
+  let userInfo = await axios.post("http://localhost:3003/collect-user-data",{id:userId})
+  console.log("resp ok user datA:",userInfo.data)
+
+  let data = {}
+  let fields = ['email','_id']
+  fields.forEach((field)=>{
+    data[field] = userInfo.data[field]
+  })
+  console.log("Data before return:".data)
+
+  return res.status(200).send(JSON.stringify({...data}));
+})
 
 app.listen(3002,()=>{
-    console.log("api gateway is listening at 3002")
+  console.log("user business at 3002")
 })

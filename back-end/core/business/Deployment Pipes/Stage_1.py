@@ -4,13 +4,24 @@ from kafka import KafkaAdminClient, KafkaConsumer,KafkaProducer
 from json import dumps
 from NodeStructure import NodeCore
 import json
+from Tasks import TasksCore
+
+def Stage_1_Task(packetSource):
+    localPacket = packetSource.copy()
+    localPacket['history'] = localPacket['history'] + "_" + 'stage_1'
+    return localPacket
 
 if __name__ == '__main__':
+    # args
+    my_node_name = 'stage_1'
+    receive_from = 'pipe_1_stage_1'
+    send_to = 'pipe_1_stage_2'
+    my_node_task = 'stage_1'
 
-    # KafkaAdminClient(bootstrap_servers='localhost : 9092').delete_topics(['to-stage-1'])
+
     KafkaAdminClient(bootstrap_servers='localhost : 9092').delete_topics(['pipe_1_stage_1'])
     my_consumer = KafkaConsumer(
-        'pipe_1_stage_1',
+        receive_from,
         bootstrap_servers=['localhost : 9092'],
         auto_offset_reset='latest',
         enable_auto_commit=True,
@@ -25,12 +36,14 @@ if __name__ == '__main__':
         print("Stage 1 received:", message.value)
         bytes = message.value
         bytesDecoded = bytes.decode()
-        objectEl = json.loads((bytesDecoded))
-        node = NodeCore.Pipe_Node('Stage 1','pipe_1_stage_2',objectEl)
-
-        to_send = json.dumps(node.nodeTask())
+        objectEl = json.loads(bytesDecoded)
+        # node = NodeCore.Pipe_Node('Stage 1','pipe_1_stage_2',objectEl)
+        node = NodeCore.Pipe_Node(
+            name='Stage 1',
+            resources=objectEl,
+            task=TasksCore.tasksCore[my_node_task]
+        )
+        to_send = json.dumps(node.executeTask())
         print("Packet to send:", to_send)
         time.sleep(2)
-        my_producer.send(node.nextTopic, value=to_send.encode())
-
-
+        my_producer.send(send_to, value=to_send.encode())

@@ -1,6 +1,7 @@
 import React,{useState,useEffect} from 'react';
-import './Dashboard.css';
+import './Style/Dashboard.css';
 import LeftMenu from '../Components/Organisms/LeftMenu';
+import TopBar from '../Components/Organisms/TopBar';
 
 const botsStatusTemp = [
     {
@@ -45,30 +46,17 @@ const botsPerformanceTemp = [
 ]
 
 
-export default function Dashboard({tabIndex,setTabs,tabs})
+export default function Dashboard({tabIndex,setTabs,tabs,testProp})
 {
+    useEffect(()=>{
+        console.log("Dash props:",testProp)
+    },[])
+    
     return (
         <div className='dashboard-container'>
             <LeftMenu tabIndex={tabIndex} setTabs={setTabs} tabs={tabs}/>
             <div className='dashboard-content'>
-                <div className="dashboard-content-header">
-                    <div className="dashboard-content-header-left">
-                        <span>Dashboard</span>
-                    </div>
-                    <div className="dashboard-content-header-right">
-                        <div className="dashboard-content-header-right-left">
-                            <div className="dashboard-content-header-right-left-top">
-                                <span>Username</span>
-                            </div>
-                            <div className="dashboard-content-header-right-left-bot">
-                                <span>Balance: 0.00$</span>
-                            </div>
-                        </div>
-                        <div className="dashboard-content-header-right-right">
-                            <span>Logout</span>
-                        </div>  
-                    </div>
-                </div>
+                <TopBar />
                 <div className="dashboard-content-data">
                   
                 </div>

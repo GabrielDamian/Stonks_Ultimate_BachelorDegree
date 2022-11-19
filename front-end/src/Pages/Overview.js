@@ -1,5 +1,5 @@
 import React,{useState, useEffect} from 'react';
-import './Overview.css';
+import './Style/Overview.css';
 import LeftMenu from '../Components/Organisms/LeftMenu';
 
 import InputLabel from '@mui/material/InputLabel';
@@ -24,7 +24,7 @@ import Icon1 from '../Media/Icons/artificial-intelligence.png';
 import {ChartComponent} from '../Components/Organisms/ChartComponent';
 import Switch from '@mui/material/Switch';
 import Button from '@mui/material/Button';
-
+import TopBar from '../Components/Organisms/TopBar';
 
 export default function Overview({tabIndex,setTabs,tabs})
 {
@@ -51,10 +51,8 @@ export default function Overview({tabIndex,setTabs,tabs})
     return (
         <div className='overview-container'>
             <LeftMenu tabIndex={tabIndex} setTabs={setTabs} tabs={tabs}/>
-            <div className='overview-content'>
-                <div className='overview-content-header'>
-                    <span>Overview Panel</span>
-                </div>
+            <div className='dashboard-content'>
+                <TopBar />
                 <div className='overview-content-data'>
                     <div className='overview-content-data-header'>
                     <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>

@@ -1,11 +1,12 @@
 import React from 'react';
-import './AddBlock.css';
+import './Style/AddBlock.css';
 import LeftMenu from '../Components/Organisms/LeftMenu';
 import TextField from '@mui/material/TextField';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
 import CustomMonaco from '../Components/Organisms/CustomMonaco';
 import Button from '@mui/material/Button';
 import Hyperparameters from '../Components/Molecules/Hyperparameters';
+import TopBar from '../Components/Organisms/TopBar';
 
 function AddBlock({tabIndex,setTabs,tabs})
 {
@@ -16,10 +17,8 @@ function AddBlock({tabIndex,setTabs,tabs})
     return(
         <div className='add-block-container'>
             <LeftMenu tabIndex={tabIndex} setTabs={setTabs} tabs={tabs}/>
-            <div className='add-block-content'>
-                <div className="add-block-content-header">
-                    <span>Add Data Flow Block Area (ADMIN)</span>
-                </div>
+            <div className='dashboard-content'>
+                <TopBar />
                 <div className="add-block-content-data">
                     <div className='add-block-content-data-center'>
                         <div className='add-block-content-data-center-inputs'>
@@ -53,13 +52,13 @@ function AddBlock({tabIndex,setTabs,tabs})
                             </div>
 
                         </div>
-                      
+                        
 
                         
 
 
                         <div className='content-data-center-row' style={{height:'300px', padding:'20px'}}>
-                           <CustomMonaco/>
+                            <CustomMonaco/>
                         </div>
                         <div className='content-data-center-row' style={{
                             display:'flex',

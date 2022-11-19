@@ -1,5 +1,7 @@
-import React from 'react';
-import './BuyMarkets.css';
+// !!!!!!!!! ----->>> DEPRECATED Component, 
+
+import React, { Component } from 'react';
+import './Style/BuyMarkets.css';
 import LeftMenu from '../Components/Organisms/LeftMenu';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -9,6 +11,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
+import TopBar from '../Components/Organisms/TopBar';
 
 function createData(name, calories, fat, ) {
     return { name, calories, fat};
@@ -33,11 +36,9 @@ const newRows = [
 function BuyMarkets({tabIndex,setTabs,tabs}){
     return(
         <div className='buy-market-container'>
-            <LeftMenu tabIndex={tabIndex} setTabs={setTabs} tabs={tabs}/>
-            <div className='buy-market-content'>
-                <div className="buy-market-content-header">
-                    <span>Buy markets area</span>
-                </div>
+             <LeftMenu tabIndex={tabIndex} setTabs={setTabs} tabs={tabs}/>
+            <div className='dashboard-content'>
+                <TopBar />
                 <div className="buy-market-content-data">
                     <div className="buy-market-content-data-own">
                         <div className="buy-market-content-data-own-header">
@@ -107,6 +108,7 @@ function BuyMarkets({tabIndex,setTabs,tabs}){
                     </div>
                 </div>
             </div>
+                
         </div>
     )
 }

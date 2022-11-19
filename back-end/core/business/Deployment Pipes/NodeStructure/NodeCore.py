@@ -1,16 +1,9 @@
 import time
 
 class Pipe_Node:
-    def __init__(self, name, nextTopic, resources):
+    def __init__(self, name, resources,task):
         self.name = name
-        self.nextTopic = nextTopic
         self.resources = resources
-    def nodeTask(self):
-        result = {
-            'pipe': self.resources['pipe'],
-            'payload': self.resources['payload'] +"_"+ self.name
-        }
-        print("nodeTask return:", result)
-        return result
-
-
+        self.task = task
+    def executeTask(self):
+        return self.task(self.resources)

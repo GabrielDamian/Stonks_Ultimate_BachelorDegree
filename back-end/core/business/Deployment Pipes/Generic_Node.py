@@ -1,27 +1,30 @@
-from json import loads
 import time
+from json import loads
 from kafka import KafkaAdminClient, KafkaConsumer,KafkaProducer
-import json
-from Tasks import TasksCore
 from json import dumps
 from NodeStructure import NodeCore
-
-def Stage_2_Task(packetSource):
-    localPacket = packetSource.copy()
-    localPacket['history'] = localPacket['history'] + "_" + 'stage_2'
-    return localPacket
+import json
+from Tasks import TasksCore
+import sys
 
 if __name__ == '__main__':
     # args
-    my_node_name = 'stage_1'
-    receive_from = 'pipe_1_stage_2'
-    send_to = 'balancer-releaser'
-    my_node_task = 'stage_2'
+    print("check params:",sys.argv)
+    my_node_name = sys.argv[1]
+    receive_from = sys.argv[2]
+    send_to = sys.argv[3]
+    my_node_task = sys.argv[4]
 
-    KafkaAdminClient(bootstrap_servers='localhost : 9092').delete_topics(['pipe_1_stage_2'])
+    # my_node_name = 'stage_1'
+    # receive_from = 'pipe_1_stage_1'
+    # send_to = 'pipe_1_stage_2'
+    # my_node_task = 'stage_1'
 
+    print("Node " + my_node_name + " is listening!")
+
+    # KafkaAdminClient(bootstrap_servers='localhost : 9092').delete_topics(['pipe_1_stage_1'])
     my_consumer = KafkaConsumer(
-        'pipe_1_stage_2',
+        receive_from,
         bootstrap_servers=['localhost : 9092'],
         auto_offset_reset='latest',
         enable_auto_commit=True,
@@ -32,15 +35,14 @@ if __name__ == '__main__':
         bootstrap_servers=['localhost:9092'],
         # value_serializer=lambda x: dumps(x).encode('utf-8')
     )
-    print("waiting in stage 2")
     for message in my_consumer:
-        print("Stage 2 received:", message.value)
+        print("Stage 1 received:", message.value)
         bytes = message.value
         bytesDecoded = bytes.decode()
         objectEl = json.loads(bytesDecoded)
-        # node = NodeCore.Pipe_Node('Stage 2', 'balancer-releaser', objectEl)
+        # node = NodeCore.Pipe_Node('Stage 1','pipe_1_stage_2',objectEl)
         node = NodeCore.Pipe_Node(
-            name='Stage 2',
+            name='Stage 1',
             resources=objectEl,
             task=TasksCore.tasksCore[my_node_task]
         )

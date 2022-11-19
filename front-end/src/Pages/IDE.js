@@ -1,12 +1,12 @@
 import React,{useState,useEffect} from 'react';
 import LeftMenu from '../Components/Organisms/LeftMenu';
-import './IDE.css';
+import './Style/IDE.css';
 import MonacoEditor from 'react-monaco-editor'
 import CustomMonaco from '../Components/Organisms/CustomMonaco';
 
 import DocsSection from '../Components/Organisms/DocsSection';
 import DeployArea from '../Components/Organisms/DeployArea';
-
+import TopBar from '../Components/Organisms/TopBar';
 
 const code =
 `
@@ -43,7 +43,9 @@ export default function IDE({tabIndex,setTabs,tabs})
     return (
         <div className='ide-container'>
             <LeftMenu tabIndex={tabIndex} setTabs={setTabs} tabs={tabs}/>
-            <div className='ide-content'>
+            <div className='dashboard-content'>
+                <TopBar />
+                <div className='ide-content'>
                 <div className='ide-header'>
                     <span>IDE Builder</span>
                 </div>
@@ -90,6 +92,7 @@ export default function IDE({tabIndex,setTabs,tabs})
 
 
                 </div>
+            </div>
             </div>
         </div>
     )

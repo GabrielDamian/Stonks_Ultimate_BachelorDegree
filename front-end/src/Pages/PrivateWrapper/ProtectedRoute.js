@@ -1,5 +1,7 @@
-import React, {useState,useEffect } from 'react';
+import React, {useState,useEffect, Children } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
+import axios from 'axios';
 
 export default function ProtectedRoute(
     {
@@ -9,13 +11,17 @@ export default function ProtectedRoute(
     const navigate = useNavigate();
 
     const [isLoading, setIsLoading] = useState(true);
-
+    const [userId, setUserId] = useState(null);
+    
     const apiCheck = async ()=>{
-        //fetch for 'check-token' before rendering the component
-        console.log("test") 
+        console.log("check cokie before send:",Cookies.get('jwt'))
+        let testSring = JSON.stringify({jwt: Cookies.get('jwt')})
+        console.log("test json:", testSring);
+        
         try{
             let response =await fetch('http://localhost:3001/check-token', { 
                     method: 'POST', 
+                    body: JSON.stringify({token: Cookies.get('jwt')}),
                     headers: {
                     'Content-Type': 'application/json',
                     Accept: 'application/json',
@@ -26,40 +32,54 @@ export default function ProtectedRoute(
                 })
                 if(!response.ok)
                 {
-                    console.log("err:",response.status)
-                    let data = await response.json()
+                    console.log("err  private route:",response.status)
                     return navigate('/login')
                 }
                 else 
                 {
                     const data = await response.json();
                     console.log("ok data:", data)
+                    setUserId(data.id);
                     setIsLoading(false);
                 }
 
-                
-            // const res = await fetch('http://localhost:3001/check-token', { 
-            //     method: 'POST', 
-            //     headers: {'Content-Type': 'application/json'}
-            //   });
+          
         }
         catch(err)
         {
             console.log("err:",err)
         }
     }
+
     useEffect(()=>{
        apiCheck()
     },[])
 
-    
+    const redenerChild = (children)=>{
+        // return children
+        return Children.map(children,(child)=>{
+            return (
+                <child.type
+                    {...child.props}
+                    userId={userId}
+                />
+            )
+        })
+    }
+
     const decideComponent = (currentState)=>{
         switch(currentState)
         {
             case true: 
                 return <LoadingComponent />
             case false: 
-                return children
+                return (<>
+                    {redenerChild(children)}
+                </>)
+                // <>{children({
+                //     ...children,
+                //     testProp: 'ceva'
+                // })}</>
             default:
                 return <LoadingComponent />
         }
@@ -78,3 +98,19 @@ const LoadingComponent = ()=>{
         <p>Loading</p>
     )
 }
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+

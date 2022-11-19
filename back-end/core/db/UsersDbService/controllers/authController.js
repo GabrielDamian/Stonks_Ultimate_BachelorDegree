@@ -83,11 +83,12 @@ module.exports.check_user_post = async (req, res) => {
 }
 
 
-module.exports.get_user_role = async(req,res)=>{
+module.exports.collect_user_data = async(req,res)=>{
   const { id } = req.body;
   console.log("id to fnd:",id)
   try{
     User.findById(id,(err,doc)=>{
+      console.log("full doc:",doc)
       if(err)
       {
         console.log("err:",err)
@@ -95,14 +96,11 @@ module.exports.get_user_role = async(req,res)=>{
       }
       else
       {
-        let user_role = 
-        {
-          role: doc.role
-        }
-        console.log("mongose result", doc)
-        console.log("role raw:",doc.role)
-
-        return res.status(200).send(JSON.stringify(user_role))
+        console.log("iterate fields:")
+        Object.keys(doc).forEach((key)=>{
+          console.log("key:",key)
+        })
+        return res.status(200).send(JSON.stringify({...doc._doc}))
 
       }
     })

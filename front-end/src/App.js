@@ -10,13 +10,13 @@ import AddMarket from './Pages/AddMarket';
 import AddCredit from './Pages/AddCredit';
 import Login from './Pages/Login';
 import Signup from './Pages/Signup';
-import PrivateRoute from './Pages/PrivateRoute';
+import MyProfile from './Pages/MyProfile';
 
 import ProtectedRoute from './Pages/PrivateWrapper/ProtectedRoute';
 function App() {
   
   const [tabs, setTabs] = useState({
-    options: ['/','/ide','/drag','/overview','/buy-credit','/add-block'],
+    options: ['/','/ide','/drag','/overview','/buy-credit','/add-block','/my-profile'],
     selected: '/ide'
   })
 
@@ -59,6 +59,11 @@ function App() {
           <Route exact path="/add-block" element={
             <ProtectedRoute>
               <AddBlock tabIndex={5} tabs={tabs} setTabs={setTabs}/>
+            </ProtectedRoute>
+          }/>
+          <Route exact path="/my-profile" element={
+            <ProtectedRoute>
+              <MyProfile tabIndex={6} tabs={tabs} setTabs={setTabs}/>
             </ProtectedRoute>
           }/>
 
