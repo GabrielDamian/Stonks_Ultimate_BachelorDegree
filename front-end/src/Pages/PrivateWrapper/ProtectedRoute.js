@@ -76,10 +76,6 @@ export default function ProtectedRoute(
                 return (<>
                     {redenerChild(children)}
                 </>)
-                // <>{children({
-                //     ...children,
-                //     testProp: 'ceva'
-                // })}</>
             default:
                 return <LoadingComponent />
         }

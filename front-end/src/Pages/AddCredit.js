@@ -5,13 +5,13 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import TopBar from '../Components/Organisms/TopBar';
 
-function AddCredit({tabIndex,setTabs,tabs}){
+function AddCredit({tabIndex,setTabs,tabs,userId}){
     return(
         <div className='add-credit-container'>
             <LeftMenu tabIndex={tabIndex} setTabs={setTabs} tabs={tabs}/>
            
             <div className='dashboard-content'>
-                <TopBar />
+                <TopBar userId={userId}/>
                 <div className="add-credit-content-data">
                 <div className="add-credit-content-data-center">
                     <div className="add-credit-content-data-center-input">

@@ -11,6 +11,7 @@ function Signup()
     const [userData, setUserData] = useState({
         name: '',
         email:'',
+        username:'',
         password: '',
         repeatPass: ''
     })
@@ -28,9 +29,9 @@ function Signup()
                 const res = await fetch('http://localhost:3001/signup', { 
                   method: 'POST', 
                   body: JSON.stringify({ 
-                    name: userData.name,
                     email:userData.email, 
-                    password: userData.password 
+                    password: userData.password ,
+                    username: userData.username
                 }),
                   headers: {'Content-Type': 'application/json'}
                 });
@@ -87,6 +88,7 @@ function Signup()
         <div>
             <input name="name" type="text" placeholder='username' onChange={handleInputChange}></input>
             <input name="email" type="text" placeholder='email' onChange={handleInputChange}></input>
+            <input name="username" type="text" placeholder='username' onChange={handleInputChange}></input>
             <input name="password" type="password" placeholder='password' onChange={handleInputChange}></input>
             <input name="repeatPass" type="password" placeholder='repeatPass' onChange={handleInputChange}></input>
             <button onClick={SignupHandler}>signup</button>

@@ -54,14 +54,14 @@ app.post('/login',async (req,res)=>{
 
 app.post('/signup',async(req,res)=>{
   
-  let {email,password} = req.body;
+  let {email,password, username} = req.body;
 
   //check user data
   console.log("signup:", email, password);
 
   let user_id = undefined;
   try{
-    let resp = await axios.post("http://localhost:3003/create-user",{email,password})
+    let resp = await axios.post("http://localhost:3003/create-user",{email,password,username})
     console.log("ok sigup:", resp.data.user)
     user_id = resp.data.user;
   }
@@ -128,7 +128,7 @@ app.post('/collect-user-data', async(req,res)=>{
   console.log("resp ok user datA:",userInfo.data)
 
   let data = {}
-  let fields = ['email','_id']
+  let fields = ['email','_id','role','username','nodes']
   fields.forEach((field)=>{
     data[field] = userInfo.data[field]
   })

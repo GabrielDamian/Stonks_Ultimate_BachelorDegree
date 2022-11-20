@@ -47,10 +47,10 @@ const createToken = (id) => {
 // controller actions
 
 module.exports.signup_post = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password,username } = req.body;
 
   try {
-    const user = await User.create({ email, password });
+    const user = await User.create({ email, password, username });
     res.status(201).json({ 
       user: user._id,
     });
@@ -101,7 +101,6 @@ module.exports.collect_user_data = async(req,res)=>{
           console.log("key:",key)
         })
         return res.status(200).send(JSON.stringify({...doc._doc}))
-
       }
     })
     // return res.status(200).send(JSON.stringify(user_role))

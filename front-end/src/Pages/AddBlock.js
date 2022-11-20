@@ -8,7 +8,7 @@ import Button from '@mui/material/Button';
 import Hyperparameters from '../Components/Molecules/Hyperparameters';
 import TopBar from '../Components/Organisms/TopBar';
 
-function AddBlock({tabIndex,setTabs,tabs})
+function AddBlock({tabIndex,setTabs,tabs,userId})
 {
     const TextAreaStyle={
         width: '100%'
@@ -18,7 +18,7 @@ function AddBlock({tabIndex,setTabs,tabs})
         <div className='add-block-container'>
             <LeftMenu tabIndex={tabIndex} setTabs={setTabs} tabs={tabs}/>
             <div className='dashboard-content'>
-                <TopBar />
+                <TopBar userId={userId}/>
                 <div className="add-block-content-data">
                     <div className='add-block-content-data-center'>
                         <div className='add-block-content-data-center-inputs'>

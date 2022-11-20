@@ -8,43 +8,62 @@ import DocsSection from '../Components/Organisms/DocsSection';
 import DeployArea from '../Components/Organisms/DeployArea';
 import TopBar from '../Components/Organisms/TopBar';
 
+// const code =
+// `
+// let customFunction = ()=>{
+//     console.log(new Date().toString())
+// }
+
+// setInterval(()=>{
+//     customFunction()
+// },1000)
+
+// `
 const code =
 `
-// Define Typescript Interface Employee
-interface Employee {
-    firstName: String;
-    lastName: String;
-    contractor?: Boolean;
-}
-// Use Typescript Interface Employee. 
-// This should show you an error on john 
-// as required attribute lastName is missing
-const john:Employee = {
-    firstName:"John",
-    // lastName:"Smith"
-    // contractor:true
-}
+#test-code
 `
-export default function IDE({tabIndex,setTabs,tabs})
+export default function IDE({tabIndex,setTabs,tabs,userId})
 {
     console.log("tabs idex:", tabIndex)
 
-    const [value, setValue] = useState(code)
+    const [editorValue, setEditorValue] = useState(code)
 
-    const handleChange = (newValue)=>{
-        setValue(newValue);
-    }
-
-    const deployCode = ()=>{
-        console.log("deply code")
-
+    const deployCode = async ()=>{
+        console.log("deply code:",editorValue)
+        try{
+            let response =await fetch('http://localhost:3001/deploy-code', { 
+                    method: 'POST', 
+                    body: JSON.stringify({code: editorValue}),
+                    headers: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                    'Access-Control-Allow-Credentials':true
+                    },
+                    withCredentials: true,
+                    credentials: 'include'
+                })
+                if(!response.ok)
+                {
+                    console.log("err  private route:",response.status)
+                }
+                else 
+                {
+                    const data = await response.json();
+                    console.log("ok data:", data)
+                }
+        }
+        catch(err)
+        {
+            console.log("err:",err)
+        }
     }
     
     return (
         <div className='ide-container'>
             <LeftMenu tabIndex={tabIndex} setTabs={setTabs} tabs={tabs}/>
             <div className='dashboard-content'>
-                <TopBar />
+                <TopBar userId={userId}/>
                 <div className='ide-content'>
                 <div className='ide-header'>
                     <span>IDE Builder</span>
@@ -54,7 +73,10 @@ export default function IDE({tabIndex,setTabs,tabs})
                         <DocsSection/>
                     </div>
                     <div className='ide-core-editor'>
-                        <CustomMonaco/>
+                        <CustomMonaco
+                            editorValue={editorValue}
+                            setEditorValue={setEditorValue}
+                        />
                     </div>
                 </div>
                 <div className='ide-deploy'>

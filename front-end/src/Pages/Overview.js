@@ -26,7 +26,7 @@ import Switch from '@mui/material/Switch';
 import Button from '@mui/material/Button';
 import TopBar from '../Components/Organisms/TopBar';
 
-export default function Overview({tabIndex,setTabs,tabs})
+export default function Overview({tabIndex,setTabs,tabs,userId})
 {
     let testNodes = [
         {
@@ -52,7 +52,7 @@ export default function Overview({tabIndex,setTabs,tabs})
         <div className='overview-container'>
             <LeftMenu tabIndex={tabIndex} setTabs={setTabs} tabs={tabs}/>
             <div className='dashboard-content'>
-                <TopBar />
+                <TopBar userId={userId}/>
                 <div className='overview-content-data'>
                     <div className='overview-content-data-header'>
                     <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>

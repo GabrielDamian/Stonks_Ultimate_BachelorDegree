@@ -7,13 +7,13 @@ import DragItem from '../Components/Molecules/DragItem';
 import DeployArea from '../Components/Organisms/DeployArea';
 import TopBar from '../Components/Organisms/TopBar';
 
-function NodeStore({tabIndex,setTabs,tabs})
+function NodeStore({tabIndex,setTabs,tabs,userId})
 {
     return (
         <div className='node-store-container'>
             <LeftMenu tabIndex={tabIndex} setTabs={setTabs} tabs={tabs}/>
             <div className='dashboard-content'>
-                <TopBar />
+                <TopBar userId={userId}/>
                 <div className='node-store-content-data'>
                     <div className='node-store-content-up'>
                         <DragArea/>

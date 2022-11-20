@@ -8,15 +8,10 @@ import { ClockLoader as Loader } from "react-spinners";
 
 let code = `print("Hello world")`
 
-export default function CustomMonaco() {
+export default function CustomMonaco({editorValue,setEditorValue}) {
   const [theme, setTheme] = useState("vs-dark");
-  const [language, setLanguage] = useState("python");
+  const [language, setLanguage] = useState("javascript");
   const [isEditorReady, setIsEditorReady] = useState(false);
-
-  const [value,setValue] = useState(code);
-  const handleValueChange = (newValue)=>{
-    setValue(newValue)
-  }
 
   return (
     <>
@@ -26,8 +21,8 @@ export default function CustomMonaco() {
         theme={theme}
         language={language}
         loading={<Loader />}
-        value={value}
-        onChange={handleValueChange}
+        value={editorValue}
+        onChange={setEditorValue}
       />
     </>
   );

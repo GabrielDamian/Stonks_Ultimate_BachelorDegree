@@ -46,7 +46,7 @@ const botsPerformanceTemp = [
 ]
 
 
-export default function Dashboard({tabIndex,setTabs,tabs,testProp})
+export default function Dashboard({tabIndex,setTabs,tabs,testProp,userId})
 {
     useEffect(()=>{
         console.log("Dash props:",testProp)
@@ -56,7 +56,7 @@ export default function Dashboard({tabIndex,setTabs,tabs,testProp})
         <div className='dashboard-container'>
             <LeftMenu tabIndex={tabIndex} setTabs={setTabs} tabs={tabs}/>
             <div className='dashboard-content'>
-                <TopBar />
+                <TopBar userId={userId}/>
                 <div className="dashboard-content-data">
                   
                 </div>

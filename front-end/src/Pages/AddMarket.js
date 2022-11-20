@@ -1,3 +1,5 @@
+// DEPRECATED COMPONENT
+
 import React from 'react';
 import './Style/AddMarket.css';
 import LeftMenu from '../Components/Organisms/LeftMenu';
@@ -45,7 +47,7 @@ TabPanel.propTypes = {
   }
 
 
-function AddMarket({tabIndex,setTabs,tabs}){
+function AddMarket({tabIndex,setTabs,tabs,userId}){
 
     const [value, setValue] = React.useState(0);
 

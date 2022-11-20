@@ -7,8 +7,13 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Please enter an email'],
     unique: true,
-    lowercase: true,
+    lowercase: [true, 'Email must be lowercase'],
     validate: [isEmail, 'Please enter a valid email']
+  },
+  username: {
+    type: String,
+    required: [true, 'Please enter a username'],
+    unique: true,
   },
   password: {
     type: String,
@@ -18,8 +23,13 @@ const userSchema = new mongoose.Schema({
   role: {
     type: String,
     default: 'user'
-  }
-});
+  },
+  nodes:{
+    type: Array,
+    default: []
+  },
+}
+);
 
 
 // fire a function before doc saved to db

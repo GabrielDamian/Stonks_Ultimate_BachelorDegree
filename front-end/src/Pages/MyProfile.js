@@ -5,16 +5,18 @@ import TopBar from '../Components/Organisms/TopBar';
 import {collectUserData} from '../API/apiCore';
 
 
-export default function MyProfile({tabIndex,setTabs,tabs,userId,testProp}){
+export default function MyProfile({tabIndex,setTabs,tabs,userId}){
     
     const [userData, setUserData] = useState({})
-
+    useEffect(()=>{
+        console.log("userData update:",userData)
+    },[userData])
     
     useEffect(()=>{
         if(userId !== null && userId !== undefined)
         {
             console.log("collect user data effect")
-            collectUserData(userId,['email'],setUserData)
+            collectUserData(userId,['_id','username','email','role','nodes'],setUserData)
         }
     },[userId])
     
@@ -24,8 +26,15 @@ export default function MyProfile({tabIndex,setTabs,tabs,userId,testProp}){
             <div className='my-profile-content'>
                 <TopBar userId={userId}/>
                 <div className='my-profile-content-data'>
-                    <p> my profile page </p>
-                    <p>{userData.email}</p>
+                    {/* <p> my profile page </p>
+                    <p>{.email}</p> */}
+                    <p>User id:---- {userData._id}</p>
+                    <p>Username:--- {userData.username}</p>
+                    <p>Email:--- {userData.email}</p>
+                    <p>Role:--- {userData.role}</p>
+                    <p>Nodes:--- {userData.nodes ? userData.nodes.map((node)=>{
+                        return<b>-{node}-</b>
+                    }):null}</p>
                 </div>
             </div>
         </div>

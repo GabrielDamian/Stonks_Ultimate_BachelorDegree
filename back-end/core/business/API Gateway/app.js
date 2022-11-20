@@ -25,6 +25,7 @@ app.use(cors({
 // setupLogging(app);
 
 const ROUTES = {
+    //user business layer
     'login_POST':{
         needsAuth: false,
         roles: [],
@@ -35,11 +36,6 @@ const ROUTES = {
         roles: [],
         service: "http://localhost:3002/signup"
     },
-    'deploy-node_POST':{
-        needsAuth: true,
-        roles:[],
-        service: "http://localhost:3004/deploy-node"
-    },
     'check-token_POST':{
         needsAuth: true,
         roles:[],
@@ -49,7 +45,14 @@ const ROUTES = {
         needsAuth: true,
         roles: [],
         service: "http://localhost:3002/collect-user-data"
-    }
+    },
+    //deployment business layer
+    'deploy-code_POST':{
+        needsAuth: false,
+        roles:[],
+        service: "http://localhost:3004/deploy-code"
+    },
+
 }
 let mapIndexSeparator = "_";
 

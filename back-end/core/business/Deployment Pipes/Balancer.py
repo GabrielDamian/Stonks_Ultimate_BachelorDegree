@@ -32,6 +32,8 @@ class NodesMap:
 
 
 def releasePipe(nodesMapEl):
+    KafkaAdminClient(bootstrap_servers='localhost : 9092').delete_topics(['balancer-releaser'])
+
     releaser_consumer = KafkaConsumer(
         'balancer-releaser',
         bootstrap_servers=['localhost : 9092'],
@@ -89,7 +91,9 @@ if __name__ == '__main__':
 
         initPacket = {
             'pipe': emptySlot,
-            'payload': message.value.decode(),
+            'payload': {
+                'code': message.value.decode(),
+            },
             'history': ''
         }
 
