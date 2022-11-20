@@ -1,12 +1,13 @@
 import threading
 import time
+import requests
+import json
 from json import loads
 from kafka import KafkaAdminClient, KafkaConsumer, KafkaProducer
 from json import dumps
 from NodeStructure import NodeCore
 from threading import Thread, Lock
 import json
-
 
 class NodesMap:
     def __init__(self):
@@ -30,9 +31,8 @@ class NodesMap:
                 return a
         return None
 
-
 def releasePipe(nodesMapEl):
-    KafkaAdminClient(bootstrap_servers='localhost : 9092').delete_topics(['balancer-releaser'])
+    # KafkaAdminClient(bootstrap_servers='localhost : 9092').delete_topics(['balancer-releaser'])
 
     releaser_consumer = KafkaConsumer(
         'balancer-releaser',
@@ -49,12 +49,27 @@ def releasePipe(nodesMapEl):
         objectEl = json.loads(bytesDecoded)
         nodesMapEl.releaseNode(objectEl['pipe'])
 
-
 def balancerTask(packetSource):
     localPacket = packetSource.copy()
     localPacket['history'] = localPacket['history'] + "_" + 'balancer'
     return localPacket
 
+def persistNodeEntity(sourcePacket):
+    print("Create Node Entity-> Persist into db")
+    print("Packet:", sourcePacket)
+    #Nodes Persitence Service
+    url = 'http://localhost:3005/create-node'
+    # payload = {
+    #     'name':
+    # }
+    bodyPersistNode = {
+        'name': sourcePacket['payload']['name'],
+    }
+    response = requests.post(url, json=bodyPersistNode)
+    decodedResponse = response.content.decode()
+    print("decodedResp:", decodedResponse)
+
+    return json.loads(decodedResponse)['id']
 
 if __name__ == '__main__':
 
@@ -65,7 +80,7 @@ if __name__ == '__main__':
 
     print("Balancer listening")
     nodesMapEl = NodesMap()
-    KafkaAdminClient(bootstrap_servers='localhost : 9092').delete_topics(['to-balancer'])
+    # KafkaAdminClient(bootstrap_servers='localhost : 9092').delete_topics(['to-balancer'])
     balancer_consumer = KafkaConsumer(
         receive_from,
         bootstrap_servers=['localhost : 9092'],
@@ -89,13 +104,19 @@ if __name__ == '__main__':
             print("All pipes busy, retrying in 2 seconds")
             time.sleep(2)
 
+        decodeObject = json.loads(message.value.decode())
+        print("Decoded obj:", decodeObject)
+        print("decoded type:", type(decodeObject))
+
         initPacket = {
             'pipe': emptySlot,
-            'payload': {
-                'code': message.value.decode(),
-            },
+            'payload': decodeObject.copy(),
             'history': ''
         }
+
+        mongoId = persistNodeEntity(initPacket)
+        print("MongoId in master:", mongoId);
+        initPacket['payload']['id'] = mongoId
 
         node = NodeCore.Pipe_Node(
             name='balancer',
