@@ -48,16 +48,92 @@ const ROUTES = {
     },
     //deployment business layer
     'deploy-code_POST':{
-        needsAuth: false,
+        needsAuth: true,
         roles:[],
         service: "http://localhost:3004/deploy-code"
+    },
+    //fetch nodes
+    'fetch-nodes_GET':{
+        needsAuth: true,
+        roles:[],
+        service: "http://localhost:3006/fetch-nodes"
     },
 
 }
 let mapIndexSeparator = "_";
 
 app.post('/:destination',async (req,res)=>{
-    console.log(":destination")
+    console.log("destination:",req.originalUrl.slice(1), req.method)
+    console.log("token:", req.cookies.jwt);
+
+    let url = req.originalUrl.slice(1)
+    let method = req.method;
+
+    let mapIndex = url + mapIndexSeparator + method; 
+    console.log("before:",mapIndex)
+    if(ROUTES[mapIndex])
+    {
+        console.log("cas 1")
+        // TODO:
+        if(ROUTES[mapIndex].needsAuth == true)
+        {
+            console.log("private route")
+            let token = req.cookies.jwt;
+            if(!token)
+            {
+                return res.status(401).send("Please provide a token!")
+            }
+            console.log("ceva:")
+            try{
+                console.log("check token before post:", )
+                let reps_token_check = await axios.post(
+                    "http://localhost:3002/check-token",
+                    {token}
+                )
+               console.log("token resp:",reps_token_check.data)
+            }
+            catch(e)
+            {
+                console.log("err:")
+                return res.status(403).send("Wrong token!")
+            }
+           
+        }
+        try{
+            console.log("route public:", ROUTES[mapIndex].service)
+            Proxy(ROUTES[mapIndex].service, req, res)
+            .then((el)=>{
+                console.log("ok 1")
+                return el
+            })
+            .catch((err)=>{
+                console.log("err ok")
+                return res.status(err.response.status).send(JSON.stringify(err.response.data))
+            })
+        }
+        catch(e)
+        {
+            console.log("ERR:")
+        }
+
+        console.log("outer if")
+        // console.log("SKIP auth")
+        // let resp = await axios({
+        //     method: method,
+        //     url: ROUTES[mapIndex].service,
+        //     data: {...req.body}
+        //   });
+        //   console.log("RESP:",resp)
+        
+    }
+    else 
+    {
+        console.log("case 404")
+        res.status(404).send("404")
+    }
+})
+app.get('/:destination',async (req,res)=>{
+    console.log("destination:",req.originalUrl.slice(1), req.method)
     console.log("token:", req.cookies.jwt);
 
     let url = req.originalUrl.slice(1)

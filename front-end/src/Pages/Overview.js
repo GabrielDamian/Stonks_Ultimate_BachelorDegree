@@ -28,26 +28,42 @@ import TopBar from '../Components/Organisms/TopBar';
 
 export default function Overview({tabIndex,setTabs,tabs,userId})
 {
-    let testNodes = [
-        {
-            name:'aa adadad',
-            startDate:'45/33/2019',
-            creationType:'Jupyter IDE',
-            totalPrediction: '400',
-            succesRation: '52%',
-            market: 'ETH',
-            icon:Icon1
-        },
-        {
-            name:'aa2ccd',
-            startDate:'35/13/2022',
-            creationType:'Data Flow IDE',
-            totalPrediction: '100',
-            succesRation: '3%',
-            market: 'BTC',
-            icon:Icon1
-        }
-    ]
+  const [nodes, setNodes] = useState([]);
+
+  let collectUserNodes = async()=>{
+    console.log("fetch nodes")
+      try{
+        let response =await fetch('http://localhost:3001/fetch-nodes', { 
+                method: 'GET', 
+                headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+                'Access-Control-Allow-Credentials':true
+                },
+                withCredentials: true,
+                credentials: 'include'
+            })
+            if(!response.ok)
+            {
+                console.log("err  private route:",response.status)
+            }
+            else 
+            {
+                const data = await response.json();
+                console.log("Nodes:", data)
+                setNodes(data.nodes);
+            }
+      }
+      catch(err)
+      {
+          console.log("err:",err)
+      }
+  }
+    useEffect(()=>{
+      collectUserNodes() 
+    },[])
+
+
     return (
         <div className='overview-container'>
             <LeftMenu tabIndex={tabIndex} setTabs={setTabs} tabs={tabs}/>
@@ -72,7 +88,7 @@ export default function Overview({tabIndex,setTabs,tabs,userId})
                     <div className='overview-content-data-selection'>
                         <div className='content-data-selection-list'>
                             {
-                                testNodes.map((el)=>{
+                                nodes.map((el)=>{
                                     return(<NodeListElem obj={el}/>)
                                 })
                             }
@@ -111,8 +127,10 @@ function NodeListElem({obj})
         subheader={
           <ListSubheader component="div" id="nested-list-subheader">
             <div className="header-item-list">
-              <span>{obj.name}</span>
-              <img src={obj.icon} alt="icon"/>
+              <p>{obj.id}</p>
+              <p>{obj.buildName}</p>
+              <p>{obj.status}</p>
+              {/* <img src={obj.icon} alt="icon"/> */}
             </div>
 
           </ListSubheader>

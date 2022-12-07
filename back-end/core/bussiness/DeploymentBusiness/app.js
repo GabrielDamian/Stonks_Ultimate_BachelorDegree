@@ -10,9 +10,9 @@ const kafka = new Kafka({
   brokers: ['localhost:9092'],
 })
 const producer = kafka.producer()
+const cookieParser = require("cookie-parser");
 
-
-
+app.use(cookieParser());
 app.use(express.json());
 app.use(cors({
     credentials: true,
@@ -49,34 +49,46 @@ app.use(cors({
 
 //--> Test pursope route //page GET trigger
 //TO DELETE
-app.get('/deploy-code',async (req,res)=>{
+app.post('/deploy-code',async (req,res)=>{
 
-  // let {code} = req.body;
-  let code = `from flask import Flask
-from flask_apscheduler import APScheduler
-import datetime
+  let {code} = req.body;
+  //   let code = `from flask import Flask
+  // from flask_apscheduler import APScheduler
+  // import datetime
 
-app = Flask(__name__)
+  // app = Flask(__name__)
 
-def my_job(text):
-    print(text, str(datetime.datetime.now()))
+  // def my_job(text):
+  //     print(text, str(datetime.datetime.now()))
 
-@app.route('/')
-def index():
-    #
-    #
-    return 'Web App with Python Flask!'
+  // @app.route('/')
+  // def index():
+  //     #
+  //     #
+  //     return 'Web App with Python Flask!'
 
-if (__name__ == "__main__"):
-    scheduler = APScheduler()
-    scheduler.add_job(func=my_job, args=['job run'], trigger='interval', id='job', seconds=5)
-    scheduler.start()
-    app.run(host='0.0.0.0', port=81)
-  `
+  // if (__name__ == "__main__"):
+  //     scheduler = APScheduler()
+  //     scheduler.add_job(func=my_job, args=['job run'], trigger='interval', id='job', seconds=5)
+  //     scheduler.start()
+  //     app.run(host='0.0.0.0', port=81)
+  //   `
+
+  let token = req.cookies.jwt
+  console.log("token:", token)
+
+  let reps_token_check = await axios.post(
+    "http://localhost:3002/check-token",
+    {token}
+  )
+  console.log("token resp:",reps_token_check.data)
+  let ownerId = reps_token_check.data.id;
+  console.log("Build owner:", ownerId);
 
   let frontEndPayload = {
-    name: 'test name',
-    code: code
+    buildName: 'test name from input field',
+    code: code,
+    owner: ownerId
   }
 
   console.log("Code:",code)

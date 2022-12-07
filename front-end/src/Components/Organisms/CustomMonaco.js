@@ -10,7 +10,7 @@ let code = `print("Hello world")`
 
 export default function CustomMonaco({editorValue,setEditorValue}) {
   const [theme, setTheme] = useState("vs-dark");
-  const [language, setLanguage] = useState("javascript");
+  const [language, setLanguage] = useState("python");
   const [isEditorReady, setIsEditorReady] = useState(false);
 
   return (
