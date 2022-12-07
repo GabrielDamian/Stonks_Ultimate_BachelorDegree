@@ -18,7 +18,7 @@ gnome-terminal --geometry=260x25-0+0 \
 --tab -t "User Bussiness" -e "bash -c '$UserBussiness'" \
 --tab -t "Deployment Business" -e "bash -c '$DeploymentBusiness'" \
 --tab -t "Nodes Business" -e "bash -c '$NodesBusiness'" \
---tab -t "React App" -e "bash -c '$ReactApp'" \
+--tab -t "React App" -e "bash -c '$ReactApp'"
 
 # Start Zookeeper and Kafka
 # to do: check exit code and exit from main script in case of failure
