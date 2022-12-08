@@ -17,7 +17,7 @@
 }
 .ide-deploy-field
 {
-    width:20%;
+    flex:1;
     display: flex;
     align-items: center;
     justify-content: flex-start;

@@ -8,17 +8,6 @@ import DocsSection from '../Components/Organisms/DocsSection';
 import DeployArea from '../Components/Organisms/DeployArea';
 import TopBar from '../Components/Organisms/TopBar';
 
-// const code =
-// `
-// let customFunction = ()=>{
-//     console.log(new Date().toString())
-// }
-
-// setInterval(()=>{
-//     customFunction()
-// },1000)
-
-// `
 const code =`from flask import Flask
 from flask_apscheduler import APScheduler
 import datetime
@@ -47,36 +36,6 @@ export default function IDE({tabIndex,setTabs,tabs,userId})
 
     const [editorValue, setEditorValue] = useState(code)
 
-    const deployCode = async ()=>{
-        console.log("deply code:",editorValue)
-        try{
-            let response =await fetch('http://localhost:3001/deploy-code', { 
-                    method: 'POST', 
-                    body: JSON.stringify({code: editorValue}),
-                    headers: {
-                    'Content-Type': 'application/json',
-                    Accept: 'application/json',
-                    'Access-Control-Allow-Credentials':true
-                    },
-                    withCredentials: true,
-                    credentials: 'include'
-                })
-                if(!response.ok)
-                {
-                    console.log("err  private route:",response.status)
-                }
-                else 
-                {
-                    const data = await response.json();
-                    console.log("ok data:", data)
-                }
-        }
-        catch(err)
-        {
-            console.log("err:",err)
-        }
-    }
-    
     return (
         <div className='ide-container'>
             <LeftMenu tabIndex={tabIndex} setTabs={setTabs} tabs={tabs}/>
@@ -98,39 +57,7 @@ export default function IDE({tabIndex,setTabs,tabs,userId})
                     </div>
                 </div>
                 <div className='ide-deploy'>
-                    <DeployArea deployCode={deployCode}/>
-
-                    {/* <div className='ide-deploy-header'>
-                        <span>Deployment Area:</span>
-                    </div>
-                    <div className='ide-deploy-content'>
-                        <div className='ide-deploy-field'>
-                            <TextField 
-                                id="outlined-basic" 
-                                label="Name" 
-                                variant="outlined" 
-                                sx={{
-                                    width:'70%'
-                                }}    
-                            />
-                        </div>
-                        <div className='ide-deploy-field'>
-                            <TextField 
-                                id="outlined-basic" 
-                                label="Description" 
-                                variant="outlined" 
-                                sx={{
-                                    width:'70%'
-                                }}    
-                            />
-                        </div>
-                        <div className='ide-deploy-action'>
-                            <Button variant="contained">Deploy</Button>
-                        </div>
-                    </div> */}
-
-
-
+                    <DeployArea editorValue={editorValue}/>
                 </div>
             </div>
             </div>
