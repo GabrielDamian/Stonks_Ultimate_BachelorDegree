@@ -11,12 +11,13 @@ import AddCredit from './Pages/AddCredit';
 import Login from './Pages/Login';
 import Signup from './Pages/Signup';
 import MyProfile from './Pages/MyProfile';
+import NodePage from './Pages/NodePage';
 
 import ProtectedRoute from './Pages/PrivateWrapper/ProtectedRoute';
 function App() {
   
   const [tabs, setTabs] = useState({
-    options: ['/','/ide','/drag','/overview','/buy-credit','/add-block','/my-profile'],
+    options: ['/','/ide','/drag','/overview','/buy-credit','/add-block','/my-profile','/node-page'],
     selected: '/ide'
   })
 
@@ -66,6 +67,13 @@ function App() {
               <MyProfile tabIndex={6} tabs={tabs} setTabs={setTabs}/>
             </ProtectedRoute>
           }/>
+
+          <Route exact path="/node-page" element={
+            <ProtectedRoute>
+              <NodePage tabIndex={7} tabs={tabs} setTabs={setTabs}/>
+            </ProtectedRoute>
+          }/>
+
 
       </Routes>
     </BrowserRouter>

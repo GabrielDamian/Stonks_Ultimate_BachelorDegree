@@ -58,6 +58,11 @@ const ROUTES = {
         roles:[],
         service: "http://localhost:3006/fetch-nodes"
     },
+    'fetch-node_GET':{
+        needsAuth: true,
+        roles:[],
+        service: "http://localhost:3006/fetch-node"
+    },
 
 }
 let mapIndexSeparator = "_";
@@ -134,9 +139,25 @@ app.post('/:destination',async (req,res)=>{
 })
 app.get('/:destination',async (req,res)=>{
     console.log("destination:",req.originalUrl.slice(1), req.method)
+    //check if link contains query params
+    let testSplitQueryParams = req.originalUrl.slice(1).split("?")
+    console.log("testSplitQueryParams:",testSplitQueryParams)
+    let url = testSplitQueryParams[0]
+    let queryParamsPayload = "/?"
+    if(testSplitQueryParams.length>1)
+    {
+        queryParamsPayload += testSplitQueryParams[1]
+    }
+    if(url[url.length-1] == '/')
+    {
+        url = url.slice(0,-1)
+    }
+    
+    console.log("url test:", url)
+    console.log("queryParamsPayload:",queryParamsPayload)
+
     console.log("token:", req.cookies.jwt);
 
-    let url = req.originalUrl.slice(1)
     let method = req.method;
 
     let mapIndex = url + mapIndexSeparator + method; 
@@ -171,13 +192,17 @@ app.get('/:destination',async (req,res)=>{
         }
         try{
             console.log("route public:", ROUTES[mapIndex].service)
-            Proxy(ROUTES[mapIndex].service, req, res)
+            
+            let attachQueryPayload = ROUTES[mapIndex].service + queryParamsPayload
+            console.log("final destination:",attachQueryPayload)
+
+            Proxy(attachQueryPayload, req, res)
             .then((el)=>{
                 console.log("ok 1")
                 return el
             })
             .catch((err)=>{
-                console.log("err ok")
+                console.log("err ok:",err.response.status)
                 return res.status(err.response.status).send(JSON.stringify(err.response.data))
             })
         }

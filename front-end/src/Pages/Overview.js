@@ -25,6 +25,7 @@ import {ChartComponent} from '../Components/Organisms/ChartComponent';
 import Switch from '@mui/material/Switch';
 import Button from '@mui/material/Button';
 import TopBar from '../Components/Organisms/TopBar';
+import {Link} from 'react-router-dom';
 
 export default function Overview({tabIndex,setTabs,tabs,userId})
 {
@@ -127,7 +128,7 @@ function NodeListElem({obj})
         subheader={
           <ListSubheader component="div" id="nested-list-subheader">
             <div className="header-item-list">
-              <p>{obj.id}</p>
+              <Link to={`/node-page/?nodeid=${obj.id}`}>Details</Link>
               <p>{obj.buildName}</p>
               <p>{obj.status}</p>
               {/* <img src={obj.icon} alt="icon"/> */}

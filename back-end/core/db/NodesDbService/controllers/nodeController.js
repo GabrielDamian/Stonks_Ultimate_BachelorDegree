@@ -82,3 +82,41 @@ module.exports.get_user_nodes = async (req, res) => {
         res.status(400).send({test: "Can't update node!"})
     }
 }
+
+module.exports.get_node = async (req, res) => {
+    console.log("get node:", req.url)
+    let destructureLink = req.url.split('/')
+    let extractId = destructureLink[2]
+    console.log("extractID:", extractId)
+    console.log("extractID:", typeof extractId)
+    
+    try{
+        let nodeDbResp = await Node.findById(extractId);
+        console.log("nodeDbResp:",nodeDbResp)
+        if(nodeDbResp !== null)
+        {
+            console.log("case 1")
+            return res.status(200).send(JSON.stringify(nodeDbResp))
+        }
+        else 
+        {
+            console.log("case 2")
+            return res.status(404).send("Node don't exist!")
+        }
+    }
+    catch(err)
+    {
+        return res.status(400).send("Can't find doc id")
+    }
+    // try{
+    //     const doc = await Node.findById(extractId)
+    //     console.log("doc find:",doc)
+    // }
+    // catch(e)
+    // {
+    //     console.log("can't find node err")
+    //     return res.status(400).send({test: "Can't find doc node node!"})
+    // }
+
+    return res.status(200).send(JSON.stringify({ceva:'ceva'}))
+}

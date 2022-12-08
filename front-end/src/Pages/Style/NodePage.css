@@ -1,0 +1,18 @@
+.node-page-container
+{
+    height:100vh;
+    width:100%;
+    border:1px solid magenta;
+    display: flex;
+}
+.node-page-content
+{
+    width: 85%;
+    border:1px solid green;
+    height:100vh;
+}
+.node-page-content-data
+{
+    height: 90%;
+    border: 1px solid blue;
+}
