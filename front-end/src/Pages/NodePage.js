@@ -5,6 +5,11 @@ import LeftMenu from '../Components/Organisms/LeftMenu';
 
 function NodePage({tabIndex,setTabs,tabs,userId})
 {
+    const [nodeData, setNodeData] = useState({})
+    useEffect(()=>{
+        console.log("nodeData update:",nodeData)
+    },[nodeData])
+
     let fetchNodeData = async (nodeID)=>{
         try{
             let destination = `http://localhost:3001/fetch-node/?nodeid=${nodeID}`
@@ -27,7 +32,40 @@ function NodePage({tabIndex,setTabs,tabs,userId})
                 else 
                 {
                     const data = await response.json();
-                    console.log("Node Data Response:", data)
+                    setNodeData(data)
+                }
+          }
+          catch(err)
+          {
+              console.log("err:",err)
+          }
+    }
+    
+    let connectToNode = async (nodeID)=>{
+        console.log("connectToNode fct:",nodeID)
+        try{
+            let destination = `http://localhost:3001/establish-node-connection`
+            console.log("destination:",destination)
+            
+            let response =await fetch(destination, { 
+                    method: 'POST', 
+                    body: JSON.stringify({nodeID}),
+                    headers: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                    'Access-Control-Allow-Credentials':true
+                    },
+                    withCredentials: true,
+                    credentials: 'include'
+                })
+                if(!response.ok)
+                {
+                    console.log("err  private route:",response.status)
+                }
+                else 
+                {
+                    const data = await response.json();
+                    console.log("connect to node resp:", data)
                 }
           }
           catch(err)
@@ -48,8 +86,10 @@ function NodePage({tabIndex,setTabs,tabs,userId})
         else 
         {
             fetchNodeData(nodeId)
+            connectToNode(nodeId)
         }
     },[])
+
 
     return(
         <div className='node-page-container'>

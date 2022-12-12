@@ -90,16 +90,23 @@ function DeployArea ({editorValue})
             setFieldsError("Please complete all fields");
             return
         }
+        else if(marketsSelected.length > 1)
+        {
+            setFieldsError("Please select one single market!");
+            return
+        }
         else 
         {
+            console.log("marketsSelected:",marketsSelected)
+            
             let packet = {
                 name: fields.name,
                 description: fields.description,
-                markets: [],
+                market: marketsSelected[0],
                 code: editorValue
             }
-            console.log("herreee")
             setDeployStatus("Deployment Started")
+            console.log("packet before api:",packet)
             deployCodeRequest(packet)
         }
     }

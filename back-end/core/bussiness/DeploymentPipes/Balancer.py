@@ -55,26 +55,27 @@ def balancerTask(packetSource):
     return localPacket
 
 def persistNodeEntity(sourcePacket):
-    print("Create Node Entity-> Persist into db")
-    print("Packet:", sourcePacket)
+    print("Create Node Entity-> Persist into db:",sourcePacket)
+
     #Nodes Persitence Service
     url = 'http://localhost:3005/create-node'
-    # payload = {
-    #     'name':
-    # }
+
     bodyPersistNode = {
         'buildName': sourcePacket['payload']['buildName'],
-        'owner': sourcePacket['payload']['owner']
+        'owner': sourcePacket['payload']['owner'],
+        'description': sourcePacket['payload']['description'],
+        'market': sourcePacket['payload']['market']
     }
+    print("bodyPersistNode:",bodyPersistNode)
+    
     response = requests.post(url, json=bodyPersistNode)
+    
+    #nodeID
     decodedResponse = response.content.decode()
-    print("decodedResp:", decodedResponse)
-
     return json.loads(decodedResponse)['id']
 
 if __name__ == '__main__':
 
-    # args
     my_node_name = 'balancer'
     receive_from = 'to-balancer'
     send_to = 'pipe_1_stage_1'
@@ -94,19 +95,16 @@ if __name__ == '__main__':
     )
     releaserThread = threading.Thread(target=releasePipe, args=(nodesMapEl,))
     releaserThread.start()
+
     for message in balancer_consumer:
-        print("Balancer received:", message.value)
+
         emptySlot = False
         while emptySlot == False:
             nodeId = nodesMapEl.giveMeSlot()
             emptySlot = False if nodeId is None else nodeId
-            print("Slot chosed:", emptySlot)
-            print("All pipes busy, retrying in 2 seconds")
             time.sleep(2)
 
         decodeObject = json.loads(message.value.decode())
-        print("Decoded obj:", decodeObject)
-        print("decoded type:", type(decodeObject))
 
         initPacket = {
             'pipe': emptySlot,
@@ -115,8 +113,9 @@ if __name__ == '__main__':
         }
 
         mongoId = persistNodeEntity(initPacket)
-        print("MongoId in master:", mongoId);
         initPacket['payload']['id'] = mongoId
+
+        print("initPacket:",initPacket)
 
         node = NodeCore.Pipe_Node(
             name='balancer',
@@ -125,6 +124,4 @@ if __name__ == '__main__':
         )
 
         to_send = json.dumps(node.executeTask())
-        print("Packet to send:", to_send)
-        print("type to send:", type(to_send))
         balancer_producer.send(send_to, value=to_send.encode())

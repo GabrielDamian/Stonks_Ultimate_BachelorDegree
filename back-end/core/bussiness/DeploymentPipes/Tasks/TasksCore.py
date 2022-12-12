@@ -114,12 +114,33 @@ def Stage_4_Task(packetSource):
     resultStartContainer = startContainer.communicate()[0]
     print("Result start container:",resultStartContainer)
 
-    print("Packet Stage 4::", localPacket)
 
     # Persis node info
-    url = 'http://localhost:3005/populate-node'
-    print("Collect data from persistence:")
+    # url = 'http://localhost:3005/populate-node'
     #docId, code, imageId, containerId
+    # docId_persist = localPacket['payload']['buildName']
+    # code_persist = localPacket['payload']['code']
+    # imageId_persist = localPacket['payload']['id']
+    # containerId_persist = localPacket['payload']['containerId']
+
+    # bodyPersistNode = {
+    #     'docId': docId_persist,
+    #     'code': code_persist,
+    #     'imageId': imageId_persist,
+    #     'containerId': containerId_persist
+    # }
+
+    # response = requests.post(url, json=bodyPersistNode)
+    # decodedResponse = response.content.decode()
+    # print("decodedResp:", decodedResponse)  
+
+    return localPacket
+
+def Stage_5_Task(packetSource):
+    localPacket = packetSource.copy()
+    localPacket['history'] = localPacket['history'] + "_" + 'stage_5'
+
+
     docId_persist = localPacket['payload']['buildName']
     code_persist = localPacket['payload']['code']
     imageId_persist = localPacket['payload']['id']
@@ -131,12 +152,12 @@ def Stage_4_Task(packetSource):
         'imageId': imageId_persist,
         'containerId': containerId_persist
     }
-    print("test Body final persist:",bodyPersistNode)
 
+    url = 'http://localhost:3005/populate-node'
     response = requests.post(url, json=bodyPersistNode)
     decodedResponse = response.content.decode()
     print("decodedResp:", decodedResponse)  
-
+    
     return localPacket
 
 
@@ -144,5 +165,6 @@ tasksCore = {
     'stage_1': Stage_1_Task,
     'stage_2': Stage_2_Task,
     'stage_3': Stage_3_Task,
-    'stage_4': Stage_4_Task
+    'stage_4': Stage_4_Task,
+    'stage_5': Stage_5_Task
 }

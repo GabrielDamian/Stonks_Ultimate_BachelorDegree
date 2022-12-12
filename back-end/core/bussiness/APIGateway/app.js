@@ -63,6 +63,11 @@ const ROUTES = {
         roles:[],
         service: "http://localhost:3006/fetch-node"
     },
+    'establish-node-connection_POST':{
+        needsAuth: true,
+        roles:[],
+        service: "http://localhost:3006/establish-node-connection"
+    },
 
 }
 let mapIndexSeparator = "_";
@@ -106,6 +111,7 @@ app.post('/:destination',async (req,res)=>{
         }
         try{
             console.log("route public:", ROUTES[mapIndex].service)
+            console.log("route public:", ROUTES[mapIndex])
             Proxy(ROUTES[mapIndex].service, req, res)
             .then((el)=>{
                 console.log("ok 1")

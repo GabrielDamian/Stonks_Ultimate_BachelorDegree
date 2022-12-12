@@ -26,50 +26,27 @@ app.use(cors({
   ]}))
 
 
-// app.post('/deploy-code',async (req,res)=>{
-
-//   console.log("deploy code empty")
-
-//   let {code} = req.body;
-  
-//   console.log("Code:",code)
-//   await producer.connect()
-//   await producer.send({
-//     topic: 'to-balancer',
-//     messages: [
-//       { value: code },
-//     ],
-//   })
-
-//   await producer.disconnect()
-
-//   return res.status(200).send({test:'ceva'}) 
-// })
-
-
-//--> Test pursope route //page GET trigger
-//TO DELETE
 app.post('/deploy-code',async (req,res)=>{
 
-  let {code} = req.body;
+  let {code,name,description,market} = req.body;
   let token = req.cookies.jwt
-  console.log("token:", token)
 
   let reps_token_check = await axios.post(
     "http://localhost:3002/check-token",
     {token}
   )
-  console.log("token resp:",reps_token_check.data)
   let ownerId = reps_token_check.data.id;
-  console.log("Build owner:", ownerId);
 
   let frontEndPayload = {
-    buildName: 'test name from input field',
+    buildName: name,
     code: code,
+    description: description,
+    market: market,
     owner: ownerId
   }
-
-  console.log("Code:",code)
+  
+  console.log("FrontEndPayload:",frontEndPayload)
+  
   await producer.connect()
   await producer.send({
     topic: 'to-balancer',
@@ -79,7 +56,6 @@ app.post('/deploy-code',async (req,res)=>{
   })
 
   await producer.disconnect()
-
   return res.status(200).send({test:'ceva'}) 
 })
 

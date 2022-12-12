@@ -7,9 +7,9 @@
 }
 .ide-content
 {
-    width: 85%;
+    width: 100%;
     border:1px solid green;
-    height:100vh;
+    height:90%;
 }
 .ide-header
 {

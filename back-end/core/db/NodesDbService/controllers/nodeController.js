@@ -6,25 +6,24 @@ require("dotenv").config();
 
 module.exports.create_node = async (req, res) => {
 
-    const {buildName, owner} = req.body;
-    console.log("Create node:", buildName, owner);
-    let status = 'deploy in progress'
+    const {buildName, owner, description, market} = req.body;
+    console.log("Create node:", req.body);
+    let status = 'Deploy in progress'
     try{
-        const node = await Node.create({buildName,owner,status});
+        const node = await Node.create({buildName,owner,status,description,market});
             res.status(201).json({ 
                 id: node._id,
-                
             });
     }
     catch(e)
     {
-        res.status(400).send({test: "Can't creade node!"})
+        res.status(400).send({test: "Can't create node!"})
     }
 }
 
 module.exports.populate_node = async (req, res) => {
     // -code
-    // -imageId (same as the folder path)
+    // -imageId (same as folder path)
     // -containerId
     const {docId, code, imageId, containerId} = req.body;
 

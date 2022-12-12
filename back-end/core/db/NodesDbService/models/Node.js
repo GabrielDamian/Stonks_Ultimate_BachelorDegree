@@ -3,12 +3,19 @@ const { isEmail } = require('validator');
 const bcrypt = require('bcrypt');
 
 const nodeSchema = new mongoose.Schema({
-    buildName:{
+    buildName:{ //init
         type: String,
         required: true
     },
-    owner:{
+    owner:{ //init
         type: String,
+        required: true
+    },
+    description:{ //init
+        type: String,
+    },
+    market:{ //init
+        type:String,
         required: true
     },
     code:{
@@ -22,7 +29,7 @@ const nodeSchema = new mongoose.Schema({
     },
     status:{
         type:String
-    }
+    },
 });
 
 const User = mongoose.model('node', nodeSchema);
