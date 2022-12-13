@@ -2,6 +2,7 @@ import {React, useState, useEffect} from 'react';
 import './Style/NodePage.css';
 import TopBar from '../Components/Organisms/TopBar';
 import LeftMenu from '../Components/Organisms/LeftMenu';
+import LiveNodeConnector from '../Components/Organisms/LiveNodeConnector/LiveNodeConnector';
 
 function NodePage({tabIndex,setTabs,tabs,userId})
 {
@@ -98,6 +99,7 @@ function NodePage({tabIndex,setTabs,tabs,userId})
                 <TopBar userId={userId}/>
                 <div className='node-page-content-data'>
                    <p>NodePage</p>
+                   <LiveNodeConnector />
                 </div>
             </div>
         </div>

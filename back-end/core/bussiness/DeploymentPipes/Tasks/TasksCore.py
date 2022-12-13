@@ -16,7 +16,7 @@ def createFile(fileName, content):
 dockerFileTemplate = """
 # syntax=docker/dockerfile:1
 
-FROM python:3.8-slim-buster
+FROM python:3.10-alpine
 
 WORKDIR /app
 
@@ -25,11 +25,14 @@ RUN pip3 install -r requirements.txt
 
 COPY . .
 
-CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0"]
+CMD [ "python3", "./app.py"]
 """
 requirementsTemplate = """
-flask==2.0.1
-Flask-APScheduler===1.12.4
+Flask==2.1.2
+Flask-SocketIO==5.2.0
+Flask-Cors==3.0.10
+eventlet==0.33.1
+gevent
 """
 
 
@@ -98,7 +101,7 @@ def Stage_4_Task(packetSource):
     localPacket['history'] = localPacket['history'] + "_" + 'stage_4'
     buildName = localPacket['payload']['buildName']
 
-    imageRunOutput = subprocess.Popen(["docker", "run", "-d", buildName], stdout=subprocess.PIPE)
+    imageRunOutput = subprocess.Popen(["docker", "run", "-d",buildName], stdout=subprocess.PIPE)
 
     output = imageRunOutput.communicate()[0]
     decodedOutput = output.decode().rstrip() #remove '\n'
