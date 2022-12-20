@@ -123,7 +123,6 @@ app.post('/check-token',async(req,res)=>{
 
 app.post('/collect-user-data', async(req,res)=>{
   
-  console.log("collect user data:", req.body.id)
   let userId = req.body.id;
 
   //user user id from token to find user role

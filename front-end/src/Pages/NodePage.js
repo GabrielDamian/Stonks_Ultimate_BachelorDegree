@@ -3,14 +3,17 @@ import './Style/NodePage.css';
 import TopBar from '../Components/Organisms/TopBar';
 import LeftMenu from '../Components/Organisms/LeftMenu';
 import LiveNodeConnector from '../Components/Organisms/LiveNodeConnector/LiveNodeConnector';
+import NodeInfo from '../Components/Organisms/NodeInfo';
 
 function NodePage({tabIndex,setTabs,tabs,userId})
 {
     const [nodeData, setNodeData] = useState({})
+    const [nodeAddress, setNodeAddress] = useState(null);
+    
     useEffect(()=>{
-        console.log("nodeData update:",nodeData)
-    },[nodeData])
-
+        console.log("STEP 4:",nodeAddress)
+    },[nodeAddress])
+    
     let fetchNodeData = async (nodeID)=>{
         try{
             let destination = `http://localhost:3001/fetch-node/?nodeid=${nodeID}`
@@ -43,7 +46,7 @@ function NodePage({tabIndex,setTabs,tabs,userId})
     }
     
     let connectToNode = async (nodeID)=>{
-        console.log("connectToNode fct:",nodeID)
+        console.log("STEP 1",nodeID)
         try{
             let destination = `http://localhost:3001/establish-node-connection`
             console.log("destination:",destination)
@@ -66,7 +69,13 @@ function NodePage({tabIndex,setTabs,tabs,userId})
                 else 
                 {
                     const data = await response.json();
+                    console.log("STEP 2")
                     console.log("connect to node resp:", data)
+                    if(data.address != undefined && data.address != '' && data.address != ' ')
+                    {
+                        console.log("STEP 3:",data.address)
+                        setNodeAddress(data.address)
+                    }
                 }
           }
           catch(err)
@@ -91,15 +100,14 @@ function NodePage({tabIndex,setTabs,tabs,userId})
         }
     },[])
 
-
     return(
         <div className='node-page-container'>
             <LeftMenu tabIndex={tabIndex} setTabs={setTabs} tabs={tabs}/>
             <div className='node-page-content'>
                 <TopBar userId={userId}/>
                 <div className='node-page-content-data'>
-                   <p>NodePage</p>
-                   <LiveNodeConnector />
+                   <NodeInfo nodeData={nodeData}/>
+                   <LiveNodeConnector nodeAddress={nodeAddress}/>
                 </div>
             </div>
         </div>

@@ -15,7 +15,6 @@ export default function MyProfile({tabIndex,setTabs,tabs,userId}){
     useEffect(()=>{
         if(userId !== null && userId !== undefined)
         {
-            console.log("collect user data effect")
             collectUserData(userId,['_id','username','email','role','nodes'],setUserData)
         }
     },[userId])

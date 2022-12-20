@@ -14,5 +14,7 @@
 .node-page-content-data
 {
     height: 90%;
-    border: 1px solid blue;
+    border: 3px solid blue;
+    display: flex;
+
 }

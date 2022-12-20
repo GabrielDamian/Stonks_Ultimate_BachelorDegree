@@ -15,7 +15,6 @@ export default function TopBar({userId}){
     useEffect(()=>{
         if(userId !== null && userId !== undefined)
         {
-            console.log("collect user data effect")
             collectUserData(userId,['email'],setUserEmail)
         }
     },[userId])

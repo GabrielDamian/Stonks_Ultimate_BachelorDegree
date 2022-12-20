@@ -10,24 +10,24 @@ export default function WebSocketCall({ socket }) {
   };
 
   const handleSubmit = () => {
-    if (!message) {
-      return;
-    }
-    setInterval(()=>{
-      socket.emit("data", message);
-    },1000)
-    setMessage("");
+    // if (!message) {
+    //   return;
+    // }
+    // setInterval(()=>{
+    //   socket.emit("data", message);
+    // },1000)
+    // setMessage("");
   };
 
   useEffect(() => {
-    socket.on("data", (data) => {
-      setMessages([...messages, data.data]);
-    });
-    return () => {
-      socket.off("data", () => {
-        console.log("data event was removed");
-      });
-    };
+    // socket.on("data", (data) => {
+    //   setMessages([...messages, data.data]);
+    // });
+    // return () => {
+    //   socket.off("data", () => {
+    //     console.log("data event was removed");
+    //   });
+    // };
   }, [socket, messages]);
 
   return (

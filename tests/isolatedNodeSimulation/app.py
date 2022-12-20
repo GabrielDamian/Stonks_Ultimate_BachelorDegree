@@ -1,16 +1,4 @@
-import React,{useState,useEffect} from 'react';
-import LeftMenu from '../Components/Organisms/LeftMenu';
-import './Style/IDE.css';
-import MonacoEditor from 'react-monaco-editor'
-import CustomMonaco from '../Components/Organisms/CustomMonaco';
-
-
-import DocsSection from '../Components/Organisms/DocsSection';
-import DeployArea from '../Components/Organisms/DeployArea';
-import TopBar from '../Components/Organisms/TopBar';
-
-
-const code =`from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify
 from flask_socketio import SocketIO, emit
 from flask_cors import CORS
 import threading
@@ -213,39 +201,6 @@ def NodeAppRun():
 if __name__ == '__main__':
     set_interval(NodeAppRun, nodeCoreInterval)
     socketio.run(app, debug=False, port=5000, host='0.0.0.0')
-`
 
-export default function IDE({tabIndex,setTabs,tabs,userId})
-{
-    console.log("tabs idex:", tabIndex)
 
-    const [editorValue, setEditorValue] = useState(code)
-
-    return (
-        <div className='ide-container'>
-            <LeftMenu tabIndex={tabIndex} setTabs={setTabs} tabs={tabs}/>
-            <div className='dashboard-content'>
-                <TopBar userId={userId}/>
-                <div className='ide-content'>
-                <div className='ide-header'>
-                    <span>IDE Builder</span>
-                </div>
-                <div className='ide-core'>
-                    <div className='ide-core-docs'>
-                        <DocsSection/>
-                    </div>
-                    <div className='ide-core-editor'>
-                        <CustomMonaco
-                            editorValue={editorValue}
-                            setEditorValue={setEditorValue}
-                        />
-                    </div>
-                </div>
-                <div className='ide-deploy'>
-                    <DeployArea editorValue={editorValue}/>
-                </div>
-            </div>
-            </div>
-        </div>
-    )
-}
+#decorate code_63a0b558d4e5161f4fc19185 ->>>
