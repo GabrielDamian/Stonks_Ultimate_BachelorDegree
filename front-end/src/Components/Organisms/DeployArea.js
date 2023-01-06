@@ -7,7 +7,7 @@ import Checkbox from '@mui/material/Checkbox';
 
 const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
-const marketsTemp =['BTC','ETH']
+const marketsTemp =['IBM','TSLA']
 const initMarketState = (marketsSource)=>{
     let marketObj = {}
     marketsSource.forEach((el)=>{

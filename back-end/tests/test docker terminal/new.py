@@ -1,54 +1,3 @@
-import json
-import os
-import random
-import shlex
-import time
-import subprocess
-import json
-import requests
-
-# utils
-def createFile(fileName, content):
-    fp = open(fileName, 'w')
-    fp.write(content)
-    fp.close()
-
-dockerFileTemplate = """
-# syntax=docker/dockerfile:1
-
-FROM tensorflow/tensorflow
-
-WORKDIR /app
-
-COPY requirements.txt requirements.txt
-RUN pip3 install -r requirements.txt
-
-COPY . .
-
-CMD [ "python3", "./app.py"]
-"""
-
-
-requirementsTemplate = """
-Flask==2.1.2
-Flask-SocketIO==5.2.0
-Flask-Cors==3.0.10
-eventlet==0.33.1
-gevent
-numpy==1.24.0
-pandas==1.5.2
-pandas-datareader==0.9.0
-tensorflow==2.11.0
-scikit-learn==1.2.0
-yfinance
-"""
-
-
-code_template_replace_layers = '<< Replace_code_layers >>'
-code_template_replace_company = '<< Replace_code_company >>'
-code_template_node_id = '<< Replace_node_id >>'
-
-code_template_node = """
 from flask import Flask, request, jsonify
 from flask_socketio import SocketIO, emit
 from flask_cors import CORS
@@ -65,9 +14,8 @@ from keras.models import Sequential
 from keras.layers import Dense, Dropout, LSTM
 from keras.models import load_model
 from pandas_datareader import data as pdr
-import requests
 import yfinance as yfin
-
+import requests
 yfin.pdr_override()
 
 app = Flask(__name__)
@@ -76,7 +24,6 @@ app.url_map.strict_slashes = False
 CORS(app, resources={r"/*": {"origins": "*"}})
 socketio = SocketIO(app, cors_allowed_origins="*", async_mode='eventlet')
 
-node_id = '""" + code_template_node_id + """'\n
 
 class NodeModelHandler:
     modelControllerPath = './saved_model/my_model/modelControler.txt'
@@ -96,12 +43,13 @@ class NodeModelHandler:
         # create and init train model with x years data
         print("Action: ->>> create model")
 
-        company = '""" + code_template_replace_company + """'\n
+        # company = "IBM"
+        company = "IBM"
 
         # start = dt.datetime(2012, 1, 1)
         # end = dt.datetime(2020, 1, 1)
 
-        data = pdr.get_data_yahoo(company, start="2018-10-10", end="2020-10-10")
+        data = pdr.get_data_yahoo("IBM", start="2018-10-10", end="2020-10-10")
         # data = pdr.DataReader(company, 'yahoo', start, end)
         # data = pdr.get_data_yahoo("IBM", start="2018-10-10", end="2020-10-10")
 
@@ -121,16 +69,14 @@ class NodeModelHandler:
         x_train, y_train = np.array(x_train), np.array(y_train)
         x_train = np.reshape(x_train, (x_train.shape[0], x_train.shape[1], 1))
 
-        # model = Sequential()
-        # model.add(LSTM(units=50, return_sequences=True, input_shape=(x_train.shape[1], 1)))  # units = neurons
-        # model.add(Dropout(0.2))
-        # model.add(LSTM(units=50, return_sequences=True))
-        # model.add(Dropout(0.2))
-        # model.add(LSTM(units=50))
-        # model.add(Dropout(0.2))
-        # model.add(Dense(units=1))
-
-        \n""" + code_template_replace_layers + """\n
+        model = Sequential()
+        model.add(LSTM(units=50, return_sequences=True, input_shape=(x_train.shape[1], 1)))  # units = neurons
+        model.add(Dropout(0.2))
+        model.add(LSTM(units=50, return_sequences=True))
+        model.add(Dropout(0.2))
+        model.add(LSTM(units=50))
+        model.add(Dropout(0.2))
+        model.add(Dense(units=1))
 
         model.compile(optimizer='adam', loss='mean_squared_error')
         model.fit(x_train, y_train, epochs=25, batch_size=32)
@@ -211,7 +157,7 @@ class NodeModelHandler:
 
         prediction = modelParam.predict(real_data)
         prediction = scaler.inverse_transform(prediction)
-        # print(f"Prediction: {prediction}")
+        print(f"Prediction: {prediction}")
         return prediction
 
 
@@ -231,10 +177,9 @@ class NodeCore:
 
     # below functions run in setIntervals, managed by .run()
     def predictTomorrow(self):
-
         print("fetch market data recurent")
         tomorrowPrice = self.nodeModelHandler.predictNextDay(self.model)
-        print("tomorrowPrice:",tomorrowPrice)
+        print("tomorrowPrice:", tomorrowPrice[0][0])
 
         self.apiPersistPrediction(str(tomorrowPrice[0][0]))
 
@@ -245,17 +190,15 @@ class NodeCore:
         # TODO: check is model != None (initialized properly)
 
     def apiPersistPrediction(self, valueToPersist):
-        url = 'http://172.17.0.1:3006/push-node-stats'
+        url = 'http://localhost:3006/push-node-stats'
         myobj = {
-            'node_id': node_id,
+            'node_id': '63af35ba73282a4138d7f44e',
             'new_prediction': valueToPersist
         }
         x = requests.post(url, json=myobj)
 
-
     def run(self):
         self.predictTomorrow()
-
 
 class LogManager():
     logs = []
@@ -286,14 +229,13 @@ class LogManager():
 
         return self.logs[lastConsumedCopy:]
 
-
 # GLOBALS
 lock = threading.Lock()
 increment = 0
 connected_users = {}
 
-nodeCoreInterval = 15
-logsEmitInterval = 1
+nodeCoreInterval = 5  # GLOBAL INTERVAL
+logsEmitInterval = 2
 logsLock = threading.Lock()
 
 logManager = LogManager()
@@ -325,6 +267,7 @@ class Worker(object):
                 print("No fresh logs, ignore socket push this time")
 
             eventlet.sleep(logsEmitInterval)
+
 
 @socketio.on("connect")
 def connected():
@@ -358,6 +301,7 @@ def connected():
 
 @socketio.on("disconnect")
 def disconnected():
+    """event listener when client disconnects to the server"""
     print("user disconnected:", request.sid)
 
     lock.acquire()
@@ -392,187 +336,8 @@ def NodeAppRun():
     print("---> Node app new run")
     nodeCore.run()
 
-def nodeHeartBeat():
-    print("heart beat")
-    logManager.createLog('__Alive__')
 
 if __name__ == '__main__':
     set_interval(NodeAppRun, nodeCoreInterval)
-    set_interval(nodeHeartBeat, 1)
-
     socketio.run(app, debug=False, port=5000, host='0.0.0.0')
-"""
 
-
-def Stage_1_Task(packetSource):
-
-    global code_template_node
-
-    try:
-        print("paket source init:",packetSource)
-
-        marketPayload = packetSource['payload']['market']
-        print("Extracted market:", marketPayload)
-        
-        # decorate front-end code
-        localPacket = packetSource.copy()
-        localPacket['history'] = localPacket['history'] + "_" + 'stage_1'
-
-        frontEndCode = localPacket['payload']['code']
-        nodeId = localPacket['payload']['id']
-
-        print("node id extracted:", nodeId)
-
-        print("Extract market:", packetSource['payload'])
-        print("Front end code:", frontEndCode)
-
-        #replace company symbol
-        # extractedCompany = '"IBM"'
-        code_template_code_copy = code_template_node[:] #make a copy
-        print("copy here:",code_template_code_copy)
-
-        print("find test company:",code_template_code_copy.find(code_template_replace_company))
-
-        #Populate node_id
-        #TO DO: extract from payload
-        # fake_node_id = "63af35ba73282a4138d7f44e"
-        code_template_code_copy = code_template_code_copy.replace(code_template_node_id, nodeId)
-
-        #Populate market
-        code_template_code_copy = code_template_code_copy.replace(code_template_replace_company, marketPayload)
-        
-        #Populate tensor flow layers
-        code_template_code_copy = code_template_code_copy.replace(code_template_replace_layers, frontEndCode)
-
-        code_template_code_copy +=  "\n#decorate code_"+ localPacket['payload']['id'] +" ->>>\n"
-        # localPacket['payload']['code'] += "\n#decorate code_"+ localPacket['payload']['id'] +" ->>>\n"
-        localPacket['payload']['code'] = code_template_code_copy
-
-        print("final code:", code_template_code_copy)
-        return localPacket
-
-    except Exception as bomb:
-        print("An exception occurred:", bomb) 
-
-
-def Stage_2_Task(packetSource):
-    # create docker file
-    localPacket = packetSource.copy()
-    localPacket['history'] = localPacket['history'] + "_" + 'stage_2'
-
-    print("Start createDockerFile")
-    cwd = os.getcwd()
-    print("cwd:", cwd)
-    buildName = packetSource['payload']['id']
-    newPath = cwd + "/images/" + buildName
-    print("newPath:", newPath)
-
-    print("creating folder for dockerfile")
-    if not os.path.exists(newPath):
-        os.makedirs(newPath)
-
-    # Create index.py
-    createFile(newPath + "/" + "app.py", localPacket['payload']['code'])
-
-    # Create requirements.txt
-    createFile(newPath + "/" + "dockerfile", dockerFileTemplate)
-
-    # Create dockerfile
-    createFile(newPath + "/" + "requirements.txt", requirementsTemplate)
-    localPacket['payload']['dockerPath'] = newPath
-    localPacket['payload']['buildName'] = buildName
-
-
-    print("\nstage 2 localPacket")
-    print(localPacket)
-    return localPacket
-
-
-def Stage_3_Task(packetSource):
-    # create container based on prev stage image
-    localPacket = packetSource.copy()
-    localPacket['history'] = localPacket['history'] + "_" + 'stage_3'
-    buildName = localPacket['payload']['buildName']
-    dockerPath = localPacket['payload']['dockerPath']
-
-    print("Stage 3 payload:", localPacket)
-    # print("final docker command:", ["docker", "build", "--no-cache", "--tag", f"{buildName}", dockerPath])
-    # !!!!!! NO CACHE IS A MUST !!!!!!!!
-    # test = subprocess.Popen(["docker", "build", "--no-cache", "--tag", f"{buildName}", dockerPath], stdout=subprocess.PIPE)
-    test = subprocess.Popen(["docker", "build", "--tag", f"{buildName}", dockerPath], stdout=subprocess.PIPE)
-    output = test.communicate()[0]
-    print("out:", output)
-    print("\n\n\nReturn from task 3")
-    return localPacket
-
-
-def Stage_4_Task(packetSource):
-    try:
-        print("Stage 4:")
-        # create docker container
-        localPacket = packetSource.copy()
-        localPacket['history'] = localPacket['history'] + "_" + 'stage_4'
-        buildName = localPacket['payload']['buildName']
-
-        # imageRunOutput = subprocess.Popen(["docker", "run", "-d",'--network=host',buildName], stdout=subprocess.PIPE)
-        imageRunOutput = subprocess.Popen(["docker", "run", "-d",buildName], stdout=subprocess.PIPE)
-        print("imageRunOutput:",imageRunOutput)
-
-        output = imageRunOutput.communicate()[0]
-        print("output:",output)
-
-        decodedOutput = output.decode().rstrip() #remove '\n'
-        print("decodedOutput:",decodedOutput)
-
-        imageInspect = subprocess.Popen(["docker", "inspect", decodedOutput], stdout=subprocess.PIPE)
-        imageInspectOut = imageInspect.communicate()[0]
-        objParsed = json.loads(imageInspectOut.decode())
-        print("obj parsed:",objParsed)
-
-        containerId = objParsed[0]['Config']['Hostname']
-        localPacket['payload']['containerId'] = containerId
-
-        # start container
-        startContainer = subprocess.Popen(["docker", "start", containerId], stdout=subprocess.PIPE)
-        resultStartContainer = startContainer.communicate()[0]
-        print("Result start container:",resultStartContainer)
-
-        return localPacket
-
-    except Exception as bomb:
-        
-        print("An exception occurred in stage 4:", bomb) 
-
-
-def Stage_5_Task(packetSource):
-    localPacket = packetSource.copy()
-    localPacket['history'] = localPacket['history'] + "_" + 'stage_5'
-
-
-    docId_persist = localPacket['payload']['buildName']
-    code_persist = localPacket['payload']['code']
-    imageId_persist = localPacket['payload']['id']
-    containerId_persist = localPacket['payload']['containerId']
-
-    bodyPersistNode = {
-        'docId': docId_persist,
-        'code': code_persist,
-        'imageId': imageId_persist,
-        'containerId': containerId_persist
-    }
-
-    url = 'http://localhost:3005/populate-node'
-    response = requests.post(url, json=bodyPersistNode)
-    decodedResponse = response.content.decode()
-    print("decodedResp:", decodedResponse)  
-    
-    return localPacket
-
-
-tasksCore = {
-    'stage_1': Stage_1_Task,
-    'stage_2': Stage_2_Task,
-    'stage_3': Stage_3_Task,
-    'stage_4': Stage_4_Task,
-    'stage_5': Stage_5_Task
-}

@@ -91,7 +91,7 @@ module.exports.get_node = async (req, res) => {
     
     try{
         let nodeDbResp = await Node.findById(extractId);
-        console.log("nodeDbResp:",nodeDbResp)
+        console.log("------>nodeDbResp:",nodeDbResp)
         if(nodeDbResp !== null)
         {
             console.log("case 1")
@@ -118,4 +118,31 @@ module.exports.get_node = async (req, res) => {
     // }
 
     return res.status(200).send(JSON.stringify({ceva:'ceva'}))
+}
+
+module.exports.push_stats = async (req,res)=>{
+    
+    let {new_prediction, node_id} = req.body;
+
+    console.log("push stats:", new_prediction, node_id);
+
+    const doc = await Node.findOne({ _id: node_id })
+
+    let complete_stats_element = {
+        timestamp: new Date().getTime().toString(), 
+        value: Number(new_prediction), 
+    }
+
+    try{
+        doc.predictions.push(complete_stats_element)
+        await doc.save()
+        res.status(200).json({ 
+            node_id
+        });
+    }
+    catch(err)
+    {
+        console.log("err:", err)
+        res.status(400).send({test: "Can't update node stats!"})
+    }
 }

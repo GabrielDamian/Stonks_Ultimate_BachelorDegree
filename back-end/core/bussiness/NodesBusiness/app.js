@@ -8,16 +8,17 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-    credentials: true,
-    origin: [
-    [
-      "http://localhost:3000",
-      "http://localhost:3001",
-      "http://localhost:3002",
-      "http://localhost:3003",
-      "http://localhost:3004",
-      "http://localhost:3005",
-    ]
+  credentials: true,
+  origin: [
+  [
+    "http://localhost:3000",
+    "http://localhost:3001",
+    "http://localhost:3002",
+    "http://localhost:3003",
+    "http://localhost:3004",
+    "http://localhost:3005",
+    "http://localhost:3006",
+  ]
 ]}))
 
 app.get('/fetch-nodes',async (req,res)=>{
@@ -153,6 +154,37 @@ app.post('/establish-node-connection',async (req,res)=>{
     {
       return res.status(403).send("You can't fetch this node");
     }
+})
+
+// TODO !!!!! - change into POST
+app.post('/push-node-stats',async (req,res)=>{
+  
+  console.log("push node stats")
+  let {node_id, new_prediction} = req.body;
+
+  
+
+  console.log("test params:", node_id, new_prediction)
+  // return res.status(200).send('ceva')
+  try{
+    
+    let push_stats_resp = await axios.post(
+      `http://localhost:3005/push-stats`,
+        {
+          new_prediction,
+          node_id
+        }
+    )
+
+   let extractedResponse = {...push_stats_resp.data}
+   return res.status(200).send(JSON.stringify({...extractedResponse}))
+
+  }
+  catch(e)
+  {
+      console.log("err:",e)
+      return res.status(403).send("Can't push node stats!")
+  }
 })
 
 app.listen(3006,()=>{

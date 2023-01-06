@@ -36,6 +36,7 @@ function NodePage({tabIndex,setTabs,tabs,userId})
                 else 
                 {
                     const data = await response.json();
+                    console.log("NODE DATA:",data)
                     setNodeData(data)
                 }
           }

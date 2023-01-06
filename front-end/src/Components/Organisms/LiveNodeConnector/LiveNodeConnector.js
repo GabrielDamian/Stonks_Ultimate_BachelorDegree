@@ -31,6 +31,7 @@ function LiveNodeConnector({nodeAddress}) {
 
     return result
   }
+  
   useEffect(()=>{
     
     if(nodeAddress !== null && nodeAddress != undefined)
@@ -44,7 +45,7 @@ function LiveNodeConnector({nodeAddress}) {
         },
       });
 
-      // const socket = io(`http://localhost:5000/`, {
+      // const socket = io(`http://172.17.0.2:5000/`, {
       //   transports: ["websocket"],
       //   cors: {
       //     origin: "http://localhost:3000/",

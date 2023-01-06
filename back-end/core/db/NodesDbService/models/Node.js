@@ -30,6 +30,10 @@ const nodeSchema = new mongoose.Schema({
     status:{
         type:String
     },
+    predictions:[{
+        timestamp: String, 
+        value: Number, 
+    }]
 });
 
 const User = mongoose.model('node', nodeSchema);
