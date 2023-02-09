@@ -68,6 +68,19 @@ const ROUTES = {
         roles:[],
         service: "http://localhost:3006/establish-node-connection"
     },
+    'create-layer_POST':{
+        needsAuth: true,
+        roles:[],
+        service: "http://localhost:3008/create-layer"
+    },
+     'fetch-layers_GET':{
+        needsAuth: true,
+        roles:[],
+        service: "http://localhost:3008/fetch-layers"
+    },
+
+    // block layers
+
 
 }
 let mapIndexSeparator = "_";

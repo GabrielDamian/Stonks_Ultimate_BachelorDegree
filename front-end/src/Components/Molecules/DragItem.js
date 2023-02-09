@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState, useEffect} from 'react';
 import './DragItem.css';
 import ListSubheader from '@mui/material/ListSubheader';
 import List from '@mui/material/List';
@@ -15,10 +15,14 @@ import InfoIcon from '@mui/icons-material/Info';
 import DataObjectIcon from '@mui/icons-material/DataObject';
 import Icon1 from '../../Media/Icons/artificial-intelligence.png';
 
-function DragItem({name})
+function DragItem({data})
 {
-    const [open, setOpen] = React.useState(false);
-    const [open2, setOpen2] = React.useState(false);
+  useEffect(()=>{
+    console.log("data item:",data)
+  },[data])
+
+  const [open, setOpen] = React.useState(false);
+  const [open2, setOpen2] = React.useState(false);
 
   const handleClick = () => {
     setOpen(!open);
@@ -37,7 +41,7 @@ function DragItem({name})
         subheader={
           <ListSubheader component="div" id="nested-list-subheader">
             <div className="header-item-list">
-              <span>{name}</span>
+              <span>ceva</span>
               <img src={Icon1} alt="icon"/>
             </div>
 

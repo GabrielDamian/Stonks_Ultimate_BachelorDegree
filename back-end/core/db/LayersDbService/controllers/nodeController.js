@@ -1,49 +1,56 @@
 const Layer = require("../models/Layer");
-const { ObjectId } = require("mongoose");
-const {convertIntoPythonCode} = require('../utils.js')
 
 require("dotenv").config();
 
 module.exports.create_layer = async (req, res) => {
 
-    
-    // convertIntoPythonCode(req.body)
     let {
-        layerName,
-        layerKeyword,
-        layerDescription,
-        docLink,
+        layerData,
         parameters
     } = req.body;
 
-    console.log("parameters:", parameters)
+    let layerName = layerData.name;
+    let layerKeyword = layerData.keyword;
+    let layerDescription = layerData.desc;
+    let docLink = layerData.docLink;
+
+
     let layerResp = undefined;
     try{
         layerResp = await Layer.create({layerName,layerKeyword,layerDescription,docLink});
-        console.log("layer created ok:", layerResp._id)
     }
     catch(e)
     {
-        console.log(e)
         return res.status(400).send({test: "Can't create layer!"})
     }
-
+    let layerCreated = undefined;
     try
     {
-        const layerCreated = await Layer.findOne({ _id: layerResp._id })
+        layerCreated = await Layer.findOne({ _id: layerResp._id })
         parameters.forEach((parameterEl)=>{
+
+            let parameter_values = ""
+            let interSeparator = "--"
+            let externalSeparator = "___"
+            parameterEl.values.forEach((parameter_value_el, index)=>{
+                parameter_values += parameter_value_el.type + interSeparator + parameter_value_el.value
+                if(index !== parameterEl.values.length  - 1)
+                {
+                    parameter_values += externalSeparator;
+                }
+            })
+
+            parameterEl.parameterValues = parameter_values
             layerCreated.parameters.push(parameterEl);
         })
         layerCreated.save()
     }
     catch(e)
     {
-        console.log(e)
         return res.status(400).send({test: "Can't setup layer parameters!"})
     }
 
-    res.send("ceva")
-
+    res.status(200).send({_id: layerCreated['_id']})
 }
 
 module.exports.get_layers = async(req,res)=>{

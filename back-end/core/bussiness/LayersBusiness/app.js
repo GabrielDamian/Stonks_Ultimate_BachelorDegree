@@ -23,49 +23,62 @@ app.use(cors({
 ]}))
 
 app.post('/create-layer', async(req,res)=>{
+
+    let layerData = req.body.layerData
+    let parameters = req.body.parameters
+
     let token = req.cookies.jwt
-    console.log("token:", token)
   
     let reps_token_check = await axios.post(
       "http://localhost:3002/check-token",
       {token}
     )
-    let userId = reps_token_check.data.id;
-    let userInfo = await axios.post("http://localhost:3003/collect-user-data",{id:userId});
 
-    console.log("user info:", userInfo);
-
-
-    console.log("token resp:",reps_token_check.data)
-    res.send('test create layer')
-
+    if(reps_token_check.data.role !== undefined && reps_token_check.data.role == 'admin')
+    {
+      try{
+        let create_layers_response = await axios.post(
+          "http://localhost:3007/create-layer",
+          {
+            layerData,
+            parameters
+          }
+        )
+        return res.status(200).send({...create_layers_response.data})
+      }
+      catch(e)
+      {
+        return res.status(500).send("can't create a new layer")
+      }
+    }
+    else 
+    {
+      return res.status(403).send("You don't have rights to create new layer!")
+    }
 })
 app.get('/fetch-layers',async (req,res)=>{
- 
-    let token = req.cookies.jwt
-    console.log("token:", token)
-  
-    let reps_token_check = await axios.post(
-      "http://localhost:3002/check-token",
-      {token}
-    )
-    console.log("token resp:",reps_token_check.data)
 
-    // try{
-    //     let resp_user_nodes = await axios.post(
-    //         "http://localhost:3005/get-user-nodes",
-    //         {owner:ownerId}
-    //     )
-    //    console.log("db service nodes resp:",resp_user_nodes.data)
-    //    let extractedResponse = {...resp_user_nodes.data}
-    //    console.log("Final chekc:",extractedResponse)
-    //    return res.status(200).send(JSON.stringify({...extractedResponse}))
-    // }
-    // catch(e)
-    // {
-    //     console.log("err:")
-    //     return res.status(403).send("Can't get user nodes!")
-    // }
+  console.log("fetch layers")
+  
+  let token = req.cookies.jwt
+  console.log("token:", token)
+
+  let reps_token_check = await axios.post(
+    "http://localhost:3002/check-token",
+    {token}
+  )
+  console.log("token resp:",reps_token_check.data)
+
+  try{
+    let get_layers_response = await axios.get(
+      "http://localhost:3007/get-layers",
+    )
+    return res.status(200).send({...get_layers_response.data})
+  }
+  catch(e)
+  {
+    return res.status(500).send("can't get layers")
+  }
 
 })
 

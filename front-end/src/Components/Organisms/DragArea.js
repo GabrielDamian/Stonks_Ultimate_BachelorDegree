@@ -1,4 +1,4 @@
-import React,{useState,Component} from 'react';
+import React,{useState,Component, useEffect} from 'react';
 import {DragDropContext,Draggable,Droppable} from 'react-beautiful-dnd';
 import './DragArea.css';
 import DragItem from '../Molecules/DragItem';
@@ -60,20 +60,59 @@ const getListStyle = isDraggingOver => ({
     width: 250
 });
 
-class DragArea extends Component {
-    state = {
-        items: getItems(5),
-        selected: getItems(5, 5)
-    };
+function DragArea() {
 
-    id2List = {
+
+    const [state, setState] = useState({
+        items: [],
+        selected: []
+    });
+
+    useEffect(()=>{
+        fetchLayers();
+    },[])
+
+    const fetchLayers = async ()=>{
+        console.log("fetchLayers:")
+        try{
+            let response = await fetch('http://localhost:3001/fetch-layers', { 
+                    method: 'GET', 
+                    headers: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                    'Access-Control-Allow-Credentials':true
+                    },
+                    withCredentials: true,
+                    credentials: 'include'
+                })
+                if(!response.ok)
+                {
+                    console.log("err  private route:",response.status)
+                }
+                else 
+                {
+                    const data = await response.json();
+                   
+                    setState((prev)=>{
+                        let copy = {...prev}
+                        copy.items = [...data.layers]
+                        return copy
+                    })
+                }
+        }
+        catch(err)
+        {
+            console.log("err:",err)
+        }
+    }
+    const id2List = {
         droppable: 'items',
         droppable2: 'selected'
     };
 
-    getList = id => this.state[this.id2List[id]];
+    const getList = id => state[id2List[id]];
 
-    onDragEnd = result => {
+    const onDragEnd = result => {
         const { source, destination } = result;
 
         // dropped outside the list
@@ -83,7 +122,7 @@ class DragArea extends Component {
 
         if (source.droppableId === destination.droppableId) {
             const items = reorder(
-                this.getList(source.droppableId),
+                getList(source.droppableId),
                 source.index,
                 destination.index
             );
@@ -94,26 +133,27 @@ class DragArea extends Component {
                 state = { selected: items };
             }
 
-            this.setState(state);
+            setState(state);
         } else {
             const result = move(
-                this.getList(source.droppableId),
-                this.getList(destination.droppableId),
+                getList(source.droppableId),
+                getList(destination.droppableId),
                 source,
                 destination
             );
 
-            this.setState({
+            setState({
                 items: result.droppable,
                 selected: result.droppable2
             });
         }
     };
 
-    render() {
+
+
         return (
             <div className='drag-area-container'>
-                <DragDropContext onDragEnd={this.onDragEnd}>
+                <DragDropContext onDragEnd={onDragEnd}>
                 <div className='drag-area-info-panel'>
                     <div className='drag-area-info-panel-header'>
                         <span>Library Section</span>
@@ -126,11 +166,11 @@ class DragArea extends Component {
                                 className="drag-area-info-panel-drag"
                                 // style={getListStyle(snapshot.isDraggingOver)}
                                 >
-                                {this.state.items.length > 0 &&
-                                    this.state.items.map((item, index) => (
+                                {state.items.length > 0 &&
+                                    state.items.map((item, index) => (
                                         <Draggable
                                             key={item.id}
-                                            draggableId={item.id}
+                                            draggableId={String(item._id)}
                                             index={index}>
                                             {(provided, snapshot) => (
                                                 
@@ -143,7 +183,7 @@ class DragArea extends Component {
                                                             snapshot.isDragging,
                                                             provided.draggableProps.style
                                                         )}>
-                                                        <DragItem name={item.content}/>
+                                                        <DragItem data={item}/>
                                                     </div>
                                                 </div>
                                             )}
@@ -163,7 +203,7 @@ class DragArea extends Component {
                             className="drag-area-info-panel-drag"
                             // style={getListStyle(snapshot.isDraggingOver)}
                             >
-                            {this.state.selected.map((item, index) => (
+                            {state.selected.map((item, index) => (
                                  <Draggable
                                  key={item.id}
                                  draggableId={item.id}
@@ -197,44 +237,9 @@ class DragArea extends Component {
                         </div>
                     )}
                 </Droppable>
-                {/* <Droppable droppableId="droppable2">
-                        {(provided, snapshot) => (
-                            <div
-                                ref={provided.innerRef}
-                                className="drag-area-info-panel-drag"
-                                // style={getListStyle(snapshot.isDraggingOver)}
-                                >
-                                {this.state.items.length > 0 &&
-                                    this.state.items.map((item, index) => (
-                                        <Draggable
-                                            key={item.id}
-                                            draggableId={item.id}
-                                            index={index}>
-                                            {(provided, snapshot) => (
-                                                
-                                                <div style={{border:'1px solid red'}}>
-                                                    <div
-                                                        ref={provided.innerRef}
-                                                        {...provided.draggableProps}
-                                                        {...provided.dragHandleProps}
-                                                        style={getItemStyle(
-                                                            snapshot.isDragging,
-                                                            provided.draggableProps.style
-                                                        )}>
-                                                        <DragItem name={item.content}/>
-                                                    </div>
-                                                </div>
-                                            )}
-                                        </Draggable>
-                                    ))}
-                                {provided.placeholder}
-                            </div>
-                        )}
-                </Droppable> */}
             </DragDropContext>
             </div>
         );
-    }
 }
 
 export default DragArea;

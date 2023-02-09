@@ -5,7 +5,6 @@ const cookieParser = require('cookie-parser');
 var cors = require('cors');
 const app = express();
 
-// middleware
 app.use(express.static('public'));
 app.use(express.json());
 app.use(cookieParser());
@@ -22,13 +21,10 @@ app.use(cors({
     "http://localhost:3006",
   ]
 ]}))
-// view engine
 
-// database connection
 const dbURI = 'mongodb://localhost:27017/nodes';
 mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex:true })
   .then((result) => app.listen(3007))
   .catch((err) => console.log(err));
 
-// routes
 app.use(nodesRoutes);

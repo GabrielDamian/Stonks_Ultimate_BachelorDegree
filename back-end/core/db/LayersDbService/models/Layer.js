@@ -6,16 +6,11 @@ const layerSchema = new mongoose.Schema({
     docLink: String, 
     parameters:[{
 
-        paramName: String, //user display name
-        parameterKeyword: String, //parameter name in code
-        parameterDescription: String,
-        unnamed: String, //"unnamed" || "named",
-        parameterValues:[
-            {
-                typeParam: String, //string || value
-                value: String
-            }
-        ]
+        paramName: String, 
+        paramKeyword: String, //parameter name in code
+        paramDesc: String,
+        unnamed: String,//true || false
+        parameterValues: String //concated String ex: "String--22___String--sdsd"
     }]
 });
 

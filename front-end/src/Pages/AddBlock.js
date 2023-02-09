@@ -182,6 +182,53 @@ function AddBlock({tabIndex,setTabs,tabs,userId})
         })
         setParameters(copy)
     }
+    const createBlockRequest = async ()=>{
+
+        let packedData = {layerData, parameters}
+        console.log("packetData:", packedData)
+
+        try{
+            let response =await fetch('http://localhost:3001/create-layer', { 
+                    method: 'POST', 
+                    body: JSON.stringify(packedData),
+                    headers: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                    'Access-Control-Allow-Credentials':true
+                    },
+                    withCredentials: true,
+                    credentials: 'include'
+                })
+                if(!response.ok)
+                {
+                    console.log("err  private route:",response.status)
+                }
+                else 
+                {
+                    const data = await response.json();
+                    console.log("add block response ok:", data)
+                }
+        }
+        catch(err)
+        {
+            console.log("err:",err)
+        }
+    }
+    const handleAddBlock = ()=>{
+        console.log("add block")
+        console.log("layerData:",layerData)
+        console.log("parameteres:", parameters)
+        if(layerData.name == '' || layerData.keyword == '' || layerData.desc == '' 
+            || layerData.iconLink == '' || parameters.length == 0)
+        {
+            console.log("please complete all field or add at leat 1 parameters")
+        }
+        else 
+        {
+            console.log("add block OOK") 
+            createBlockRequest()
+        }
+    }
     return(
         <div className='add-block-container'>
             <LeftMenu tabIndex={tabIndex} setTabs={setTabs} tabs={tabs}/>
@@ -337,7 +384,7 @@ function AddBlock({tabIndex,setTabs,tabs,userId})
                             alignItems:'center',
                             justifyContent:'center'
                         }}>
-                            <Button variant="contained">Add Block</Button>
+                            <Button variant="contained" onClick={handleAddBlock}>Add Block</Button>
                         </div>
                     </div>
                 </div>
