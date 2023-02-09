@@ -17,8 +17,24 @@ import Icon1 from '../../Media/Icons/artificial-intelligence.png';
 
 function DragItem({data})
 {
+  const [interState, setInternState] = useState({
+    layerName: '',
+    layerKeyword: '',
+    layerDescription: '',
+    docLink: '',
+    iconLink: '',
+    parameters: []
+  })
+
   useEffect(()=>{
-    console.log("data item:",data)
+    console.log("interState update:",interState)
+  },[interState])
+
+  useEffect(()=>{
+    if(data !== null && data!==undefined)
+    {
+      setInternState({...data})
+    }
   },[data])
 
   const [open, setOpen] = React.useState(false);
@@ -41,8 +57,8 @@ function DragItem({data})
         subheader={
           <ListSubheader component="div" id="nested-list-subheader">
             <div className="header-item-list">
-              <span>ceva</span>
-              <img src={Icon1} alt="icon"/>
+              <span>{interState.layerName}</span>
+              <img src={interState.iconLink} alt="icon"/>
             </div>
 
           </ListSubheader>
@@ -58,6 +74,11 @@ function DragItem({data})
         </ListItemButton>
         <Collapse in={open} timeout="auto" unmountOnExit>
           <div style={{height:'200px', border:'1px solid red'}}>
+            <p>layerKeyword: {interState.layerKeyword}</p><br/>
+            <p>layerDescription: {interState.layerDescription}</p><br/>
+            <a href={interState.docLink}>docs</a><br/>
+            <p>{interState.cevav}</p>
+            <p>{interState.cevav}</p>
           </div>
         </Collapse>
 

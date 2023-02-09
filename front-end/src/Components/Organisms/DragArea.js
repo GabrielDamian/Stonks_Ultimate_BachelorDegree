@@ -12,10 +12,14 @@ const menu = {
 };
 // fake data generator
 const getItems = (count, offset = 0) =>
-    Array.from({ length: count }, (v, k) => k).map(k => ({
+{
+    let temp =  Array.from({ length: count }, (v, k) => k).map(k => ({
         id: `item-${k + offset}`,
         content: `item ${k + offset}`
     }));
+    console.log("Temp:", temp)
+    return temp
+}
 
 // a little function to help us with reordering the result
 const reorder = (list, startIndex, endIndex) => {
@@ -60,59 +64,57 @@ const getListStyle = isDraggingOver => ({
     width: 250
 });
 
-function DragArea() {
 
+class DragArea extends Component {
 
-    const [state, setState] = useState({
-        items: [],
+    state = {
+        items: getItems(5),
         selected: []
-    });
+    };
 
-    useEffect(()=>{
-        fetchLayers();
-    },[])
-
-    const fetchLayers = async ()=>{
-        console.log("fetchLayers:")
-        try{
-            let response = await fetch('http://localhost:3001/fetch-layers', { 
-                    method: 'GET', 
-                    headers: {
-                    'Content-Type': 'application/json',
-                    Accept: 'application/json',
-                    'Access-Control-Allow-Credentials':true
-                    },
-                    withCredentials: true,
-                    credentials: 'include'
-                })
-                if(!response.ok)
-                {
-                    console.log("err  private route:",response.status)
-                }
-                else 
-                {
-                    const data = await response.json();
-                   
-                    setState((prev)=>{
-                        let copy = {...prev}
-                        copy.items = [...data.layers]
-                        return copy
-                    })
-                }
-        }
-        catch(err)
-        {
-            console.log("err:",err)
-        }
-    }
-    const id2List = {
+    id2List = {
         droppable: 'items',
         droppable2: 'selected'
     };
 
-    const getList = id => state[id2List[id]];
 
-    const onDragEnd = result => {
+    
+    componentDidMount()
+    {
+        fetch('http://localhost:3001/fetch-layers', { 
+            method: 'GET', 
+            headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+            'Access-Control-Allow-Credentials':true
+            },
+            withCredentials: true,
+            credentials: 'include'
+        })
+        .then(res => res.json())
+        .then(data=>{
+
+            let attachId = []
+            data.layers.forEach((el)=>{
+                let temp = {...el}
+                temp.id = el._id
+                delete temp._id
+                attachId.push(temp)
+            })
+            console.log("attachId:",attachId)
+
+            this.setState((prev)=>{
+                let copy = {...prev}
+                copy.items = [...attachId]
+                console.log("COPY:::::",copy)
+                return copy
+            })
+        })
+    }
+
+    getList = id => this.state[this.id2List[id]];
+
+    onDragEnd = result => {
         const { source, destination } = result;
 
         // dropped outside the list
@@ -122,7 +124,7 @@ function DragArea() {
 
         if (source.droppableId === destination.droppableId) {
             const items = reorder(
-                getList(source.droppableId),
+                this.getList(source.droppableId),
                 source.index,
                 destination.index
             );
@@ -133,16 +135,16 @@ function DragArea() {
                 state = { selected: items };
             }
 
-            setState(state);
+            this.setState(state);
         } else {
             const result = move(
-                getList(source.droppableId),
-                getList(destination.droppableId),
+                this.getList(source.droppableId),
+                this.getList(destination.droppableId),
                 source,
                 destination
             );
 
-            setState({
+            this.setState({
                 items: result.droppable,
                 selected: result.droppable2
             });
@@ -150,10 +152,10 @@ function DragArea() {
     };
 
 
-
+    render() {
         return (
             <div className='drag-area-container'>
-                <DragDropContext onDragEnd={onDragEnd}>
+                <DragDropContext onDragEnd={this.onDragEnd}>
                 <div className='drag-area-info-panel'>
                     <div className='drag-area-info-panel-header'>
                         <span>Library Section</span>
@@ -166,11 +168,11 @@ function DragArea() {
                                 className="drag-area-info-panel-drag"
                                 // style={getListStyle(snapshot.isDraggingOver)}
                                 >
-                                {state.items.length > 0 &&
-                                    state.items.map((item, index) => (
+                                {this.state.items.length > 0 &&
+                                    this.state.items.map((item, index) => (
                                         <Draggable
                                             key={item.id}
-                                            draggableId={String(item._id)}
+                                            draggableId={item.id}
                                             index={index}>
                                             {(provided, snapshot) => (
                                                 
@@ -203,7 +205,7 @@ function DragArea() {
                             className="drag-area-info-panel-drag"
                             // style={getListStyle(snapshot.isDraggingOver)}
                             >
-                            {state.selected.map((item, index) => (
+                            {this.state.selected.map((item, index) => (
                                  <Draggable
                                  key={item.id}
                                  draggableId={item.id}
@@ -227,7 +229,7 @@ function DragArea() {
                                             //     border:'1px solid red'
                                             // }}
                                              >
-                                              <DragItem name={item.content}/>
+                                              <DragItem data={item}/>
                                          </div>
                                      </div>
                                  )}
@@ -240,6 +242,7 @@ function DragArea() {
             </DragDropContext>
             </div>
         );
+    }
 }
 
 export default DragArea;

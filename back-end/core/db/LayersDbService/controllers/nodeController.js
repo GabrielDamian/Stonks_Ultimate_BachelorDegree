@@ -9,15 +9,17 @@ module.exports.create_layer = async (req, res) => {
         parameters
     } = req.body;
 
+    console.log("layerData:",layerData)
+
     let layerName = layerData.name;
     let layerKeyword = layerData.keyword;
     let layerDescription = layerData.desc;
     let docLink = layerData.docLink;
-
+    let iconLink = layerData.iconLink;
 
     let layerResp = undefined;
     try{
-        layerResp = await Layer.create({layerName,layerKeyword,layerDescription,docLink});
+        layerResp = await Layer.create({layerName,layerKeyword,layerDescription,docLink, iconLink});
     }
     catch(e)
     {

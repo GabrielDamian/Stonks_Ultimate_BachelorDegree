@@ -4,6 +4,7 @@ const layerSchema = new mongoose.Schema({
     layerKeyword: String, 
     layerDescription: String, 
     docLink: String, 
+    iconLink: String,
     parameters:[{
 
         paramName: String, 
