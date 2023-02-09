@@ -1,13 +1,11 @@
 .node-live-connector-container
 {
-    width: 40%;
+    width: 100%;
+    border: 1px solid red;
 }
 
 .node-live-connector-container-items
 {
     padding: 10px;
-}
-.log-item-container
-{
-    font-size: 0.9rem;
+    border: 1px solid blue;
 }

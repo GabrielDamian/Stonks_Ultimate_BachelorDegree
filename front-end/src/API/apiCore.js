@@ -12,9 +12,7 @@ export const collectUserData = async (userIdParam,fields,setStateParam)=>{
             })
             if(response.ok)
             {
-                console.log("ok resp in my profile")
                 const data = await response.json();
-                console.log("ok data in my profile:", data)
                 let extractFields = {}
                 fields.forEach((field)=>{
                     extractFields[field] = data[field]
@@ -23,7 +21,6 @@ export const collectUserData = async (userIdParam,fields,setStateParam)=>{
             }
             else 
             {
-                console.log("err:",response.status)
                 let data = await response.json()
                 console.log("err data:",data)
             }

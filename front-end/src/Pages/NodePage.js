@@ -4,20 +4,40 @@ import TopBar from '../Components/Organisms/TopBar';
 import LeftMenu from '../Components/Organisms/LeftMenu';
 import LiveNodeConnector from '../Components/Organisms/LiveNodeConnector/LiveNodeConnector';
 import NodeInfo from '../Components/Organisms/NodeInfo';
+import { ChartComponent } from '../Components/Organisms/ChartComponent';
+import LastPriceWidget from '../Components/Molecules/LastPriceWidget';
 
+
+
+// TODO: delete faker real data generator
+let generateFakeRealData = (source)=>{
+    console.log("SOURCEEE:",source)
+    let inner = []
+    if(source == undefined || source == null) return undefined
+    source.forEach((el)=>{
+        let temp = {
+            timestamp: el.timestamp,
+            value: el.value + Math.floor(Math.random() * 10)
+        }
+        inner.push(temp)
+    })
+    console.log("inner:", inner)
+    return inner
+}
 function NodePage({tabIndex,setTabs,tabs,userId})
 {
     const [nodeData, setNodeData] = useState({})
     const [nodeAddress, setNodeAddress] = useState(null);
     
     useEffect(()=>{
-        console.log("STEP 4:",nodeAddress)
-    },[nodeAddress])
+        console.log("node data:", nodeData)
+        console.log("noed address:", nodeAddress)
+
+    },[nodeAddress, nodeData])
     
     let fetchNodeData = async (nodeID)=>{
         try{
             let destination = `http://localhost:3001/fetch-node/?nodeid=${nodeID}`
-            console.log("destination:",destination)
 
             let response =await fetch(destination, { 
                     method: 'GET', 
@@ -36,7 +56,6 @@ function NodePage({tabIndex,setTabs,tabs,userId})
                 else 
                 {
                     const data = await response.json();
-                    console.log("NODE DATA:",data)
                     setNodeData(data)
                 }
           }
@@ -47,10 +66,8 @@ function NodePage({tabIndex,setTabs,tabs,userId})
     }
     
     let connectToNode = async (nodeID)=>{
-        console.log("STEP 1",nodeID)
         try{
             let destination = `http://localhost:3001/establish-node-connection`
-            console.log("destination:",destination)
             
             let response =await fetch(destination, { 
                     method: 'POST', 
@@ -70,11 +87,8 @@ function NodePage({tabIndex,setTabs,tabs,userId})
                 else 
                 {
                     const data = await response.json();
-                    console.log("STEP 2")
-                    console.log("connect to node resp:", data)
                     if(data.address != undefined && data.address != '' && data.address != ' ')
                     {
-                        console.log("STEP 3:",data.address)
                         setNodeAddress(data.address)
                     }
                 }
@@ -89,7 +103,6 @@ function NodePage({tabIndex,setTabs,tabs,userId})
         // extract from query params
         const queryParams = new URLSearchParams(window.location.search)
         const nodeId = queryParams.get("nodeid")
-        console.log("node id :",nodeId)
         if(nodeId == undefined || nodeId == "" || nodeId == " ")
         {
             console.log("invalid query param for nodeid")
@@ -108,7 +121,15 @@ function NodePage({tabIndex,setTabs,tabs,userId})
                 <TopBar userId={userId}/>
                 <div className='node-page-content-data'>
                    <NodeInfo nodeData={nodeData}/>
-                   <LiveNodeConnector nodeAddress={nodeAddress}/>
+                   <div style={{
+                    width: "40%",
+                    border: '1px solid red'
+                   }}>
+                        
+                        <ChartComponent source={nodeData.predictions}/>
+                        <LastPriceWidget value={nodeData.predictions}/>
+                        <LiveNodeConnector nodeAddress={nodeAddress}/>
+                   </div>
                 </div>
             </div>
         </div>

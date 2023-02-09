@@ -25,10 +25,8 @@ export default function NodeInfo({nodeData})
     },[nodeData])
     
     let extractNodeData = (source)=>{
-        console.log("SOURCE:",source)
         let temp = []
         Object.keys(source).forEach((el)=>{
-            console.log("new extract:", el)
             let obj = {
                 key: el,
                 content: source[el]
@@ -43,7 +41,6 @@ export default function NodeInfo({nodeData})
         <div className='node-info-container'>
             {
                 extractNodeData(localData).map((el)=>{
-                    console.log("iterator:", el)
                     return <TempDisplayNodeItem keyItem={el.key} content={el.content}/>
                 })
             }
@@ -52,9 +49,6 @@ export default function NodeInfo({nodeData})
 }
 
 const TempDisplayNodeItem = ({keyItem,content})=>{
-    useEffect(()=>{
-        console.log("key deeeep:", keyItem,content)
-    },[keyItem])
     return (
         keyItem == 'Code'?
         <div className='node-info-temp-item'>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -52,28 +52,87 @@ export const options = {
   },
 };
 
-const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
+// const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
 
-export const data = {
-  labels,
-  datasets: [
-    {
-      label: 'Dataset 1',
-      data: labels.map(() => faker.datatype.number({ min: -1000, max: 1000 })),
-      borderColor: 'rgb(255, 99, 132)',
-      backgroundColor: 'rgba(255, 99, 132, 0.5)',
-      yAxisID: 'y',
-    },
-    {
-      label: 'Dataset 2',
-      data: labels.map(() => faker.datatype.number({ min: -1000, max: 1000 })),
-      borderColor: 'rgb(53, 162, 235)',
-      backgroundColor: 'rgba(53, 162, 235, 0.5)',
-      yAxisID: 'y1',
-    },
-  ],
-};
+// export const data = {
+//   labels,
+//   datasets: [
+//     // {
+//     //   label: 'Dataset 1',
+//     //   data: labels.map(() => faker.datatype.number({ min: -1000, max: 1000 })),
+//     //   borderColor: 'rgb(255, 99, 132)',
+//     //   backgroundColor: 'rgba(255, 99, 132, 0.5)',
+//     //   yAxisID: 'y',
+//     // },
+//     {
+//       label: 'Dataset 2',
+//       data: labels.map(() => faker.datatype.number({ min: -1000, max: 1000 })),
+//       borderColor: 'rgb(53, 162, 235)',
+//       backgroundColor: 'rgba(53, 162, 235, 0.5)',
+//       yAxisID: 'y1',
+//     },
+//   ],
+// };
 
-export function ChartComponent() {
-  return <Line options={options} data={data} />;
+export function ChartComponent({source}) {
+  
+  let howManyBehind = 20;
+
+  useEffect(()=>{
+    
+    console.log("source deep:", source)
+    if(source !== undefined)
+    {
+      prepareForInnerState(source)
+    }
+
+  },[source])
+  
+  let prepareForInnerState = (source)=>{
+
+    console.log("prepareForInnerState:",prepareForInnerState)
+    
+    let sliced = source.slice(0,howManyBehind)
+    console.log("sliced:", sliced)
+    let labels = []
+    let values = []
+
+    sliced.forEach((el)=>{
+      let timestamp = Number(el.timestamp);
+      let formattedDate = new Date(timestamp).toLocaleDateString('en-us', { weekday:"long", year:"numeric", month:"short", day:"numeric"})
+      labels.push(formattedDate)
+
+      values.push(el.value)
+    })
+
+    console.log("labels:", labels)
+    console.log("values:", values)
+    setLabels(labels)
+    setValuesGraph(values)
+  }
+
+  const [valuesGrahp, setValuesGraph] = useState()
+  const [labels, setLabels] = useState([]
+    )
+  return <Line options={options} data={
+    {
+      labels,
+      datasets: [
+        // {
+        //   label: 'Dataset 1',
+        //   data: labels.map(() => faker.datatype.number({ min: -1000, max: 1000 })),
+        //   borderColor: 'rgb(255, 99, 132)',
+        //   backgroundColor: 'rgba(255, 99, 132, 0.5)',
+        //   yAxisID: 'y',
+        // },
+        {
+          label: 'Dataset 2',
+          data: valuesGrahp,
+          borderColor: 'rgb(53, 162, 235)',
+          backgroundColor: 'rgba(53, 162, 235, 0.5)',
+          yAxisID: 'y1',
+        },
+      ],
+    }
+  } />;
 }

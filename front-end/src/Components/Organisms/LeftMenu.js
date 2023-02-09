@@ -10,7 +10,6 @@ import Box from '@mui/material/Box';
 import { tabsListUnstyledClasses } from '@mui/base';
 
 export default function LeftMenu({tabIndex,setTabs,tabs}){
-    console.log("tab index:", tabIndex)
     return(
         <div className='left-bar-container'>
             <div className='left-bar-header'>
@@ -55,8 +54,6 @@ function a11yProps(index) {
 }
 
 function VerticalTabs({tabIndex,setTabs,tabs}) {
-    console.log("tab index:", tabIndex)
-
     const navigate = useNavigate();
     
   const [value, setValue] = React.useState(tabIndex);

@@ -4,6 +4,7 @@
     width:100%;
     border:1px solid magenta;
     display: flex;
+    border: 1px solid green;
 }
 .add-block-content-data
 {
@@ -31,12 +32,13 @@
 {
     height: 100%;
     width: 50%;
+    border: 1px solid red;
 }
 
 .content-data-center-row
 {
-    height: 100px;
+    margin: 10px;
     display: flex;
     align-items: center;
-    padding: 0px 20px;
+    padding: 0px 10px;
 }

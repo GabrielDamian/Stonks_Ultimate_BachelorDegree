@@ -123,7 +123,6 @@ class NodeModelHandler:
         prediction_days = 60
 
         test_data = pdr.get_data_yahoo("TSLA", start="2020-10-10", end="2021-10-10")
-        actual_prices = test_data['Close'].values
 
         total_dataset = pd.concat((data['Close'], test_data['Close']), axis=0)
 
@@ -141,14 +140,6 @@ class NodeModelHandler:
 
         predicted_prices = modelParam.predict(x_test)
         predicted_prices = scaler.inverse_transform(predicted_prices)
-
-        # plt.plot(actual_prices, color="black", label=f"Actual {company} Price")
-        # plt.plot(predicted_prices, color="green", label=f"Predicted {company} Price")
-        # plt.title(f"{company} Share Price")
-        # plt.xlabel('Time')
-        # plt.ylabel(f'{company} Share Price')
-        # plt.legend()
-        # plt.show()
 
         # Predict next day
         real_data = [model_inputs[len(model_inputs) + 1 - prediction_days:len(model_inputs + 1), 0]]

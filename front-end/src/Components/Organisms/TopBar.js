@@ -9,9 +9,7 @@ export default function TopBar({userId}){
 
 
     const [userEmail, setUserEmail] = useState('');
-    useEffect(()=>{
-        console.log("userEmail updat:",userEmail)
-    },[userEmail])
+
     useEffect(()=>{
         if(userId !== null && userId !== undefined)
         {
@@ -36,7 +34,7 @@ export default function TopBar({userId}){
                         <span>Username:{userEmail.email}</span>
                     </div>
                     <div className="top-bar-content-header-right-left-bot">
-                        <span>Balance: 0.00$</span>
+                        {/* <span>Balance: 0.00$</span> */}
                     </div>
                 </div>
                 <div className="top-bar-content-header-right-right">

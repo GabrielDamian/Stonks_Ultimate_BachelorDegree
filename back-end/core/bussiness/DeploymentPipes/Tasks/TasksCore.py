@@ -292,7 +292,7 @@ lock = threading.Lock()
 increment = 0
 connected_users = {}
 
-nodeCoreInterval = 15
+nodeCoreInterval = 86400
 logsEmitInterval = 1
 logsLock = threading.Lock()
 
