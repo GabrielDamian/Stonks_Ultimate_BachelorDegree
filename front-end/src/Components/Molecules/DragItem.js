@@ -14,8 +14,10 @@ import ExpandMore from '@mui/icons-material/ExpandMore';
 import InfoIcon from '@mui/icons-material/Info';
 import DataObjectIcon from '@mui/icons-material/DataObject';
 import Icon1 from '../../Media/Icons/artificial-intelligence.png';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
 
-function DragItem({data})
+function DragItem({data, hyperParamsActive})
 {
   const [interState, setInternState] = useState({
     layerName: '',
@@ -25,11 +27,7 @@ function DragItem({data})
     iconLink: '',
     parameters: []
   })
-
-  useEffect(()=>{
-    console.log("interState update:",interState)
-  },[interState])
-
+  
   useEffect(()=>{
     if(data !== null && data!==undefined)
     {
@@ -48,6 +46,17 @@ function DragItem({data})
     setOpen2(!open2);
   };
 
+  const extractParameterValues = (magicString)=>{
+    let values = []
+
+    let pairs = magicString.split("___")
+    pairs.forEach((el)=>{
+      let value_split= el.split("--")
+      values.push(value_split[1])
+    })
+
+    return values
+  }
   return (
     <div  className='drag-item-container' >
       <List
@@ -83,17 +92,53 @@ function DragItem({data})
         </Collapse>
 
         {/* HYPERPARAMETERS */}
-        <ListItemButton onClick={handleClick2}>
-          <ListItemIcon>
-            <DataObjectIcon />
-          </ListItemIcon>
-          <ListItemText primary="Hyperparameters" />
-          {open2 ? <ExpandLess /> : <ExpandMore />}
-        </ListItemButton>
-        <Collapse in={open2} timeout="auto" unmountOnExit>
-          <div style={{height:'200px', border:'1px solid red'}}>
-          </div>
-        </Collapse>
+        {hyperParamsActive == true?
+        <>
+          <ListItemButton onClick={handleClick2}>
+            <ListItemIcon>
+              <DataObjectIcon />
+            </ListItemIcon>
+            <ListItemText primary="Hyperparameters" />
+            {open2 ? <ExpandLess /> : <ExpandMore />}
+          </ListItemButton>
+          <Collapse in={open2} timeout="auto" unmountOnExit>
+            <div style={{height:'200px', border:'1px solid red'}}>
+              {
+                interState.parameters !== undefined ? interState.parameters.map((el)=>{
+                  console.log("el ultra deep:",el)
+                  return (
+                    <div style={{
+                      padding: '10px',
+                      border:'1px solid blue',
+                      width:'100%',
+                      minHeight: '50px'
+                    }}>
+                      <span>{el.paramName} - {el.paramKeyword}</span>
+                      <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={undefined}
+                        label="Age"
+                        onChange={()=>{}}
+                      >
+                        {
+                          extractParameterValues(el.parameterValues).map((el_menu_item)=>{
+                            return(
+                              <MenuItem value={el_menu_item}>{el_menu_item}</MenuItem>
+                            )
+                          })
+                        }
+                      </Select>
+                    </div>)
+                  
+                }):null
+              }
+            </div>
+          </Collapse>
+        </>
+        :null
+      }
+        
       </List>
     </div>
   );

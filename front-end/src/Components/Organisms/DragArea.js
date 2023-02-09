@@ -101,12 +101,10 @@ class DragArea extends Component {
                 delete temp._id
                 attachId.push(temp)
             })
-            console.log("attachId:",attachId)
 
             this.setState((prev)=>{
                 let copy = {...prev}
                 copy.items = [...attachId]
-                console.log("COPY:::::",copy)
                 return copy
             })
         })
@@ -185,7 +183,7 @@ class DragArea extends Component {
                                                             snapshot.isDragging,
                                                             provided.draggableProps.style
                                                         )}>
-                                                        <DragItem data={item}/>
+                                                        <DragItem data={item} hyperParamsActive={false}/>
                                                     </div>
                                                 </div>
                                             )}
@@ -229,7 +227,7 @@ class DragArea extends Component {
                                             //     border:'1px solid red'
                                             // }}
                                              >
-                                              <DragItem data={item}/>
+                                              <DragItem data={item} hyperParamsActive={true}/>
                                          </div>
                                      </div>
                                  )}
