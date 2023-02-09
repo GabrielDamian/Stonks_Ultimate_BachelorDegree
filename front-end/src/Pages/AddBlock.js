@@ -7,6 +7,8 @@ import Button from '@mui/material/Button';
 import TopBar from '../Components/Organisms/TopBar';
 import MenuItem from '@mui/material/MenuItem';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
+import {TranslateBlockStructureInPythonCode} from '../utils/utils.js';
+
 
 
 const CurrentParamValues = ({values, removeValue})=>{
@@ -56,6 +58,20 @@ function AddBlock({tabIndex,setTabs,tabs,userId})
     const TextAreaStyle={
         width: '100%',
     }
+    const [layerData, setLayerData] = useState({
+        name: '',
+        keyword:'',
+        desc:'',
+        docLink:'',
+        iconLink:''
+    })
+    const handleLayerDataChange = (e)=>[
+        setLayerData((prev)=>{
+            let copy = {...prev}
+            copy[e.target.name] = e.target.value
+            return copy
+        })
+    ]
     const [parameters, setParameters] = useState([]);
 
     const [currentNewParam, setCurrentNewParam] = useState({
@@ -65,6 +81,11 @@ function AddBlock({tabIndex,setTabs,tabs,userId})
         unnamed: false,
         values: []
     })
+    const [pyCode, setPyCode] = useState('None')
+
+    useEffect(()=>{
+        setPyCode(TranslateBlockStructureInPythonCode(layerData, parameters))
+    },[layerData, parameters])
 
     const handleFieldChange = (e)=>{
         console.log("e:",e.target.value, e.target.name);
@@ -175,6 +196,9 @@ function AddBlock({tabIndex,setTabs,tabs,userId})
                                         id="outlined-required"
                                         label="Layer Name"
                                         sx={TextAreaStyle}
+                                        name="name"
+                                        value={layerData.name}
+                                        onChange={handleLayerDataChange}
                                     />
                                 </div>
                                 <div className='content-data-center-row'>
@@ -182,6 +206,9 @@ function AddBlock({tabIndex,setTabs,tabs,userId})
                                         id="outlined-required"
                                         label="Layer in code Name"
                                         sx={TextAreaStyle}
+                                        name="keyword"
+                                        value={layerData.keyword}
+                                        onChange={handleLayerDataChange}
                                     />
                                 </div>
                                 <div className='content-data-center-row'>
@@ -189,6 +216,9 @@ function AddBlock({tabIndex,setTabs,tabs,userId})
                                         id="outlined-required"
                                         label="Layer Description"
                                         sx={TextAreaStyle}
+                                        name="desc"
+                                        value={layerData.desc}
+                                        onChange={handleLayerDataChange}
                                     />
                                 </div>
                                 <div className='content-data-center-row'>
@@ -196,6 +226,9 @@ function AddBlock({tabIndex,setTabs,tabs,userId})
                                         id="outlined-required"
                                         label="Documentation Link"
                                         sx={TextAreaStyle}
+                                        name="docLink"
+                                        value={layerData.docLink}
+                                        onChange={handleLayerDataChange}
                                     />
                                 </div>
                                 <div className='content-data-center-row'>
@@ -203,6 +236,9 @@ function AddBlock({tabIndex,setTabs,tabs,userId})
                                         id="outlined-required"
                                         label="Icon link"
                                         sx={TextAreaStyle}
+                                        name="iconLink"
+                                        value={layerData.iconLink}
+                                        onChange={handleLayerDataChange}
                                     />
                                 </div>
                             </div>
@@ -291,7 +327,10 @@ function AddBlock({tabIndex,setTabs,tabs,userId})
                         </div>
                         <ParametersContainer parameters={parameters} deleteParameter={deleteParameter}/>
                         <div className='content-data-center-row' style={{height:'300px', padding:'20px'}}>
-                            <CustomMonaco/>
+                            <CustomMonaco
+                                editorValue={pyCode}
+                                setEditorValue={()=>{}}
+                            />
                         </div>
                         <div className='content-data-center-row' style={{
                             display:'flex',
