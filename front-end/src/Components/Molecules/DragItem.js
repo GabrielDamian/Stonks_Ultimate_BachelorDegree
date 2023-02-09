@@ -17,7 +17,7 @@ import Icon1 from '../../Media/Icons/artificial-intelligence.png';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 
-function DragItem({data, hyperParamsActive})
+function DragItem({data, hyperParamsActive,handleParameterValueChange})
 {
   const [interState, setInternState] = useState({
     layerName: '',
@@ -57,6 +57,10 @@ function DragItem({data, hyperParamsActive})
 
     return values
   }
+  const handleParameterValueChangeLocal = (e)=>{
+    handleParameterValueChange(e.target.name, e.target.value);
+  }
+  
   return (
     <div  className='drag-item-container' >
       <List
@@ -105,7 +109,6 @@ function DragItem({data, hyperParamsActive})
             <div style={{height:'200px', border:'1px solid red'}}>
               {
                 interState.parameters !== undefined ? interState.parameters.map((el)=>{
-                  console.log("el ultra deep:",el)
                   return (
                     <div style={{
                       padding: '10px',
@@ -113,13 +116,13 @@ function DragItem({data, hyperParamsActive})
                       width:'100%',
                       minHeight: '50px'
                     }}>
-                      <span>{el.paramName} - {el.paramKeyword}</span>
+                      <span>{el.paramName} - {el._id}</span>
                       <Select
                         labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={undefined}
+                        value={el.selectedValue}
                         label="Age"
-                        onChange={()=>{}}
+                        name={el._id}
+                        onChange={handleParameterValueChangeLocal}
                       >
                         {
                           extractParameterValues(el.parameterValues).map((el_menu_item)=>{

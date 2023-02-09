@@ -78,6 +78,56 @@ class DragArea extends Component {
     };
 
 
+    handleParameterValueChange = (paramId, newValue) =>{
+        console.log("new assigment:", paramId, newValue);
+
+        this.setState((prev)=>{
+            
+            let selectedLocal = [...prev.selected]
+            console.log("locals:",selectedLocal)
+
+            let selectedLocalUpdated = []
+
+            selectedLocal.forEach((el_layer)=>{
+
+                let copy_el_layer = {...el_layer}
+                //el - each parameter
+                
+                let localParameters = [...el_layer.parameters];
+                console.log("local parameters:",localParameters)
+
+                let localParametersUpdated = []
+                
+                localParameters.forEach((el_param)=>{
+                    console.log("el param:",el_param)
+
+                    let copy_el_param = {...el_param}
+
+                    console.log("to compare:", el_param._id, paramId)
+                    
+                    if(el_param._id == paramId)
+                    {
+                        console.log("COMPARE OK1111111")
+                        copy_el_param.selectedValue = newValue
+                    }
+                    console.log("copy_el_param updatred:",copy_el_param)
+
+                    localParametersUpdated.push(copy_el_param)
+                })
+                copy_el_layer.parameters = [...localParametersUpdated]
+              
+                selectedLocalUpdated.push(copy_el_layer)
+            })
+
+            let state_copy = {...prev}
+            state_copy.selected = selectedLocalUpdated
+
+            console.log("State copy:",state_copy)
+            return state_copy
+        })
+    }
+
+
     
     componentDidMount()
     {
@@ -98,7 +148,22 @@ class DragArea extends Component {
             data.layers.forEach((el)=>{
                 let temp = {...el}
                 temp.id = el._id
+
                 delete temp._id
+
+                let parametersLocal = temp.parameters;
+                let addedSelectedValuField = []
+                
+                parametersLocal.forEach((parameterEl)=>{
+                    let tempParameter = {...parameterEl}
+                    tempParameter.selectedValue = undefined
+                    addedSelectedValuField.push(tempParameter)
+                })
+    
+                temp.parameters = [...addedSelectedValuField]
+
+                console.log("temp final:",temp)
+
                 attachId.push(temp)
             })
 
@@ -183,7 +248,9 @@ class DragArea extends Component {
                                                             snapshot.isDragging,
                                                             provided.draggableProps.style
                                                         )}>
-                                                        <DragItem data={item} hyperParamsActive={false}/>
+                                                        <DragItem 
+                                                        handleParameterValueChange={()=>{}}
+                                                        data={item} hyperParamsActive={false}/>
                                                     </div>
                                                 </div>
                                             )}
@@ -195,7 +262,6 @@ class DragArea extends Component {
                     </Droppable>
                     </div>
                 </div>
-               
                 <Droppable droppableId="droppable2">
                     {(provided, snapshot) => (
                         <div
@@ -227,7 +293,11 @@ class DragArea extends Component {
                                             //     border:'1px solid red'
                                             // }}
                                              >
-                                              <DragItem data={item} hyperParamsActive={true}/>
+                                              <DragItem 
+                                                handleParameterValueChange={this.handleParameterValueChange}
+                                                data={item} 
+                                                hyperParamsActive={true}
+                                            />
                                          </div>
                                      </div>
                                  )}

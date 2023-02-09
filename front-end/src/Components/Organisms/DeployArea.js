@@ -17,8 +17,6 @@ const initMarketState = (marketsSource)=>{
 }
 function DeployArea ({editorValue})
 {
-    
-
     const [fields, setFields] = useState({
         name: '',
         description: '',
