@@ -17,7 +17,6 @@ const getItems = (count, offset = 0) =>
         id: `item-${k + offset}`,
         content: `item ${k + offset}`
     }));
-    console.log("Temp:", temp)
     return temp
 }
 
@@ -66,11 +65,13 @@ const getListStyle = isDraggingOver => ({
 
 
 class DragArea extends Component {
-
-    state = {
-        items: getItems(5),
-        selected: []
-    };
+    constructor(props) {
+        super(props);
+    }
+    // state = {
+    //     items: getItems(5),
+    //     selected: []
+    // };
 
     id2List = {
         droppable: 'items',
@@ -79,12 +80,10 @@ class DragArea extends Component {
 
 
     handleParameterValueChange = (paramId, newValue) =>{
-        console.log("new assigment:", paramId, newValue);
+        this.props.setCodeState((prev)=>{
 
-        this.setState((prev)=>{
             
             let selectedLocal = [...prev.selected]
-            console.log("locals:",selectedLocal)
 
             let selectedLocalUpdated = []
 
@@ -94,23 +93,17 @@ class DragArea extends Component {
                 //el - each parameter
                 
                 let localParameters = [...el_layer.parameters];
-                console.log("local parameters:",localParameters)
 
                 let localParametersUpdated = []
                 
                 localParameters.forEach((el_param)=>{
-                    console.log("el param:",el_param)
 
                     let copy_el_param = {...el_param}
 
-                    console.log("to compare:", el_param._id, paramId)
-                    
                     if(el_param._id == paramId)
                     {
-                        console.log("COMPARE OK1111111")
                         copy_el_param.selectedValue = newValue
                     }
-                    console.log("copy_el_param updatred:",copy_el_param)
 
                     localParametersUpdated.push(copy_el_param)
                 })
@@ -122,13 +115,10 @@ class DragArea extends Component {
             let state_copy = {...prev}
             state_copy.selected = selectedLocalUpdated
 
-            console.log("State copy:",state_copy)
             return state_copy
         })
     }
 
-
-    
     componentDidMount()
     {
         fetch('http://localhost:3001/fetch-layers', { 
@@ -162,12 +152,10 @@ class DragArea extends Component {
     
                 temp.parameters = [...addedSelectedValuField]
 
-                console.log("temp final:",temp)
-
                 attachId.push(temp)
             })
 
-            this.setState((prev)=>{
+            this.props.setCodeState((prev)=>{
                 let copy = {...prev}
                 copy.items = [...attachId]
                 return copy
@@ -175,7 +163,7 @@ class DragArea extends Component {
         })
     }
 
-    getList = id => this.state[this.id2List[id]];
+    getList = id => this.props.codeState[this.id2List[id]];
 
     onDragEnd = result => {
         const { source, destination } = result;
@@ -198,7 +186,12 @@ class DragArea extends Component {
                 state = { selected: items };
             }
 
-            this.setState(state);
+            this.props.setCodeState((prev)=>{
+                let copy ={...prev}
+                copy.selected = items
+                return copy
+            });
+
         } else {
             const result = move(
                 this.getList(source.droppableId),
@@ -207,7 +200,7 @@ class DragArea extends Component {
                 destination
             );
 
-            this.setState({
+            this.props.setCodeState({
                 items: result.droppable,
                 selected: result.droppable2
             });
@@ -231,8 +224,8 @@ class DragArea extends Component {
                                 className="drag-area-info-panel-drag"
                                 // style={getListStyle(snapshot.isDraggingOver)}
                                 >
-                                {this.state.items.length > 0 &&
-                                    this.state.items.map((item, index) => (
+                                {this.props.codeState.items.length > 0 &&
+                                    this.props.codeState.items.map((item, index) => (
                                         <Draggable
                                             key={item.id}
                                             draggableId={item.id}
@@ -269,7 +262,7 @@ class DragArea extends Component {
                             className="drag-area-info-panel-drag"
                             // style={getListStyle(snapshot.isDraggingOver)}
                             >
-                            {this.state.selected.map((item, index) => (
+                            {this.props.codeState.selected.map((item, index) => (
                                  <Draggable
                                  key={item.id}
                                  draggableId={item.id}

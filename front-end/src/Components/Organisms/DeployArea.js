@@ -17,6 +17,7 @@ const initMarketState = (marketsSource)=>{
 }
 function DeployArea ({editorValue})
 {
+
     const [fields, setFields] = useState({
         name: '',
         description: '',
@@ -27,7 +28,6 @@ function DeployArea ({editorValue})
     const [fieldsError, setFieldsError] = useState('');
 
     const deployCodeRequest = async (packedData)=>{
-        console.log("deploy code:",packedData)
         try{
             let response =await fetch('http://localhost:3001/deploy-code', { 
                     method: 'POST', 
@@ -95,16 +95,17 @@ function DeployArea ({editorValue})
         }
         else 
         {
-            console.log("marketsSelected:",marketsSelected)
-            
             let packet = {
                 name: fields.name,
                 description: fields.description,
                 market: marketsSelected[0],
                 code: editorValue
             }
+
+            console.log("editorValue:",editorValue)
+            console.log("packet:", packet)
+            
             setDeployStatus("Deployment Started")
-            console.log("packet before api:",packet)
             deployCodeRequest(packet)
         }
     }
