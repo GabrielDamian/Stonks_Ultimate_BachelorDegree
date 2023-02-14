@@ -1,0 +1,123 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@700&display=swap');
+.hero-container > video {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  z-index: -1;
+}
+.hero-container {
+  height: 100vh;
+  width: 100%;
+}
+.hero-top-bar
+{
+  height: 10vh;
+  display: flex;
+}
+.hero-top-bar-logo
+{
+  height: 100%;
+  width: 15%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.hero-top-bar-logo img 
+{
+  height: 65%;
+  object-fit: contain;
+}
+.hero-top-bar-logo img:hover
+{
+  cursor: pointer;
+}
+.hero-top-bar-navigation
+{
+  height: 100%;
+  width: 85%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+.hero-top-bar-navigation-buttons
+{
+  width: 30%;
+  height:100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.hero-top-bar-navigation-buttons a 
+{
+  padding: 12px 30px;
+  font-family: 'Poppins', sans-serif;
+  margin: 0px 17px;
+  border-radius: 25px;
+  text-decoration: none;
+  background-color: var(--lime);
+  font-size: 1.1rem;
+
+}
+.hero-top-bar-navigation-buttons a:hover
+{ 
+  background-color: var(--lime-dark);
+  transition: all 0.3s ease;
+}
+
+.hero-top-content
+{
+  height: 90vh;
+  display: flex;
+}
+.hero-top-content-item-left
+{
+  height: 100%;
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#tsparticles {
+  height: 70% !important;
+  width: 70% !important;
+}
+
+.hero-top-content-item-right
+{
+  height: 100%;
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.hero-top-content-item-right-title
+{
+  height: 30%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+.hero-top-content-item-right-title span 
+{
+  color: white;
+  font-size: 3rem;
+  padding: 30px;
+  font-weight: bold;
+  font-family: 'IBM Plex Sans', sans-serif;
+}
+.hero-top-content-item-right-desc
+{
+  height: auto;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: white;
+  font-family: 'Poppins', sans-serif;
+  padding: 20px 100px;
+}

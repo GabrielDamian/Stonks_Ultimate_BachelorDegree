@@ -12,22 +12,25 @@ import Login from './Pages/Login';
 import Signup from './Pages/Signup';
 import MyProfile from './Pages/MyProfile';
 import NodePage from './Pages/NodePage';
+import Welcome from './Pages/Welcome';
+
 
 import ProtectedRoute from './Pages/PrivateWrapper/ProtectedRoute';
 function App() {
   
   const [tabs, setTabs] = useState({
-    options: ['/','/ide','/drag','/overview','/buy-credit','/add-block','/my-profile','/node-page'],
+    options: ['/dashboard','/ide','/drag','/overview','/buy-credit','/add-block','/my-profile','/node-page'],
     selected: '/ide'
   })
 
   return (
     <BrowserRouter>
       <Routes>
+          <Route exact path="/" element={<Welcome/>} />
           <Route exact path="/login" element={<Login/>} />
           <Route exact path="/signup" element={<Signup/>} />
           
-          <Route exact path="/" element={
+          <Route exact path="/dashboard" element={
             <ProtectedRoute>
               <Dashboard tabIndex={0} tabs={tabs} setTabs={setTabs}/>
             </ProtectedRoute>

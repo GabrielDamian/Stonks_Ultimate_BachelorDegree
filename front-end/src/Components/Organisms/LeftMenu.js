@@ -13,7 +13,7 @@ export default function LeftMenu({tabIndex,setTabs,tabs}){
     return(
         <div className='left-bar-container'>
             <div className='left-bar-header'>
-                <span>Logo</span>
+                <a href="/">Logo</a>
             </div>
             <VerticalTabs tabIndex={tabIndex} setTabs={setTabs} tabs={tabs}/>
         </div>
