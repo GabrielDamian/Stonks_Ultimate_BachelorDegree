@@ -1,0 +1,338 @@
+.login-container
+{
+    height: 100vh;
+    /* background-image: url("https://assets.codepen.io/7773162/4kNYC.jpeg"); */
+    background-size: cover;
+}
+
+.login-container-page
+{
+    height: 90vh;
+    display: flex;
+}
+.login-container-page-left
+{
+    height: 100%;
+    width: 50%;
+}
+.login-container-page-right
+{
+    height: 100%;
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-container-page-right-content
+{
+    padding: 20px;
+}
+
+
+/* codepen  00000000000000000000000000000000000000000 */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap");
+
+/*=============== VARIABLES CSS ===============*/
+:root {
+	/*========== Colors ==========*/
+	/*Color mode HSL(hue, saturation, lightness)*/
+	--lime: #bd1a89;
+	--lime-dark: #843090;
+	--title-color: rgba(255, 255, 255, 0.9);
+	--text-color: rgba(255, 255, 255, 0.7);
+	--body-color: #01001f;
+
+	/*========== Font and typography ==========*/
+	/*.5rem = 8px | 1rem = 16px ...*/
+	--body-font: "Poppins", sans-serif;
+	--h2-font-size: 1.25rem;
+	--small-font-size: 0.813rem;
+	--smaller-font-size: 0.75rem;
+
+	/*========== Font weight ==========*/
+	--font-medium: 500;
+	--font-semi-bold: 600;
+}
+
+/* Responsive typography */
+@media screen and (min-width: 1024px) {
+	:root {
+		--h2-font-size: 1.75rem;
+		--normal-font-size: 1rem;
+		--small-font-size: 0.875rem;
+		--smaller-font-size: 0.813rem;
+	}
+}
+
+/*=============== BASE ===============*/
+
+.login-container-page-right {
+	font-family: var(--body-font);
+	color: var(--text-color);
+}
+
+.login-container-page-rightinput,
+.login-container-page-right button {
+	font-family: var(--body-font);
+	border: none;
+	outline: none;
+}
+
+/*=============== LOGIN FORM ===============*/
+.login__content,
+.login__form,
+.login__inputs {
+	display: grid;
+}
+
+.login__content {
+	position: relative;
+	height: 100vh;
+	align-items: center;
+}
+
+.login__img {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	object-position: center;
+}
+
+.login__form {
+	position: relative;
+	background-color: rgba(255, 255, 255, 0.1);
+	border: 2px solid rgba(255, 255, 255, 0.06);
+	margin-inline: 1.5rem;
+	row-gap: 1.25rem;
+	backdrop-filter: blur(20px);
+	padding: 2rem;
+	border-radius: 1rem;
+}
+
+.login__title {
+	color: var(--title-color);
+	font-size: var(--h2-font-size);
+	margin-bottom: 0.5rem;
+}
+
+.login__title span {
+	color: var( --lime);
+}
+
+.login__description {
+	font-size: var(--small-font-size);
+}
+
+.login__inputs {
+	row-gap: 0.75rem;
+	margin-bottom: 0.5rem;
+}
+
+.login__label {
+	display: block;
+	color: var(--title-color);
+	font-size: var(--small-font-size);
+	font-weight: var(--font-semi-bold);
+	margin-bottom: 0.25rem;
+}
+
+.login__input {
+	width: 100%;
+	padding: 14px 12px;
+	border-radius: 6px;
+	border: 2px solid var(--text-color);
+	background-color: rgba(255, 255, 255, 0.1);
+	color: var(--title-color);
+	font-size: var(--smaller-font-size);
+	font-weight: var(--font-medium);
+	transition: border 0.4s;
+}
+.login__input:hover 
+{
+    border: 2px solid var(--lime);
+    outline: none;
+    transition: all 0.3s ease;
+}
+.login__input:focus
+{
+    border: 2px solid var(--lime);
+    outline: none;
+    transition: all 0.3s ease;
+}
+.login__input::placeholder {
+	color: var(--text-color);
+}
+
+
+.login__box {
+	position: relative;
+}
+
+.login__box .login__input {
+	padding-right: 36px;
+}
+
+.login__eye {
+	width: max-content;
+	height: max-content;
+	position: absolute;
+	right: 0.75rem;
+	top: 0;
+	bottom: 0;
+	margin: auto 0;
+	font-size: 1.25rem;
+	cursor: pointer;
+}
+
+.login__check {
+	display: flex;
+	column-gap: 0.5rem;
+	align-items: center;
+}
+
+.login__check-input {
+	appearance: none;
+	width: 16px;
+	height: 16px;
+	border: 2px solid var(--text-color);
+	background-color: rgba(255, 255, 255, 0.1);
+	border-radius: 0.25rem;
+}
+
+.login__check-input:checked {
+	background: var( --lime);
+}
+
+.login__check-input:checked::before {
+	content: "✔";
+	display: block;
+	color: #fff;
+	font-size: 0.75rem;
+	transform: translate(1.5px, -2.5px);
+}
+
+.login__check-label {
+	font-size: var(--small-font-size);
+}
+
+.login__buttons {
+	display: flex;
+	column-gap: 0.75rem;
+}
+
+.login__button {
+	width: 100%;
+	padding: 14px 2rem;
+	border-radius: 6px;
+    background-color: var(--lime);
+	/* background: linear-gradient(180deg, var( --lime), var(--lime-dark)); */
+	font-size: var(--small-font-size);
+	font-weight: var(--font-semi-bold);
+	box-shadow: 0 6px 24px hsla(244, 75%, 48%, 0.5);
+	margin-bottom: 1rem;
+	cursor: pointer;
+}
+.login__button:hover 
+{
+    background-color: var(--lime-dark);
+    transition: all 0.3s ease;
+}
+
+.login__button-ghost {
+	background: rgba(255, 255, 255, 0.2);
+	border: 2px solid var( --lime);
+	color: var( --lime);
+	box-shadow: none;
+}
+
+.login__forgot {
+	font-size: var(--smaller-font-size);
+	font-weight: var(--font-semi-bold);
+	color: var( --lime);
+	text-decoration: none;
+}
+
+/*=============== BREAKPOINTS ===============*/
+@media screen and (max-width: 360px) {
+	.login__buttons {
+		flex-direction: column;
+	}
+}
+
+@media screen and (min-width: 576px) {
+	.login__form {
+		width: 450px;
+		justify-self: center;
+	}
+}
+
+@media screen and (min-width: 1064px) {
+	.container {
+		height: 100vh;
+		display: grid;
+		place-items: center;
+	}
+
+	.login__content {
+		width: 1024px;
+		height: 600px;
+	}
+	.login__img {
+		border-radius: 3.5rem;
+		box-shadow: 0 24px 48px #024361;
+	}
+	.login__form {
+		justify-self: flex-end;
+		margin-right: 4.5rem;
+	}
+}
+
+@media screen and (min-width: 1200px) {
+	.login__content {
+		height: 700px;
+	}
+	.login__form {
+		row-gap: 2rem;
+		padding: 3rem;
+		border-radius: 1.25rem;
+	}
+	.login__description,
+	.login__label,
+	.login__button {
+		font-size: var(--normal-font-size);
+	}
+	.login__inputs {
+		row-gap: 1.25rem;
+		margin-bottom: 0.75rem;
+	}
+	.login__input {
+		border: 2.5px solid var(--text-color);
+		padding: 1rem;
+		font-size: var(--small-font-size);
+	}
+	.login__button {
+		padding-block: 1rem;
+		margin-bottom: 1.25rem;
+	}
+	.login__button-ghost {
+		border: 2.5px solid var( --lime);
+	}
+}
+
+.login-container-page-right a:hover
+{
+    color: var(--lime-dark);
+    transition: all 0.3s ease;
+}
+
+.error-login-signup
+{
+    color: red;
+    font-family: 'Poppins', sans-serif;
+    font-weight: bold;
+    font-size: 1rem;
+    margin-top: 10px;
+    height: 20px;
+}

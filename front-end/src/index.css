@@ -2,10 +2,14 @@
   margin:0;
   padding:0;
   box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+  
   --lime:#bcfe2f;
-  --lime-dark:#a3db29;
+  --lime-dark:hwb(79 16% 14%);
   --dark:#131517;
+  --dark-light: #252728;
   --border:#252728;
+  --font: #b0afb2;
 }
 
 /* Custom scroll-bar (GLOBAL) */

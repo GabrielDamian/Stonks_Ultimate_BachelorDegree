@@ -2,19 +2,20 @@
 .top-bar-content-header
 {
     height: 10%;
-    border: 1px solid red;
     font-family: Arial, Helvetica, sans-serif;  
     display: flex;
     align-items: center;
     font-size: 1.4rem;
     justify-content: space-between;
+    background-color: var(--dark);
+    border-bottom: var(--border);
+    color: var(--font);
 }
 
 
 .top-bar-content-header-left
 {
     height: 100%;
-    border: 1px solid red;
     width: 30%;
     display: flex;
     align-items: center;
@@ -24,38 +25,37 @@
 {
     height: 100%;
     width: 30%;
-    border: 1px solid green;
     display: flex;
 }
 .top-bar-content-header-right-left
 {
     height: 100%;
-    border: 1px solid blue;
-    width: 70%
+    width: 70%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 10px;
 }
-.top-bar-content-header-right-left-top
+.top-bar-content-header-right-left span 
 {
-    height: 50%;
-    width: 100%;
-    border: 1px solid magenta;
-    text-align: center;
+    color: white;
+    font-size: 1.1rem;
 }
-.top-bar-content-header-right-left-bot
-{
-    height: 50%;
-    width: 100%;
-    border: 1px solid green;
-    text-align: center;
-}
+
 
 
 .top-bar-content-header-right-right
 {
     height: 100%;
-    border: 1px solid red;
     width: 30%;
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
+    padding: 10px;
+}
+.top-bar-content-header-right-right img 
+{
+    height: 20px;
+    object-fit: contain;
 }

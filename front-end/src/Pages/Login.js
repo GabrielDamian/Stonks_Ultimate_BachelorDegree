@@ -2,10 +2,13 @@ import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'universal-cookie';
+import {Link} from 'react-router-dom';
+import LogoIcon from '../Media/logo.png';
+import './Style/Login.css';
+
 function Login()
 {
     const cookies = new Cookies();
-    const navigate = useNavigate();
 
     const [userData, setUserData] = useState({
         email:'',
@@ -66,7 +69,7 @@ function Login()
                     let token = data.token;
                     cookies.set('jwt',token,{secure: true, sameSite: 'none'})
                     console.log("raw token:", token)
-                    navigate(`/`);
+                    navigate(`/dashboard`);
                 }
               }
               catch (err) {
@@ -93,13 +96,82 @@ function Login()
           });
     }
 
+    const navigate = useNavigate();
+    const redirectTo = (des)=>{
+        navigate(des)
+    }
+
     return(
-        <div>
-            <input name="email" type="text" placeholder='email' onChange={handleInputChange}></input>
-            <input name="password" type="password" placeholder='password' onChange={handleInputChange}></input>
-            <button onClick={LoginHandler}>Login</button>
-            <span>{errors}</span>
-            <button onClick={test}>TEST</button>
+        <div 
+            style={{
+                backgroundImage: `url('${process.env.PUBLIC_URL}/login.png')`
+            }}
+            className='login-container'>
+            <div className='hero-top-bar'>
+                <div className='hero-top-bar-logo'>
+                    <img onClick={()=>redirectTo('/')} src={LogoIcon} alt="logo" />
+                </div>
+                <div className='hero-top-bar-navigation'>
+                    <div className='hero-top-bar-navigation-buttons'>
+                    <Link to="/login">Login</Link>
+                    <Link to="/signup">Signup</Link>
+                    </div>
+                </div>
+            </div>
+            <div className='login-container-page'>
+            <div className='login-container-page-left'>
+
+            </div>
+            <div className='login-container-page-right'>
+            
+            <form action="" class="login__form" onSubmit={(e)=>{e.preventDefault()}}>
+                <div>
+                    <h1 class="login__title">
+                        <span>Welcome</span> Back!
+                    </h1>
+                    <p class="login__description">
+                        Please login to continue.
+                    </p>
+                </div>
+
+                <div>
+                    <div class="login__inputs">
+                        <div>
+                            <label for="" class="login__label">Email</label>
+                            <input name="email" type="text" onChange={handleInputChange} placeholder="Enter your email address" required class="login__input"/>
+                        </div>
+
+                        <div>
+                            <label for="" class="login__label">Password</label>
+
+                            <div class="login__box">
+                                <input name="password" type="password" placeholder='password' onChange={handleInputChange} required class="login__input" id="input-pass"/>
+                                <i class="ri-eye-off-line login__eye" id="input-icon"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="login__check">
+                        <input type="checkbox" class="login__check-input"/>
+                        <label for="" class="login__check-label">Remember me</label>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="login__buttons">
+                        <button class="login__button" onClick={LoginHandler}>Log In</button>
+                        <button class="login__button login__button-ghost" onClick={()=>redirectTo('/signup')}>Sign Up</button>
+                        
+                    </div>
+
+                    <a href="#" class="login__forgot">Forgot Password?</a>
+                    {/* <br/><br/><p></p> */}
+                    <p className='error-login-signup'>{errors}</p>
+                </div>
+		    </form>
+
+            </div>
+            </div>
         </div>
     )
 } 

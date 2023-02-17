@@ -13,21 +13,21 @@ import Typography from '@mui/material/Typography';
 
 const style = {
   position: 'absolute',
+  height: '70%',
+  width:'70%',
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 400,
   bgcolor: 'background.paper',
   border: '2px solid #000',
   boxShadow: 24,
-  p: 4,
+  display:'flex',
+  justifyContent: 'center',
+  alignItems: 'center'
 };
 
 
 function DocsSection(){
-
-    
-
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
@@ -35,24 +35,32 @@ function DocsSection(){
     return(
         <>
         <Modal
-        aria-labelledby="transition-modal-title"
-        aria-describedby="transition-modal-description"
-        open={open}
-        onClose={handleClose}
-        closeAfterTransition
-        BackdropComponent={Backdrop}
-        BackdropProps={{
-          timeout: 500,
-        }}
-      >
+          aria-labelledby="transition-modal-title"
+          aria-describedby="transition-modal-description"
+          open={open}
+          onClose={handleClose}
+          closeAfterTransition
+          BackdropComponent={Backdrop}
+          BackdropProps={{
+            timeout: 500,
+          }}
+        >
         <Fade in={open}>
           <Box sx={style}>
-            <Typography id="transition-modal-title" variant="h6" component="h2">
+          <iframe 
+            src="https://keras.io/api/layers/core_layers/dense/" 
+            style={{
+              height:'100%',
+              width:'100%',
+              outline: 'none'
+            }}
+            title="Iframe Example"></iframe> 
+            {/* <Typography id="transition-modal-title" variant="h6" component="h2">
               Text in a modal
             </Typography>
             <Typography id="transition-modal-description" sx={{ mt: 2 }}>
               Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-            </Typography>
+            </Typography> */}
           </Box>
         </Fade>
         </Modal>
@@ -65,7 +73,11 @@ function DocsSection(){
                 defaultExpandIcon={<ChevronRightIcon />}
                 sx={{ height: 240, flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
                 >
-                <TreeItem nodeId="1" label="Applications">
+                <TreeItem sx={{
+                  // color:'#b0afb2',
+                  // backgroundColor: '#131517'
+                  
+                  }} nodeId="1" label="Applications">
                     <TreeItem nodeId="2" label="Calendar" />
                 </TreeItem>
                 <TreeItem nodeId="5" label="Documents">

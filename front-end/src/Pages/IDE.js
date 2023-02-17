@@ -32,9 +32,9 @@ export default function IDE({tabIndex,setTabs,tabs,userId})
             <div className='dashboard-content'>
                 <TopBar userId={userId}/>
                 <div className='ide-content'>
-                <div className='ide-header'>
+                {/* <div className='ide-header'>
                     <span>IDE Builder</span>
-                </div>
+                </div> */}
                 <div className='ide-core'>
                     <div className='ide-core-docs'>
                         <DocsSection/>

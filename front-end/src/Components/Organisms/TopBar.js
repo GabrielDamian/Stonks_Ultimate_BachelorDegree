@@ -3,6 +3,8 @@ import './TopBar.css';
 import {collectUserData} from '../../API/apiCore';
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
+import CustomButton from '../Molecules/CustomButton';
+import LogoutIcon from '../../Media/Icons/menu/log-out.png';
 
 export default function TopBar({userId}){
     const navigate = useNavigate();
@@ -30,15 +32,10 @@ export default function TopBar({userId}){
             </div>
             <div className="top-bar-content-header-right">
                 <div className="top-bar-content-header-right-left">
-                    <div className="top-bar-content-header-right-left-top">
-                        <span>Username:{userEmail.email}</span>
-                    </div>
-                    <div className="top-bar-content-header-right-left-bot">
-                        {/* <span>Balance: 0.00$</span> */}
-                    </div>
+                    <span>{userEmail.email}</span>
                 </div>
                 <div className="top-bar-content-header-right-right">
-                    <button onClick={logOut}>log out</button>
+                    <img onClick={logOut} src={LogoutIcon} title="Log Out"/>
                 </div>  
             </div>
         </div>

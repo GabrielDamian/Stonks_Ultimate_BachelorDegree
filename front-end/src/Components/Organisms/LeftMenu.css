@@ -2,7 +2,7 @@
 {
     height:100vh;
     width:15%;
-    border:1px solid red;
+    background-color: var(--dark);
 }
 .ide-content
 {
@@ -11,8 +11,76 @@
 .left-bar-header
 {
     height:10%;
-    border: 1px solid red;
     display: flex;
     justify-content: center;
+    align-items: center;
+}
+.left-bar-header img 
+{
+    height: 50px;
+    object-fit: contain;
+}
+
+.left-bar-items
+{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.left-bar-items-el
+{
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+.left-bar-items-el img 
+{
+    height: 30px;
+    object-fit: contain;
+    margin-right: 20px;
+}
+.left-bar-items-el-active
+{
+    background-color: var(--lime);
+    color: var(--dark);
+    animation: active-nav-active 0.3s ease;
+    animation-fill-mode: forwards;
+}
+.left-bar-items-el-inactive 
+{
+    background-color: var(--dark);
+    color: var(--font);
+}
+
+@keyframes active-nav-active {
+    from
+    {
+        background-color: var(--dark);
+        color: var(--font);
+    }
+    to
+    {
+        background-color: var(--lime);
+        color: var(--dark);
+    }
+}
+
+
+.left-bar-items-el-inner
+{
+    height: 100%;
+    width: 70%;
+    display: flex;
+    justify-content: flex-start;
     align-items: center;
 }
