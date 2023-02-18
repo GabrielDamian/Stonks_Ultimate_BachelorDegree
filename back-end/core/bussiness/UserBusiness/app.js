@@ -124,10 +124,15 @@ app.post('/check-token',async(req,res)=>{
 app.post('/collect-user-data', async(req,res)=>{
   
   let userId = req.body.id;
+  console.log("userId:",userId)
 
   //user user id from token to find user role
   let userInfo = await axios.post("http://localhost:3003/collect-user-data",{id:userId})
   console.log("resp ok user datA:",userInfo.data)
+
+  let userNodes = await axios.post("http://localhost:3005/get-user-nodes",{owner:userId})
+  console.log("userNodes:",userNodes.data);
+  userInfo.data['nodes'] = [...userNodes.data.nodes]
 
   let data = {}
   let fields = ['email','_id','role','username','nodes']

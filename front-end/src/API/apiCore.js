@@ -1,4 +1,6 @@
 export const collectUserData = async (userIdParam,fields,setStateParam)=>{
+    console.log("----userIdParam:",userIdParam)
+    
     let response =await fetch('http://localhost:3001/collect-user-data', { 
                 method: 'POST', 
                 body: JSON.stringify({id: userIdParam}),
@@ -17,6 +19,7 @@ export const collectUserData = async (userIdParam,fields,setStateParam)=>{
                 fields.forEach((field)=>{
                     extractFields[field] = data[field]
                 })
+                console.log("11111:", extractFields);
                 setStateParam({...extractFields})
             }
             else 

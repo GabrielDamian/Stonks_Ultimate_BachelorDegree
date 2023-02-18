@@ -51,6 +51,7 @@ module.exports.populate_node = async (req, res) => {
 module.exports.get_user_nodes = async (req, res) => {
     // /get-user-nodes
     const {owner} = req.body;
+    console.log("nodes owner:",owner)
 
     console.log("->> Owner to extract nodes:",owner);
     try{

@@ -2,8 +2,8 @@
 {
     height:100vh;
     width:100%;
-    border:1px solid magenta;
     display: flex;
+    background-color: var(--dark);
 }
 .my-profile-content
 {
@@ -14,5 +14,91 @@
 .my-profile-content-data
 {
     height: 90%;
-    border: 1px solid blue;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.my-profile-content-card
+{
+    min-height: 500px;
+    min-width: 300px;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+}
+.my-profile-content-card-top
+{
+    height: 100px;
+    background-color: var(--lime);
+    border-radius: 10px;
+}
+.my-profile-content-card-image 
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.my-profile-content-card-image img 
+{
+    height: 100px;
+    object-fit: contain;
+    transform: translateY(-50px);
+}
+
+.my-profile-content-card-data
+{
+    color: var(--font);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.my-profile-content-card-data p 
+{
+    margin-bottom: 5px;
+}
+.my-profile-content-card-nodes
+{
+    margin-top: 20px;
+    height: 100%;
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+}
+.my-profile-content-card-nodes-header
+{
+    color: var(--font);
+    padding: 0px 10px;
+}
+.my-profile-content-card-nodes-items
+{
+    display: flex;
+    flex-wrap: wrap;
+}
+.my-profile-content-card-nodes-items-el
+{
+    padding: 5px;
+    margin: 10px;
+}
+.my-profile-content-card-nodes-items-el:hover 
+{
+    cursor: pointer;
+    border: 2px solid var(--lime) !important;
+    transition: all 0.3s ease;
+}
+.my-profile-content-card-nodes-items-el img 
+{
+    height: 40px;
+    width: 40px;
+    object-fit: contain;
+}
+.my-profile-content-card-nodes-items-el-pop
+{
+    min-height: 100px;
+    min-width: 100px;
+    padding: 7px;
+    border-radius: 10px;
+}
+.my-profile-content-card-nodes-items-el-pop p 
+{
+    margin-top: 5px;
 }

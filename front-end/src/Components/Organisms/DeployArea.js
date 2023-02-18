@@ -4,6 +4,8 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Switch from '@mui/material/Switch';
 import Checkbox from '@mui/material/Checkbox';
+import { alpha, styled } from '@mui/material/styles';
+import CustomButton from '../Molecules/CustomButton';
 
 const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
@@ -15,6 +17,28 @@ const initMarketState = (marketsSource)=>{
     })
     return marketObj
 }
+
+
+const CssTextField = styled(TextField)({
+    '& label.Mui-focused': {
+      color: '#bcfe2f',
+    },
+    '& .MuiInput-underline:after': {
+      borderBottomColor: '#bcfe2f',
+    },
+    '& .MuiOutlinedInput-root': {
+      '& fieldset': {
+        borderColor: '#bcfe2f',
+      },
+      '&:hover fieldset': {
+        borderColor: 'yellow',
+      },
+      '&.Mui-focused fieldset': {
+        borderColor: 'green',
+      },
+    },
+  });
+
 function DeployArea ({editorValue})
 {
 
@@ -109,7 +133,14 @@ function DeployArea ({editorValue})
             deployCodeRequest(packet)
         }
     }
-
+    const styles = {
+        root: {
+          background: "black"
+        },
+        input: {
+          color: "white"
+        }
+      };
     return(
         <div className='deployment-area-container'>
             <div className='ide-deploy-header'>
@@ -120,13 +151,19 @@ function DeployArea ({editorValue})
                     Object.keys(fields).map((el)=>{
                         return(
                             <div className='ide-deploy-field'>
-                                <TextField 
+                                <CssTextField 
                                     id="outlined-basic" 
                                     label={el} 
                                     variant="outlined" 
+                                    fontColor="magenta"
                                     sx={{
-                                        width:'100%'
-                                    }}    
+                                        "& .MuiFormLabel-root": {
+                                            color: '#bcfe2f'
+                                        },
+                                        "& .MuiFormLabel-root.Mui-focused": {
+                                            color: '#bcfe2f'
+                                        }
+                                    }}   
                                     value={fields.el}
                                     onChange={(e)=>handleFieldsChange(el,e.target.value)}
                                 />
@@ -139,8 +176,14 @@ function DeployArea ({editorValue})
                     Object.keys(markets).map((el)=>{
                         return(
                             <div className='ide-deploy-field-row'>
-                                <span>{el}</span>
                                 <Checkbox 
+                                    sx={{
+                                        color: '#b0afb2',
+                                        '&.Mui-checked': {
+                                        color: '#bcfe2f',
+                                        },
+                                    }}
+
                                     checked={markets.el}
                                     onChange={(e)=>{
                                         console.log("test:", e.target.value);
@@ -148,13 +191,15 @@ function DeployArea ({editorValue})
                                     }}
                                     {...label}
                                  />
+                                <span>{el}</span>
                             </div>
                         )
                     })
                 }
             </div>
             <div className='ide-deploy-action'>
-                <Button variant="contained" onClick={handleDeployAction}>Deploy</Button>
+                {/* <Button variant="contained" onClick={handleDeployAction}>Deploy</Button> */}
+                <CustomButton text="Deploy" onClick={handleDeployAction}/>
             </div>
              <div className='ide-deploy-field' style={{flexDirection: 'column'}}>
                 <p>{deployStatus}</p>
