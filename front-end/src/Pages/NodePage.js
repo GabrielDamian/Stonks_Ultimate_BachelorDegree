@@ -9,21 +9,37 @@ import LastPriceWidget from '../Components/Molecules/LastPriceWidget';
 
 
 
-// TODO: delete faker real data generator
-let generateFakeRealData = (source)=>{
-    console.log("SOURCEEE:",source)
-    let inner = []
-    if(source == undefined || source == null) return undefined
-    source.forEach((el)=>{
-        let temp = {
-            timestamp: el.timestamp,
-            value: el.value + Math.floor(Math.random() * 10)
-        }
-        inner.push(temp)
-    })
-    console.log("inner:", inner)
-    return inner
+
+export const fetchNodeData = async (nodeID, setStateCallback)=>{
+    try{
+        let destination = `http://localhost:3001/fetch-node/?nodeid=${nodeID}`
+
+        let response =await fetch(destination, { 
+                method: 'GET', 
+                headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+                'Access-Control-Allow-Credentials':true
+                },
+                withCredentials: true,
+                credentials: 'include'
+            })
+            if(!response.ok)
+            {
+                console.log("err  private route:",response.status)
+            }
+            else 
+            {
+                const data = await response.json();
+                setStateCallback(data)
+            }
+      }
+      catch(err)
+      {
+          console.log("err:",err)
+      }
 }
+
 function NodePage({tabIndex,setTabs,tabs,userId})
 {
     const [nodeData, setNodeData] = useState({})
@@ -35,35 +51,35 @@ function NodePage({tabIndex,setTabs,tabs,userId})
 
     },[nodeAddress, nodeData])
     
-    let fetchNodeData = async (nodeID)=>{
-        try{
-            let destination = `http://localhost:3001/fetch-node/?nodeid=${nodeID}`
+    // let fetchNodeData = async (nodeID)=>{
+    //     try{
+    //         let destination = `http://localhost:3001/fetch-node/?nodeid=${nodeID}`
 
-            let response =await fetch(destination, { 
-                    method: 'GET', 
-                    headers: {
-                    'Content-Type': 'application/json',
-                    Accept: 'application/json',
-                    'Access-Control-Allow-Credentials':true
-                    },
-                    withCredentials: true,
-                    credentials: 'include'
-                })
-                if(!response.ok)
-                {
-                    console.log("err  private route:",response.status)
-                }
-                else 
-                {
-                    const data = await response.json();
-                    setNodeData(data)
-                }
-          }
-          catch(err)
-          {
-              console.log("err:",err)
-          }
-    }
+    //         let response =await fetch(destination, { 
+    //                 method: 'GET', 
+    //                 headers: {
+    //                 'Content-Type': 'application/json',
+    //                 Accept: 'application/json',
+    //                 'Access-Control-Allow-Credentials':true
+    //                 },
+    //                 withCredentials: true,
+    //                 credentials: 'include'
+    //             })
+    //             if(!response.ok)
+    //             {
+    //                 console.log("err  private route:",response.status)
+    //             }
+    //             else 
+    //             {
+    //                 const data = await response.json();
+    //                 setNodeData(data)
+    //             }
+    //       }
+    //       catch(err)
+    //       {
+    //           console.log("err:",err)
+    //       }
+    // }
     
     let connectToNode = async (nodeID)=>{
         try{
@@ -109,7 +125,7 @@ function NodePage({tabIndex,setTabs,tabs,userId})
         }
         else 
         {
-            fetchNodeData(nodeId)
+            fetchNodeData(nodeId, setNodeData)
             connectToNode(nodeId)
         }
     },[])

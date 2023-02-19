@@ -13,8 +13,6 @@ export default function LeftMenu({tabIndex,tabs}){
   
 
   const decideSelected = (el,index)=>{
-    console.log("el index:", el, index, tabs);
-    console.log("test:",el.text, tabs[tabIndex].text)
     return el.text == tabs[tabIndex].text
   }
   return(

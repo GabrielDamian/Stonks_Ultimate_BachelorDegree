@@ -26,6 +26,9 @@ import Switch from '@mui/material/Switch';
 import Button from '@mui/material/Button';
 import TopBar from '../Components/Organisms/TopBar';
 import {Link} from 'react-router-dom';
+import RedirectIcon from '../Media/Icons/maximize.png';
+import {fetchNodeData} from './NodePage';
+import OverviewPanel from '../Components/Organisms/OverviewPanel';
 
 export default function Overview({tabIndex,setTabs,tabs,userId})
 {
@@ -53,6 +56,10 @@ export default function Overview({tabIndex,setTabs,tabs,userId})
                 const data = await response.json();
                 console.log("Nodes:", data)
                 setNodes(data.nodes);
+                if(data.nodes.length > 0)
+                {
+                  setSelected(0);
+                }
             }
       }
       catch(err)
@@ -64,14 +71,34 @@ export default function Overview({tabIndex,setTabs,tabs,userId})
       collectUserNodes() 
     },[])
 
+    useEffect(()=>{
+      console.log("nodes update:",nodes)  
+    },[nodes])
 
+    // TODO: handle selected node logic 
+    const selectedIndex = 0;
+    const [selected, setSelected] = useState(undefined);
+
+    const [selectedData, setSelectedData] = useState(undefined);
+    useEffect(()=>{
+      console.log("selectedData update:", selectedData)
+    },[selectedData])
+    useEffect(()=>{
+      if(selected !== undefined)
+      {
+        let extractSelectedId = nodes[selected].id;
+        console.log("to fetch node:", extractSelectedId);
+        fetchNodeData(extractSelectedId, setSelectedData);
+
+      }
+    },[selected])
     return (
         <div className='overview-container'>
             <LeftMenu tabIndex={tabIndex} setTabs={setTabs} tabs={tabs}/>
             <div className='dashboard-content'>
                 <TopBar userId={userId}/>
                 <div className='overview-content-data'>
-                    <div className='overview-content-data-header'>
+                    {/* <div className='overview-content-data-header'>
                     <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
                         <InputLabel id="demo-simple-select-standard-label">Node Types</InputLabel>
                         <Select
@@ -85,17 +112,22 @@ export default function Overview({tabIndex,setTabs,tabs,userId})
                             <MenuItem value={20}>Subscribed Nodes</MenuItem>
                         </Select>
                         </FormControl>
-                    </div>
+                    </div> */}
                     <div className='overview-content-data-selection'>
                         <div className='content-data-selection-list'>
                             {
-                                nodes.map((el)=>{
-                                    return(<NodeListElem obj={el}/>)
+                                nodes.map((el, index)=>{
+                                    return(<NodeListElem 
+                                            obj={el} 
+                                            handleClickIndex={()=>{setSelected(index)}}
+                                            selected={selected !== undefined ? (selected == index ? true:false):false}/>)
+                                            
                                 })
                             }
                         </div>
                         <div className='content-data-selection-graph'>
-                            <ChartComponent/>
+                            <ChartComponent source={selectedData == undefined ? [] :selectedData.predictions}/>
+                            <OverviewPanel data={selectedData}/>
                         </div>
                     </div>
                 </div>
@@ -106,7 +138,7 @@ export default function Overview({tabIndex,setTabs,tabs,userId})
 
 const label = { inputProps: { 'aria-label': 'Switch demo' } };
 
-function NodeListElem({obj})
+function NodeListElem({obj,selected,handleClickIndex})
 {
     const [open, setOpen] = React.useState(false);
     const [open2, setOpen2] = React.useState(false);
@@ -120,40 +152,62 @@ function NodeListElem({obj})
   };
 
     return(
-        <div className="node-list-elem-container">
-         <List
-        sx={{ width: '100%', bgcolor: 'background.paper' }}
-        component="nav"
-        aria-labelledby="nested-list-subheader"
-        subheader={
-          <ListSubheader component="div" id="nested-list-subheader">
-            <div className="header-item-list">
-              <Link to={`/node-page/?nodeid=${obj.id}`}>Details</Link>
-              <p>{obj.buildName}</p>
-              <p>{obj.status}</p>
-              {/* <img src={obj.icon} alt="icon"/> */}
-            </div>
+        <div
+          onClick={handleClickIndex}
+          className="node-list-elem-container"
+          style={{
+            border: `1px solid ${selected == true ? 'var(--lime)':'var(--border)'}`
+          }} 
+          >
+          <List
+            sx={{ 
+              width: '100%', 
+              backgroundColor: 'var(--dark)',
+              border: '1px solid var(--border)'
+            }}
+            component="nav"
+            aria-labelledby="nested-list-subheader"
+            subheader={
+            <ListSubheader component="div" id="nested-list-subheader">
+              <div className="header-item-list">
+                <Link to={`/node-page/?nodeid=${obj.id}`}>
+                  <img title='To node page' src={RedirectIcon} style={{height: '20px', objectFit: 'contain'}}/>
+                </Link>
+                <p>{obj.buildName}</p>
+                <p>{obj.status}</p>
+              </div>
 
-          </ListSubheader>
-        }
-      >
-        {/* NODE DETAILS */}
-        <ListItemButton onClick={handleClick2}>
-          <ListItemIcon>
-            <MoreHorizIcon />
-          </ListItemIcon>
-          <ListItemText primary="More Details" />
-          {open2 ? <ExpandLess /> : <ExpandMore />}
-        </ListItemButton>
-        <Collapse in={open2} timeout="auto" unmountOnExit>
-          <div style={{height:'200px', border:'1px solid red'}}>
-            <div className="node-list-elem-row">
-              <span>Delete node:</span>
-              <Button variant="contained" sx={{backgroundColor:'red', marginLeft:'20px'}}>Stop Node</Button>
+            </ListSubheader>
+          }
+        >
+          <ListItemButton 
+            onClick={handleClick2} 
+            sx={{
+              backgroundColor: 'var(--border)',
+              color: 'var(--font)',
+            }}
+              >
+            <ListItemIcon>
+              <MoreHorizIcon sx={{color: 'var(--font)'}}/>
+            </ListItemIcon>
+            <ListItemText 
+              
+              primary="More Details" />
+            {open2 ? <ExpandLess /> : <ExpandMore />}
+          </ListItemButton>
+          <Collapse in={open2} timeout="auto" unmountOnExit>
+            <div className='node-list-elem-rows-container'>
+              <div className="node-list-elem-row">
+                <div className="node-list-elem-row-name">
+                  <span>ceva</span>
+                </div>
+                <div className="node-list-elem-row-value">
+                  <span>ceva</span>
+                </div>
+              </div>
             </div>
-          </div>
-        </Collapse>
-      </List>
+          </Collapse>
+        </List>
         </div>
     )
 }

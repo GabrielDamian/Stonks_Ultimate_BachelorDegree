@@ -11,6 +11,7 @@ import {
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import faker from 'faker';
+import './ChartComponent.css';
 
 ChartJS.register(
   CategoryScale,
@@ -23,6 +24,11 @@ ChartJS.register(
 );
 
 export const options = {
+  plugins: {
+    customCanvasBackgroundColor: {
+      color: 'lightGreen',
+    }
+  },
   responsive: true,
   interaction: {
     mode: 'index',
@@ -52,35 +58,16 @@ export const options = {
   },
 };
 
-// const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
+function ChartComponentElem({source}) {
 
-// export const data = {
-//   labels,
-//   datasets: [
-//     // {
-//     //   label: 'Dataset 1',
-//     //   data: labels.map(() => faker.datatype.number({ min: -1000, max: 1000 })),
-//     //   borderColor: 'rgb(255, 99, 132)',
-//     //   backgroundColor: 'rgba(255, 99, 132, 0.5)',
-//     //   yAxisID: 'y',
-//     // },
-//     {
-//       label: 'Dataset 2',
-//       data: labels.map(() => faker.datatype.number({ min: -1000, max: 1000 })),
-//       borderColor: 'rgb(53, 162, 235)',
-//       backgroundColor: 'rgba(53, 162, 235, 0.5)',
-//       yAxisID: 'y1',
-//     },
-//   ],
-// };
-
-export function ChartComponent({source}) {
+    useEffect(()=>{
+      console.log("char component source:", source)
+    },[source])
   
   let howManyBehind = 20;
 
   useEffect(()=>{
     
-    console.log("source deep:", source)
     if(source !== undefined)
     {
       prepareForInnerState(source)
@@ -90,10 +77,7 @@ export function ChartComponent({source}) {
   
   let prepareForInnerState = (source)=>{
 
-    console.log("prepareForInnerState:",prepareForInnerState)
-    
     let sliced = source.slice(0,howManyBehind)
-    console.log("sliced:", sliced)
     let labels = []
     let values = []
 
@@ -105,8 +89,6 @@ export function ChartComponent({source}) {
       values.push(el.value)
     })
 
-    console.log("labels:", labels)
-    console.log("values:", values)
     setLabels(labels)
     setValuesGraph(values)
   }
@@ -118,21 +100,30 @@ export function ChartComponent({source}) {
     {
       labels,
       datasets: [
-        // {
-        //   label: 'Dataset 1',
-        //   data: labels.map(() => faker.datatype.number({ min: -1000, max: 1000 })),
-        //   borderColor: 'rgb(255, 99, 132)',
-        //   backgroundColor: 'rgba(255, 99, 132, 0.5)',
-        //   yAxisID: 'y',
-        // },
         {
-          label: 'Dataset 2',
+          label: 'Dataset 2', 
           data: valuesGrahp,
-          borderColor: 'rgb(53, 162, 235)',
-          backgroundColor: 'rgba(53, 162, 235, 0.5)',
+          borderColor: '#b0afb2',
+          backgroundColor: '#bcfe2f',
           yAxisID: 'y1',
         },
       ],
     }
   } />;
+}
+
+export function ChartComponent({source}){
+
+  
+  return (
+    <div 
+      className="custom-char-component-container"
+      style={{
+        height: '100%',
+        width: '100%',
+      }}
+      >
+        <ChartComponentElem source={source} />
+    </div>
+  )
 }

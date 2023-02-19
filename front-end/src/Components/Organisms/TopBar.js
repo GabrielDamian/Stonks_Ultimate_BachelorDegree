@@ -28,7 +28,7 @@ export default function TopBar({userId}){
     return(
         <div className="top-bar-content-header">
             <div className="top-bar-content-header-left">
-                <span>top-bar</span>
+                {/* <span>top-bar</span> */}
             </div>
             <div className="top-bar-content-header-right">
                 <div className="top-bar-content-header-right-left">

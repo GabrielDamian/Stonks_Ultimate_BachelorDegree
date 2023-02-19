@@ -1,0 +1,9 @@
+
+.custom-char-component-container
+{
+    color: var(--font) !important;
+}
+.custom-char-component-container canvas 
+{
+    background-color: var(--dark) !important;
+}
