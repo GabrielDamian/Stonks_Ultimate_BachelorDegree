@@ -17,7 +17,7 @@ import Icon1 from '../../Media/Icons/artificial-intelligence.png';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import DocumentsIcon from '../../Media/Icons/document.png';
-
+import makeStyles from '@mui/styles/makeStyles';
 function DragItem({data, hyperParamsActive,handleParameterValueChange})
 {
   const [interState, setInternState] = useState({
@@ -61,7 +61,7 @@ function DragItem({data, hyperParamsActive,handleParameterValueChange})
   const handleParameterValueChangeLocal = (e)=>{
     handleParameterValueChange(e.target.name, e.target.value);
   }
-  
+
   return (
     <div  className='drag-item-container' >
       <List
@@ -118,28 +118,48 @@ function DragItem({data, hyperParamsActive,handleParameterValueChange})
         <>
           <ListItemButton onClick={handleClick2}>
             <ListItemIcon>
-              <DataObjectIcon />
+              <DataObjectIcon sx={{color: '#bcfe2f'}}/>
             </ListItemIcon>
             <ListItemText primary="Hyperparameters" />
             {open2 ? <ExpandLess /> : <ExpandMore />}
           </ListItemButton>
           <Collapse in={open2} timeout="auto" unmountOnExit>
-            <div style={{height:'200px'}}>
+            <div style={{
+              display: 'flex',
+              flexWrap: 'wrap'
+            }}>
               {
                 interState.parameters !== undefined ? interState.parameters.map((el)=>{
                   return (
                     <div style={{
-                      padding: '10px',
-                      width:'100%',
-                      minHeight: '50px'
+                      padding: '10px 30px',
+                      width:'25%',
+                      display:'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
                     }}>
-                      <span>{el.paramName} - {el._id}</span>
+                      <span>{el.paramName}</span>
                       <Select
                         labelId="demo-simple-select-label"
                         value={el.selectedValue}
                         label="Age"
                         name={el._id}
                         onChange={handleParameterValueChangeLocal}
+                        sx={{
+                          color: "white",
+                          '.MuiOutlinedInput-notchedOutline': {
+                            borderColor: 'rgba(228, 219, 233, 0.25)',
+                          },
+                          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                            borderColor: 'rgba(228, 219, 233, 0.25)',
+                          },
+                          '&:hover .MuiOutlinedInput-notchedOutline': {
+                            borderColor: 'rgba(228, 219, 233, 0.25)',
+                          },
+                          '.MuiSvgIcon-root ': {
+                            fill: "white !important",
+                          }
+                        }}
                       >
                         {
                           extractParameterValues(el.parameterValues).map((el_menu_item)=>{
