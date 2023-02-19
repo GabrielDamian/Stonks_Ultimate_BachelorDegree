@@ -4,6 +4,7 @@
     background-color: var(--dark);
     color: var(--font);
     padding: 0px 20px;
+    border-top: 1px solid var(--border);
 }
 .ide-deploy-header
 {

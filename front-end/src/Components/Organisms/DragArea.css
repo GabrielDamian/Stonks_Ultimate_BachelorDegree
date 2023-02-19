@@ -3,26 +3,31 @@
     height:100%;
     width: 100%;
     display: flex;
-    border: 3px solid blue;
-
+    background-color: var(--dark);
 }
 .drag-area-info-panel-drag
 {
     height: 100%;
     width: 100%;
     overflow-y: scroll;
-    padding: 10px;
+    padding: 20px;
 }
 .drag-area-info-panel
 {
     width: 30%;
+    border-right: 2px solid var(--border);
 }
 .header-item-list
 {
     height: 100%;
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    background-color: var(--dark);
+    border: 2px solid var(--border);
+    color: var(--font);
+    padding: 10px;
 
 }
 .header-item-list img 
@@ -32,22 +37,20 @@
 .drag-area-info-panel-header
 {
     height: 10%;
-    border: 1px solid blue;
     display: flex;
     align-items: center;
     justify-content: center;
     font-family: Arial, Helvetica, sans-serif;
+    color: var(--font);
 }
 .drag-area-data
 {
     height: 90%;
-    border: 1px solid magenta;
 }
 .drag-info-panel 
 {
     height: 100%;
     width: 20%;
-    border:1px solid red;
     padding: 20px;
     overflow-y: scroll;
 }
@@ -57,4 +60,11 @@
     width: 70%;
     padding: 40px;
     overflow-y: scroll;
+}
+
+/* Materil ui fixes */
+#nested-list-subheader
+{
+    padding: 0px;
+
 }

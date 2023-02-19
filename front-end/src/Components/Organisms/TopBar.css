@@ -10,6 +10,7 @@
     background-color: var(--dark);
     border-bottom: var(--border);
     color: var(--font);
+    border-bottom: 1px solid var(--border);
 }
 
 

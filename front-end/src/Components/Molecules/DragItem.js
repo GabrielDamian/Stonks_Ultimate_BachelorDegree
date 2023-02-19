@@ -16,6 +16,7 @@ import DataObjectIcon from '@mui/icons-material/DataObject';
 import Icon1 from '../../Media/Icons/artificial-intelligence.png';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
+import DocumentsIcon from '../../Media/Icons/document.png';
 
 function DragItem({data, hyperParamsActive,handleParameterValueChange})
 {
@@ -64,7 +65,7 @@ function DragItem({data, hyperParamsActive,handleParameterValueChange})
   return (
     <div  className='drag-item-container' >
       <List
-        sx={{ width: '100%', bgcolor: 'background.paper' }}
+        sx={{ width: '100%', backgroundColor: '#252728', color: '#b0afb2' }}
         component="nav"
         aria-labelledby="nested-list-subheader"
         subheader={
@@ -80,18 +81,35 @@ function DragItem({data, hyperParamsActive,handleParameterValueChange})
         {/* ABOUT */}
         <ListItemButton onClick={handleClick}>
           <ListItemIcon>
-            <InfoIcon />
+            <InfoIcon sx={{color: '#bcfe2f'}}/>
           </ListItemIcon>
           <ListItemText primary="About" />
           {open ? <ExpandLess /> : <ExpandMore />}
         </ListItemButton>
         <Collapse in={open} timeout="auto" unmountOnExit>
-          <div style={{height:'200px', border:'1px solid red'}}>
-            <p>layerKeyword: {interState.layerKeyword}</p><br/>
-            <p>layerDescription: {interState.layerDescription}</p><br/>
-            <a href={interState.docLink}>docs</a><br/>
-            <p>{interState.cevav}</p>
-            <p>{interState.cevav}</p>
+          <div style={{
+            height:'auto', 
+            padding: '10px 15px',
+            fontSize: '0.8rem'
+            }}>
+            <p>{interState.layerDescription}</p><br/>
+
+            <div 
+              // href={interState.docLink}
+              style={{
+                width:'100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'flex-end'
+              }}
+              >
+                <a title="Visit Documentation" href={interState.docLink}>
+                  <img src={DocumentsIcon} style={{
+                  height: '20px',
+                  objectFit: 'contain'
+                }}/>
+                </a>
+            </div>
           </div>
         </Collapse>
 
@@ -106,13 +124,12 @@ function DragItem({data, hyperParamsActive,handleParameterValueChange})
             {open2 ? <ExpandLess /> : <ExpandMore />}
           </ListItemButton>
           <Collapse in={open2} timeout="auto" unmountOnExit>
-            <div style={{height:'200px', border:'1px solid red'}}>
+            <div style={{height:'200px'}}>
               {
                 interState.parameters !== undefined ? interState.parameters.map((el)=>{
                   return (
                     <div style={{
                       padding: '10px',
-                      border:'1px solid blue',
                       width:'100%',
                       minHeight: '50px'
                     }}>

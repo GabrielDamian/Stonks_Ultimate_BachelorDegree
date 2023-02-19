@@ -8,7 +8,6 @@ const menu = {
     height: '5px',
     backgroundColor: 'black',
     margin: '6px 0',
-    border:'1px solid red'
 };
 // fake data generator
 const getItems = (count, offset = 0) =>
@@ -47,11 +46,11 @@ const grid = 8;
 
 const getItemStyle = (isDragging, draggableStyle) => ({
     userSelect: 'none',
-    padding: grid * 2,
+    // padding: grid * 2,
     margin: `0 0 ${grid}px 0`,
 
     // change background colour if dragging
-    background: isDragging ? 'lightgreen' : 'grey',
+    background: isDragging ? 'lightgreen' : 'transparent',
 
     // styles we need to apply on draggables
     ...draggableStyle
@@ -68,10 +67,6 @@ class DragArea extends Component {
     constructor(props) {
         super(props);
     }
-    // state = {
-    //     items: getItems(5),
-    //     selected: []
-    // };
 
     id2List = {
         droppable: 'items',
@@ -212,95 +207,88 @@ class DragArea extends Component {
         return (
             <div className='drag-area-container'>
                 <DragDropContext onDragEnd={this.onDragEnd}>
-                <div className='drag-area-info-panel'>
-                    <div className='drag-area-info-panel-header'>
-                        <span>Library Section</span>
+                    <div className='drag-area-info-panel'>
+                        <div className='drag-area-info-panel-header'>
+                            <span>Library Section</span>
+                        </div>
+                        <div className='drag-area-data'>
+                        <Droppable droppableId="droppable">
+                            {(provided, snapshot) => (
+                                <div
+                                    ref={provided.innerRef}
+                                    className="drag-area-info-panel-drag"
+                                    // style={getListStyle(snapshot.isDraggingOver)}
+                                    >
+                                    {this.props.codeState.items.length > 0 &&
+                                        this.props.codeState.items.map((item, index) => (
+                                            <Draggable
+                                                key={item.id}
+                                                draggableId={item.id}
+                                                index={index}>
+                                                {(provided, snapshot) => (
+                                                    
+                                                    <div style={{border:'1px solid blackFgrey'}}>
+                                                        <div
+                                                            ref={provided.innerRef}
+                                                            {...provided.draggableProps}
+                                                            {...provided.dragHandleProps}
+                                                            style={getItemStyle(
+                                                                snapshot.isDragging,
+                                                                provided.draggableProps.style
+                                                            )}>
+                                                            <DragItem 
+                                                            handleParameterValueChange={()=>{}}
+                                                            data={item} hyperParamsActive={false}/>
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </Draggable>
+                                        ))}
+                                    {provided.placeholder}
+                                </div>
+                            )}
+                        </Droppable>
+                        </div>
                     </div>
-                    <div className='drag-area-data'>
-                    <Droppable droppableId="droppable">
+                    <Droppable droppableId="droppable2">
                         {(provided, snapshot) => (
                             <div
                                 ref={provided.innerRef}
                                 className="drag-area-info-panel-drag"
                                 // style={getListStyle(snapshot.isDraggingOver)}
                                 >
-                                {this.props.codeState.items.length > 0 &&
-                                    this.props.codeState.items.map((item, index) => (
-                                        <Draggable
-                                            key={item.id}
-                                            draggableId={item.id}
-                                            index={index}>
-                                            {(provided, snapshot) => (
-                                                
-                                                <div style={{border:'1px solid red'}}>
-                                                    <div
-                                                        ref={provided.innerRef}
-                                                        {...provided.draggableProps}
-                                                        {...provided.dragHandleProps}
-                                                        style={getItemStyle(
-                                                            snapshot.isDragging,
-                                                            provided.draggableProps.style
-                                                        )}>
-                                                        <DragItem 
-                                                        handleParameterValueChange={()=>{}}
-                                                        data={item} hyperParamsActive={false}/>
-                                                    </div>
+                                {this.props.codeState.selected.map((item, index) => (
+                                    <Draggable
+                                        key={item.id}
+                                        draggableId={item.id}
+                                        index={index}>
+                                        {(provided, snapshot) => (
+                                            
+                                            <div>
+                                                <div
+                                                    ref={provided.innerRef}
+                                                    {...provided.draggableProps}
+                                                    {...provided.dragHandleProps}
+                                                    style={getItemStyle(
+                                                        snapshot.isDragging,
+                                                        provided.draggableProps.style
+                                                    )}
+                                                    >
+                                                    <DragItem 
+                                                        handleParameterValueChange={this.handleParameterValueChange}
+                                                        data={item} 
+                                                        hyperParamsActive={true}
+                                                    />
                                                 </div>
-                                            )}
-                                        </Draggable>
-                                    ))}
+                                            </div>
+                                        )}
+                                    </Draggable>
+                                ))}
                                 {provided.placeholder}
                             </div>
                         )}
                     </Droppable>
-                    </div>
-                </div>
-                <Droppable droppableId="droppable2">
-                    {(provided, snapshot) => (
-                        <div
-                            ref={provided.innerRef}
-                            className="drag-area-info-panel-drag"
-                            // style={getListStyle(snapshot.isDraggingOver)}
-                            >
-                            {this.props.codeState.selected.map((item, index) => (
-                                 <Draggable
-                                 key={item.id}
-                                 draggableId={item.id}
-                                 index={index}>
-                                 {(provided, snapshot) => (
-                                     
-                                     <div style={{
-                                        border:'1px solid red', 
-                                        margin:'20px',
-                                        }}>
-                                         <div
-                                             ref={provided.innerRef}
-                                             {...provided.draggableProps}
-                                             {...provided.dragHandleProps}
-                                             style={getItemStyle(
-                                                 snapshot.isDragging,
-                                                 provided.draggableProps.style
-                                             )}
-                                            // style={{
-                                            //     width:'100%',
-                                            //     border:'1px solid red'
-                                            // }}
-                                             >
-                                              <DragItem 
-                                                handleParameterValueChange={this.handleParameterValueChange}
-                                                data={item} 
-                                                hyperParamsActive={true}
-                                            />
-                                         </div>
-                                     </div>
-                                 )}
-                             </Draggable>
-                            ))}
-                            {provided.placeholder}
-                        </div>
-                    )}
-                </Droppable>
-            </DragDropContext>
+                </DragDropContext>
             </div>
         );
     }

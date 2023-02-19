@@ -4,7 +4,6 @@ import './Style/IDE.css';
 import MonacoEditor from 'react-monaco-editor'
 import CustomMonaco from '../Components/Organisms/CustomMonaco';
 
-
 import DocsSection from '../Components/Organisms/DocsSection';
 import DeployArea from '../Components/Organisms/DeployArea';
 import TopBar from '../Components/Organisms/TopBar';
