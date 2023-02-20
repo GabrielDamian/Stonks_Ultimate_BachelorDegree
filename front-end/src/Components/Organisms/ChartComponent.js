@@ -116,13 +116,7 @@ export function ChartComponent({source}){
 
   
   return (
-    <div 
-      className="custom-char-component-container"
-      style={{
-        height: '100%',
-        width: '100%',
-      }}
-      >
+    <div className="custom-char-component-container">
         <ChartComponentElem source={source} />
     </div>
   )

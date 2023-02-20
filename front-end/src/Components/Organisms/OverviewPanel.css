@@ -1,0 +1,32 @@
+.overview-panel-container
+{
+    height: 50%;
+}
+.overview-panel-container-header
+{
+    padding: 20px 0px;
+    color: var(--font);
+}
+.overview-panel-container-content
+{
+    padding: 0px 20px;
+    overflow-y: scroll;
+}
+.overview-panel-container-content-row
+{
+    display: flex;
+    width: 100%;
+    color: var(--font);
+    margin-bottom: 10px;
+    border-bottom: 2px solid var(--border);
+}
+.overview-panel-container-content-row-left
+{
+    width: 30%;
+}
+.overview-panel-container-content-row-right
+{
+    width: 70%;
+    max-height: 300px;
+    overflow-y: scroll;
+}

@@ -2,6 +2,8 @@
 .custom-char-component-container
 {
     color: var(--font) !important;
+    height: auto;
+    max-height: 50%;
 }
 .custom-char-component-container canvas 
 {
