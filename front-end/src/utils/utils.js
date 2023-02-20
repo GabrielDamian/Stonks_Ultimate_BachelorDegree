@@ -1,3 +1,6 @@
+import TextField from '@mui/material/TextField';
+import { alpha, styled } from '@mui/material/styles';
+
 export function TranslateBlockStructureInPythonCode(layerData, parameters)
 {
     console.log("translator:",layerData, parameters)
@@ -23,3 +26,23 @@ export function TranslateBlockStructureInPythonCode(layerData, parameters)
 
     return `${layerData.keyword}(${parametersConcat})`
 }
+
+export const CssTextField = styled(TextField)({
+    '& label.Mui-focused': {
+      color: '#bcfe2f',
+    },
+    '& .MuiInput-underline:after': {
+      borderBottomColor: '#bcfe2f',
+    },
+    '& .MuiOutlinedInput-root': {
+      '& fieldset': {
+        borderColor: '#bcfe2f',
+      },
+      '&:hover fieldset': {
+        borderColor: 'yellow',
+      },
+      '&.Mui-focused fieldset': {
+        borderColor: '#a3db29',
+      },
+    },
+});

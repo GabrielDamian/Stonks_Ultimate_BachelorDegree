@@ -27,6 +27,6 @@
 .overview-panel-container-content-row-right
 {
     width: 70%;
-    max-height: 300px;
+    max-height: 170px;
     overflow-y: scroll;
 }

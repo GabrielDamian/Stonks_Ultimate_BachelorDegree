@@ -6,6 +6,7 @@ import Switch from '@mui/material/Switch';
 import Checkbox from '@mui/material/Checkbox';
 import { alpha, styled } from '@mui/material/styles';
 import CustomButton from '../Molecules/CustomButton';
+import {CssTextField} from '../../utils/utils';
 
 const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
@@ -19,25 +20,25 @@ const initMarketState = (marketsSource)=>{
 }
 
 
-const CssTextField = styled(TextField)({
-    '& label.Mui-focused': {
-      color: '#bcfe2f',
-    },
-    '& .MuiInput-underline:after': {
-      borderBottomColor: '#bcfe2f',
-    },
-    '& .MuiOutlinedInput-root': {
-      '& fieldset': {
-        borderColor: '#bcfe2f',
-      },
-      '&:hover fieldset': {
-        borderColor: 'yellow',
-      },
-      '&.Mui-focused fieldset': {
-        borderColor: 'green',
-      },
-    },
-  });
+// const CssTextField = styled(TextField)({
+//     '& label.Mui-focused': {
+//       color: '#bcfe2f',
+//     },
+//     '& .MuiInput-underline:after': {
+//       borderBottomColor: '#bcfe2f',
+//     },
+//     '& .MuiOutlinedInput-root': {
+//       '& fieldset': {
+//         borderColor: '#bcfe2f',
+//       },
+//       '&:hover fieldset': {
+//         borderColor: 'yellow',
+//       },
+//       '&.Mui-focused fieldset': {
+//         borderColor: '#a3db29',
+//       },
+//     },
+// });
 
 function DeployArea ({editorValue})
 {
@@ -133,14 +134,7 @@ function DeployArea ({editorValue})
             deployCodeRequest(packet)
         }
     }
-    const styles = {
-        root: {
-          background: "black"
-        },
-        input: {
-          color: "white"
-        }
-      };
+   
     return(
         <div className='deployment-area-container'>
             <div className='ide-deploy-header'>
@@ -155,7 +149,6 @@ function DeployArea ({editorValue})
                                     id="outlined-basic" 
                                     label={el} 
                                     variant="outlined" 
-                                    fontColor="magenta"
                                     sx={{
                                         "& .MuiFormLabel-root": {
                                             color: '#bcfe2f'

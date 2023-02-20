@@ -2,7 +2,6 @@
 {
     height:100vh;
     width:100%;
-    border:1px solid magenta;
     display: flex;
 }
 .add-block-content-data
@@ -12,6 +11,7 @@
     align-items: center;
     justify-content: center;
     overflow-y: scroll;
+    background-color: var(--dark);
 }
 .add-block-content-data-center
 {
@@ -31,7 +31,6 @@
 {
     height: 100%;
     width: 50%;
-    border: 1px solid red;
 }
 
 .content-data-center-row
@@ -40,4 +39,75 @@
     display: flex;
     align-items: center;
     padding: 0px 10px;
+    color: var(--font);
+}
+.content-data-center-row-parameters
+{
+    padding: 10px;
+    min-height: 50px;
+    width: 100%;
+}
+.content-data-center-row-parameters-header
+{
+    
+}
+
+.content-data-center-row-parameters-current-params
+{
+    display: flex;
+    flex-wrap: wrap;
+}
+.content-data-center-row-parameters-current-params-el
+{
+    border-radius: 5px;
+    padding: 5px 10px;
+    border: 2px solid black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--border);
+}
+.content-data-center-row-parameters-current-params-el:hover 
+{
+    background-color: var(--border);
+    transition: all 0.3s ease;
+}
+.content-data-center-row-parameters-current-params-el img 
+{
+    height: 15px;
+    object-fit: contain;
+    margin-left: 10px;
+}
+.content-data-center-row-parameters-current-params-el img:hover 
+{
+    cursor: pointer;
+    transform: scale(1.1);
+}
+
+
+.add-block-content-data-center-inputs-parameters-container 
+{
+    color: var(--font);
+}
+
+.add-block-content-data-center-inputs-parameters-container-el
+{
+    padding: 20px;
+    border: 1px solid var(--border);
+    font-size: 0.8rem;
+    position: relative;
+}
+.add-block-content-data-center-inputs-parameters-container-el-del
+{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 5px;
+    height: 30px;
+    object-fit: contain;
+}
+.add-block-content-data-center-inputs-parameters-container-el-del:hover 
+{
+    transform: scale(1.1);
+    transition: all 0.3s ease;
 }
