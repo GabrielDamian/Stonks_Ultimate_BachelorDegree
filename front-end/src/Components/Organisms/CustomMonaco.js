@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect} from "react";
 import ReactDOM from "react-dom";
 
 import Editor from "@monaco-editor/react";
@@ -9,10 +9,25 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 let code = `print("Hello world")`
 
-export default function CustomMonaco({editorValue,setEditorValue}) {
+export default function CustomMonaco({editorValue,setEditorValue, options}) {
   const [theme, setTheme] = useState("vs-dark");
   const [language, setLanguage] = useState("python");
   const [isEditorReady, setIsEditorReady] = useState(false);
+  const [handleOptions, setHandleOptions] = useState(null);
+
+  useEffect(()=>{
+    console.log("options xxx:",options)
+    if(options !== undefined)
+    {
+      console.log("options ok:",options)
+      setHandleOptions(options);
+    }
+  },[options])
+
+  useEffect(()=>{
+    console.log("ultmate check:",handleOptions)
+  },[handleOptions])
+
 
   return (
     <>
@@ -22,8 +37,9 @@ export default function CustomMonaco({editorValue,setEditorValue}) {
         theme={theme}
         language={language}
         loading={<TestLoader />}
-        value={editorValue}
+        value={editorValue !== undefined ? editorValue : null }
         onChange={setEditorValue}
+        options={handleOptions}
       />
     </>
   );

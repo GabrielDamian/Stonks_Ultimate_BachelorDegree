@@ -1,11 +1,25 @@
 .node-live-connector-container
 {
     width: 100%;
-    border: 1px solid red;
+    margin-top: 20px;
+    padding: 20px;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+}
+.node-live-connector-container p 
+{
+    margin-bottom: 5px;
 }
 
-.node-live-connector-container-items
+.node-live-connector-container-header
 {
-    padding: 10px;
-    border: 1px solid blue;
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 2px solid var(--border);
+}
+
+.node-live-connector-container-content
+{
+
 }

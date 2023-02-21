@@ -137,11 +137,7 @@ function NodePage({tabIndex,setTabs,tabs,userId})
                 <TopBar userId={userId}/>
                 <div className='node-page-content-data'>
                    <NodeInfo nodeData={nodeData}/>
-                   <div style={{
-                    width: "40%",
-                    border: '1px solid red'
-                   }}>
-                        
+                   <div className='node-page-content-data-stats'>
                         <ChartComponent source={nodeData.predictions}/>
                         <LastPriceWidget value={nodeData.predictions}/>
                         <LiveNodeConnector nodeAddress={nodeAddress}/>

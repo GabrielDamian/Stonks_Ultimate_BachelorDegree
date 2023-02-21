@@ -1,4 +1,26 @@
 .last-price-widget-container
 {
-    border: 1px solid red;
+    margin-top: 20px;
+    padding: 20px;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+}
+.last-price-widget-container-header
+{
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 2px solid var(--border);
+}
+.last-price-widget-container-content
+{
+
+}
+.last-price-widget-container-content p
+{
+    
+}
+.last-price-widget-container p 
+{
+    margin-bottom: 5px;
 }

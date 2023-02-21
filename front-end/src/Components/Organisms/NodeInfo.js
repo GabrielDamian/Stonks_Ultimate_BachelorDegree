@@ -1,4 +1,5 @@
 import React, {useState, useEffect } from 'react';
+import CustomMonaco from './CustomMonaco';
 import './NodeInfo.css';
 
 export default function NodeInfo({nodeData})
@@ -39,39 +40,37 @@ export default function NodeInfo({nodeData})
 
     return(
         <div className='node-info-container'>
+            <div className='node-info-container-header'>
+                <span>Details:</span>
+            </div>
+            <div className='node-info-container-content'>
             {
                 extractNodeData(localData).map((el)=>{
                     return <TempDisplayNodeItem keyItem={el.key} content={el.content}/>
                 })
             }
+            </div>
         </div>
     )
 }
 
 const TempDisplayNodeItem = ({keyItem,content})=>{
     return (
-        keyItem == 'Code'?
-        <div className='node-info-temp-item'>
-            <div className='node-info-temp-item-key'>
-               <span>{keyItem}</span>
+            keyItem === 'Code'? <CodeEditorNodeDisplay codeSource={content}/>:
+            <div className='node-info-temp-item'>
+                <div className='node-info-temp-item-key'>
+                <span>{keyItem}:</span>
+                </div>
+                <div className='node-info-temp-item-content'>
+                    <span>{content}</span>
+                </div>
             </div>
-            <div className='node-info-temp-item-content'>
-                <pre>
-                    <code>
-                      {content}
-                    </code>
-                </pre>
-            </div>
+    )
+}
+const CodeEditorNodeDisplay = ({codeSource})=>{
+    return(
+        <div className='node-info-temp-item-code'>
+            <CustomMonaco  editorValue={codeSource} setEditorValue={()=>{}} options={{readOnly: true}}/>
         </div>
-        :
-        <div className='node-info-temp-item'>
-            <div className='node-info-temp-item-key'>
-               <span>{keyItem}</span>
-            </div>
-            <div className='node-info-temp-item-content'>
-                <span>{content}</span>
-            </div>
-        </div>
-        
     )
 }

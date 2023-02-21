@@ -13,8 +13,6 @@ function LiveNodeConnector({nodeAddress}) {
     
     if(nodeAddress !== null && nodeAddress != undefined)
     {
-      console.log("nodeAddress ok --> connect to node:",nodeAddress)
-
       const socket = io(`http://${nodeAddress}:5000`, {
         transports: ["websocket"],
         cors: {
@@ -45,11 +43,13 @@ function LiveNodeConnector({nodeAddress}) {
 
   return (
     <div className="node-live-connector-container">
-      <div className="node-live-connector-container-items">
+      <div className="node-live-connector-container-header">
+        <span>Node Status:</span>
+      </div>
+      <div className="node-live-connector-container-content">
         <p>Container Address: {nodeAddress}</p>
-        <p>Node Status:</p>
-        <p>Timestamp:{logs.timestamp !== undefined ? logs.timestamp : 'loading'}</p>
-        <p>Status: {logs.status !== undefined ? logs.status : 'loading'}</p>
+        <p>Last heart beat: {logs.timestamp !== undefined ? logs.timestamp : 'loading'}</p>
+        <p>Live Status: {logs.status !== undefined ? logs.status : 'loading'}</p>
       </div>
     </div>
   );

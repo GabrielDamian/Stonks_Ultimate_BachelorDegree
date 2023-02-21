@@ -9,7 +9,6 @@ export default function LastPriceWidget ({value}){
     });
 
     useEffect(()=>{
-        console.log("last price deep:",value)
         if(value !== null && value !== undefined && value.length !== 0)
         {
             extractLastPrice(value[value.length -1])
@@ -17,7 +16,6 @@ export default function LastPriceWidget ({value}){
     },[value])
 
     const extractLastPrice = (source)=>{
-        console.log("extractLastPrice:",source)
         let timeStamp = new Date(Number(source.timestamp)).toLocaleDateString("en-US")
         let value = source.value;
 
@@ -28,9 +26,13 @@ export default function LastPriceWidget ({value}){
     }
     return(
         <div className="last-price-widget-container">
-            <p>Last Price Prediction</p>
-            <p>Timestamp: {lastValue.timestamp}</p>
-            <p>Value: {lastValue.value}</p>
+            <div className="last-price-widget-container-header">
+                <span>Predictions:</span>
+            </div>
+            <div className="last-price-widget-container-content">
+                <p>Timestamp: {lastValue.timestamp}</p>
+                <p>Value: {lastValue.value}</p>
+            </div>
         </div>
     )
 }
