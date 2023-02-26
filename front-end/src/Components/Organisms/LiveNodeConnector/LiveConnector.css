@@ -13,9 +13,8 @@
 
 .node-live-connector-container-header
 {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     margin-bottom: 10px;
-    padding-bottom: 5px;
     border-bottom: 2px solid var(--border);
 }
 

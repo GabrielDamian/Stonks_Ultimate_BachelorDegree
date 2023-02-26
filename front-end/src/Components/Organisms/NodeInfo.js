@@ -14,6 +14,7 @@ export default function NodeInfo({nodeData})
         console.log("nodeData:",nodeData)
 
     },[nodeData])
+
     const [localData, setLocalData] = useState({
         BuildName: 'x',
         Status: 'x',
@@ -31,6 +32,7 @@ export default function NodeInfo({nodeData})
                 Market: nodeData.market,
                 Code: nodeData.code
             }))
+            setAverage(extractAverage(nodeData.initTests))
         }
     },[nodeData])
     
@@ -46,7 +48,48 @@ export default function NodeInfo({nodeData})
 
         return temp
     }   
+    const [average, setAverage] = useState('_%');
+    const extractAverage = (initTestsParam)=>{
+        if(initTestsParam !== undefined)
+        {
+            console.log("extractAverage:",initTestsParam)
+            let totalDif = 0;
+            let count = 0;
+            initTestsParam.forEach((el)=>{
+                let split = el.interval.split(" ")
+                let values = [Number(split[0]), Number(split[1])]
 
+                let valueItem = undefined
+                if(values[0] > 0)
+                {
+                    valueItem = values[0]
+                }
+                else 
+                {
+                    valueItem = values[1]
+                }
+                
+                console.log("value diof:",Number(el.value))
+
+                totalDif +=  Number(el.value) * valueItem;
+                count += Number(el.value)
+            })
+
+            console.log("totalDif:",typeof totalDif)
+            console.log("len__:",typeof initTestsParam.length)
+
+            let average = totalDif/count;
+            console.log("average:",average)
+            if (average !== NaN)
+            {
+                return average.toFixed(2)
+            }
+            
+            
+        }
+       
+        return '_'
+    }
     return(
         <div className="node-info-left">
             <div className='node-info-container'>
@@ -70,7 +113,7 @@ export default function NodeInfo({nodeData})
                         <span>Model Ratio: </span>
                     </div>
                     <div className='node-info-container-stats-bar-value'>
-                        <span>53%</span>
+                        <span>{average} units</span>
                     </div>
                 </div>
                 <div 

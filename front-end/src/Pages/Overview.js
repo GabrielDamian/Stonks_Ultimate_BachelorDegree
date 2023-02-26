@@ -29,6 +29,7 @@ import {Link} from 'react-router-dom';
 import RedirectIcon from '../Media/Icons/maximize.png';
 import {fetchNodeData} from './NodePage';
 import OverviewPanel from '../Components/Organisms/OverviewPanel';
+import {attachRealData} from './NodePage';
 
 export default function Overview({tabIndex,setTabs,tabs,userId})
 {
@@ -80,9 +81,16 @@ export default function Overview({tabIndex,setTabs,tabs,userId})
     const [selected, setSelected] = useState(undefined);
 
     const [selectedData, setSelectedData] = useState(undefined);
+    const [realData, setRealData] = useState(null);
+
     useEffect(()=>{
       console.log("selectedData update:", selectedData)
+      if(selectedData !== undefined && selectedData.market !== undefined)
+      {
+          attachRealData(selectedData,setRealData);
+      }
     },[selectedData])
+
     useEffect(()=>{
       if(selected !== undefined)
       {
@@ -126,8 +134,8 @@ export default function Overview({tabIndex,setTabs,tabs,userId})
                             }
                         </div>
                         <div className='content-data-selection-graph'>
-                            <ChartComponent source={selectedData == undefined ? [] :selectedData.predictions}/>
-                            <OverviewPanel data={selectedData}/>
+                            <ChartComponent source={selectedData == undefined ? [] :selectedData.predictions} realData={realData}/>
+                            <OverviewPanel data={selectedData} />
                         </div>
                     </div>
                 </div>

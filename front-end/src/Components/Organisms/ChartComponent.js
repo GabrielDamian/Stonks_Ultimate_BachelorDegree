@@ -58,52 +58,102 @@ export const options = {
   },
 };
 
-function ChartComponentElem({source}) {
+function ChartComponentElem({source,realData}){
 
+  const [innerState, setInnerState] = useState({
+    real:{
+      labels: [],
+      values: []
+    },
+    predicted: {
+      labels: [],
+      values: []
+    }
+  })
+  useEffect(()=>{
+    console.log("innerStat update:",innerState)
+  },[innerState])
+  
     useEffect(()=>{
-      console.log("char component source:", source)
-    },[source])
+      if(realData !== undefined && realData !== null)
+      {
+        console.log("char component realData:", realData)
+
+        let realValues = []
+        let realLabels = []
+        let predictedValues = []
+        let predictedLabels = []
+
+        realData.forEach((el)=>{
+
+          realValues.push(el.realValue)
+          realLabels.push(new Date(el.realTime).toLocaleDateString('en-us', { weekday:"long", year:"numeric", month:"short", day:"numeric"}))
+
+          predictedValues.push(el.predictedValue)
+          predictedLabels.push(new Date(el.predicredTime).toLocaleDateString('en-us', { weekday:"long", year:"numeric", month:"short", day:"numeric"}))
+
+        })
+        setInnerState({
+          real:{
+            labels: [...realLabels],
+            values: [...realValues]
+          },
+          predicted: {
+            labels: [...predictedLabels],
+            values: [...predictedValues]
+          }
+        })
+      }
+    },[realData])
   
   let howManyBehind = 20;
 
-  useEffect(()=>{
+  // useEffect(()=>{
     
-    if(source !== undefined)
-    {
-      prepareForInnerState(source)
-    }
+  //   if(source !== undefined)
+  //   {
+  //     prepareForInnerState(source)
+  //   }
 
-  },[source])
+  // },[source])
   
-  let prepareForInnerState = (source)=>{
+  // let prepareForInnerState = (source)=>{
 
-    let sliced = source.slice(0,howManyBehind)
-    let labels = []
-    let values = []
+  //   let sliced = source.slice(0,howManyBehind)
+  //   let labels = []
+  //   let values = []
 
-    sliced.forEach((el)=>{
-      let timestamp = Number(el.timestamp);
-      let formattedDate = new Date(timestamp).toLocaleDateString('en-us', { weekday:"long", year:"numeric", month:"short", day:"numeric"})
-      labels.push(formattedDate)
+  //   sliced.forEach((el)=>{
+  //     let timestamp = Number(el.timestamp);
+  //     let formattedDate = new Date(timestamp).toLocaleDateString('en-us', { weekday:"long", year:"numeric", month:"short", day:"numeric"})
+  //     labels.push(formattedDate)
 
-      values.push(el.value)
-    })
+  //     values.push(el.value)
+  //   })
 
-    setLabels(labels)
-    setValuesGraph(values)
-  }
+   
+  // }
 
-  const [valuesGrahp, setValuesGraph] = useState()
-  const [labels, setLabels] = useState([]
-    )
+  
+  
   return <Line options={options} data={
     {
-      labels,
+      // labels,
+      labels:[...innerState.real.labels],
       datasets: [
         {
-          label: 'Dataset 2', 
-          data: valuesGrahp,
+          label: 'Real', 
+          // data: valuesGrahp,
+          data: [...innerState.real.values],
           borderColor: '#b0afb2',
+          backgroundColor: '#bcfe2f',
+          yAxisID: 'y1',
+        },
+        {
+          label: 'Predicted', 
+          // data: valuesGrahp,
+          data: [...innerState.predicted.values],
+          borderColor: 'red',
           backgroundColor: '#bcfe2f',
           yAxisID: 'y1',
         },
@@ -112,12 +162,11 @@ function ChartComponentElem({source}) {
   } />;
 }
 
-export function ChartComponent({source}){
+export function ChartComponent({source,realData}){
 
-  
   return (
     <div className="custom-char-component-container">
-        <ChartComponentElem source={source} />
+        <ChartComponentElem source={source} realData={realData}/>
     </div>
   )
 }

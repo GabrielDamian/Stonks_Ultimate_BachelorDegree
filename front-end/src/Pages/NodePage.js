@@ -6,7 +6,8 @@ import LiveNodeConnector from '../Components/Organisms/LiveNodeConnector/LiveNod
 import NodeInfo from '../Components/Organisms/NodeInfo';
 import { ChartComponent } from '../Components/Organisms/ChartComponent';
 import LastPriceWidget from '../Components/Molecules/LastPriceWidget';
-
+import GraphStats from '../Components/Molecules/GraphStats';
+import axios from 'axios';
 
 
 
@@ -40,47 +41,87 @@ export const fetchNodeData = async (nodeID, setStateCallback)=>{
           console.log("err:",err)
       }
 }
+export let attachRealData = async (nodeDataParam, setStateParam)=>{
+    console.log("nodeDataParam:",nodeDataParam)
+    let market = nodeDataParam.market;
+    console.log("market:",market)
+    let predictions = nodeDataParam.predictions
 
+    let translator={
+        BTC: 'bitcoin',
+        ETH: 'ethereum',
+        USDT: 'tether'
+    }
+    let realValuesLink = `https://api.coingecko.com/api/v3/coins/${translator[market]}/market_chart?vs_currency=usd&days=300&interval=1d`
+    console.log("realValuesLink",realValuesLink)
+
+    let realValues = await axios.get(realValuesLink)
+    console.log("realValues:", realValues)
+    console.log("real data:",realValues.data.prices)
+
+    let flatRealValues = realValues.data.prices
+    let flatPredictedValues = predictions.map((el)=>{
+        let timeStamp = Number(el.timestamp)
+        let value = el.value
+        return [timeStamp, value]
+    })
+
+    console.log("prediflatRealValuesctions:",flatRealValues)
+    console.log("flatPredictedValues:",flatPredictedValues)
+
+    let finalPairs = []
+    flatPredictedValues.forEach((el)=>{
+        let unitsDay = 86400000
+
+        let minDif = Math.abs(el[0] - flatRealValues[0][0])
+
+        let minItem = flatRealValues[0]
+
+        flatRealValues.forEach((real_el)=>{
+            if(Math.abs(real_el[0] - el[0]) < minDif)
+            {
+                minDif = Math.abs(real_el[0] - el[0])
+                minItem = real_el
+            }
+        })
+
+        let seconds = Math.floor(minDif / 1000);
+        let minutes = Math.floor(seconds / 60);
+        let hours = Math.floor(minutes / 60);
+
+        console.log("min Dif:", minDif,seconds,minutes, hours)
+
+
+        if(minDif < unitsDay)
+        {
+            let tempConcat = {
+                realValue: minItem[1],
+                realTime: minItem[0],
+                predictedValue: el[1],
+                predicredTime:  el[0]
+            }
+            finalPairs.push(tempConcat)
+        }
+    })
+
+    console.log("finalPairs:",finalPairs)
+    setStateParam(finalPairs)
+}
 function NodePage({tabIndex,setTabs,tabs,userId})
 {
     const [nodeData, setNodeData] = useState({})
+    const [realData, setRealData] = useState(null);
     const [nodeAddress, setNodeAddress] = useState(null);
     
     useEffect(()=>{
         console.log("node data:", nodeData)
         console.log("noed address:", nodeAddress)
-
+        if(nodeData.market !== undefined)
+        {
+            attachRealData(nodeData,setRealData);
+        }
     },[nodeAddress, nodeData])
     
-    // let fetchNodeData = async (nodeID)=>{
-    //     try{
-    //         let destination = `http://localhost:3001/fetch-node/?nodeid=${nodeID}`
-
-    //         let response =await fetch(destination, { 
-    //                 method: 'GET', 
-    //                 headers: {
-    //                 'Content-Type': 'application/json',
-    //                 Accept: 'application/json',
-    //                 'Access-Control-Allow-Credentials':true
-    //                 },
-    //                 withCredentials: true,
-    //                 credentials: 'include'
-    //             })
-    //             if(!response.ok)
-    //             {
-    //                 console.log("err  private route:",response.status)
-    //             }
-    //             else 
-    //             {
-    //                 const data = await response.json();
-    //                 setNodeData(data)
-    //             }
-    //       }
-    //       catch(err)
-    //       {
-    //           console.log("err:",err)
-    //       }
-    // }
     
     let connectToNode = async (nodeID)=>{
         try{
@@ -116,6 +157,8 @@ function NodePage({tabIndex,setTabs,tabs,userId})
           }
     }
 
+    
+
     useEffect(()=>{
         // extract from query params
         const queryParams = new URLSearchParams(window.location.search)
@@ -139,7 +182,8 @@ function NodePage({tabIndex,setTabs,tabs,userId})
                 <div className='node-page-content-data'>
                    <NodeInfo nodeData={nodeData}/>
                    <div className='node-page-content-data-stats'>
-                        <ChartComponent source={nodeData.predictions}/>
+                        <ChartComponent source={nodeData.predictions} realData={realData}/>
+                        <GraphStats source={nodeData.predictions} />
                         <LastPriceWidget value={nodeData.predictions}/>
                         <LiveNodeConnector nodeAddress={nodeAddress}/>
                    </div>

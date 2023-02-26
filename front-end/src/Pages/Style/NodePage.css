@@ -21,4 +21,5 @@
 .node-page-content-data-stats
 {
     width: 39%;
+    overflow-y: scroll;
 }

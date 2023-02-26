@@ -1,0 +1,16 @@
+.graph-stats-container
+{
+    padding: 20px;
+    border: 1px solid var(--border);
+    margin-top: 20px;
+    border-radius: 10px;
+}
+.graph-stats-container-header
+{
+    border-bottom: 1px solid var(--border);
+    font-size: 1.1rem;
+}
+.graph-stats-container-content p 
+{
+    margin-top: 10px;
+}

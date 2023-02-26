@@ -27,10 +27,10 @@ export default function LastPriceWidget ({value}){
     return(
         <div className="last-price-widget-container">
             <div className="last-price-widget-container-header">
-                <span>Predictions:</span>
+                <span>Tomorrow:</span>
             </div>
             <div className="last-price-widget-container-content">
-                <p>Timestamp: {lastValue.timestamp}</p>
+                <p>Date: {lastValue.timestamp}</p>
                 <p>Value: {lastValue.value}</p>
             </div>
         </div>
