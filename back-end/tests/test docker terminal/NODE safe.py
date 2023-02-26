@@ -2,20 +2,20 @@ from flask import Flask, request, jsonify
 from flask_socketio import SocketIO, emit
 from flask_cors import CORS
 import threading
-import time
 import eventlet
 import numpy as np
 from os.path import exists
 import pandas as pd
-# import pandas_datareader as web
 import datetime
 from sklearn.preprocessing import MinMaxScaler
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, LSTM
 from keras.models import load_model
 from pandas_datareader import data as pdr
-import yfinance as yfin
 import requests
+import yfinance as yfin
+import matplotlib.pyplot as plt
+
 yfin.pdr_override()
 
 app = Flask(__name__)
@@ -24,6 +24,7 @@ app.url_map.strict_slashes = False
 CORS(app, resources={r"/*": {"origins": "*"}})
 socketio = SocketIO(app, cors_allowed_origins="*", async_mode='eventlet')
 
+node_id = 'ceva'
 
 class NodeModelHandler:
     modelControllerPath = './saved_model/my_model/modelControler.txt'
@@ -43,31 +44,38 @@ class NodeModelHandler:
         # create and init train model with x years data
         print("Action: ->>> create model")
 
-        # company = "IBM"
-        company = "IBM"
+        # !!!!! REPLACE BEFORE DOCKER MODE
+        # company = '""" + code_template_replace_company + """'\n
+        company = 'IBM'
+        data = pdr.get_data_yahoo(company, start="2019-10-10", end="2020-10-10")
+        print("data:",data)
 
-        # start = dt.datetime(2012, 1, 1)
-        # end = dt.datetime(2020, 1, 1)
-
-        data = pdr.get_data_yahoo("IBM", start="2018-10-10", end="2020-10-10")
-        # data = pdr.DataReader(company, 'yahoo', start, end)
-        # data = pdr.get_data_yahoo("IBM", start="2018-10-10", end="2020-10-10")
-
-        # ----->Prepare data
+        # scale all data between [0,1]
         scaler = MinMaxScaler(feature_range=(0, 1))
         scaled_data = scaler.fit_transform(data['Close'].values.reshape(-1, 1))  # keep only 'close' column
+        print("scaled_data:",scaled_data)
 
+        # how many days we look into the past to predict the next day
         prediction_days = 60
 
+        # training data
         x_train = []
         y_train = []
 
         for x in range(prediction_days, len(scaled_data)):
+            print("x:",x)
             x_train.append(scaled_data[x - prediction_days:x, 0])
             y_train.append(scaled_data[x, 0])
 
+        print(" 1 x_train:",x_train)
+        print("1 y_train:",y_train)
+
+
         x_train, y_train = np.array(x_train), np.array(y_train)
         x_train = np.reshape(x_train, (x_train.shape[0], x_train.shape[1], 1))
+
+        print("2 x_train:",x_train)
+        print("2 y_train:",y_train)
 
         model = Sequential()
         model.add(LSTM(units=50, return_sequences=True, input_shape=(x_train.shape[1], 1)))  # units = neurons
@@ -115,20 +123,33 @@ class NodeModelHandler:
         return initializedModel
 
     def predictNextDay(self, modelParam):
+        print("predictNextDay:")
+
+        # company = '""" + code_template_replace_company + """'\n
         company = "IBM"
         data = pdr.get_data_yahoo(company, start="2018-10-10", end="2020-10-10")
+        print("data:",data)
 
         scaler = MinMaxScaler(feature_range=(0, 1))
-        scaled_data = scaler.fit_transform(data['Close'].values.reshape(-1, 1))  # keep only 'close' column
+        scaler.fit_transform(data['Close'].values.reshape(-1, 1))  # keep only 'close' column
         prediction_days = 60
+        print("scaler:",scaler)
 
         test_data = pdr.get_data_yahoo("TSLA", start="2020-10-10", end="2021-10-10")
+        actual_prices = test_data['Close'].values
+        print("actual_prices:",actual_prices)
 
         total_dataset = pd.concat((data['Close'], test_data['Close']), axis=0)
+        print("total_dataset:",total_dataset)
+
 
         model_inputs = total_dataset[len(total_dataset) - len(test_data) - prediction_days:].values
+        print(" 1 model_inputs:",model_inputs)
+
         model_inputs = model_inputs.reshape(-1, 1)
         model_inputs = scaler.transform(model_inputs)
+
+        print("2 model_inputs:",model_inputs)
 
         x_test = []
 
@@ -138,17 +159,30 @@ class NodeModelHandler:
         x_test = np.array((x_test))
         x_test = np.reshape(x_test, (x_test.shape[0], x_test.shape[1], 1))
 
-        predicted_prices = modelParam.predict(x_test)
-        predicted_prices = scaler.inverse_transform(predicted_prices)
+        print("len x_test:", len(x_test))
+        print("x_test",x_test)
 
-        # Predict next day
+
+        predicted_prices = modelParam.predict(x_test)
+        print("predicted_prices:",predicted_prices)
+
+        predicted_prices = scaler.inverse_transform(predicted_prices)
+        print("2 predicted_prices:",predicted_prices)
+
+        print("predicted_prices:",predicted_prices)
+        print("actual_prices:",actual_prices)
+        plt.plot(actual_prices, color="black")
+        plt.plot(predicted_prices,color="red")
+        plt.show()
+
         real_data = [model_inputs[len(model_inputs) + 1 - prediction_days:len(model_inputs + 1), 0]]
         real_data = np.array(real_data)
         real_data = np.reshape(real_data, (real_data.shape[0], real_data.shape[1], 1))
 
+        print("real data:",real_data)
+
         prediction = modelParam.predict(real_data)
         prediction = scaler.inverse_transform(prediction)
-        print(f"Prediction: {prediction}")
         return prediction
 
 
@@ -168,28 +202,29 @@ class NodeCore:
 
     # below functions run in setIntervals, managed by .run()
     def predictTomorrow(self):
-        print("fetch market data recurent")
-        tomorrowPrice = self.nodeModelHandler.predictNextDay(self.model)
-        print("tomorrowPrice:", tomorrowPrice[0][0])
 
-        self.apiPersistPrediction(str(tomorrowPrice[0][0]))
+        tomorrowPrice = self.nodeModelHandler.predictNextDay(self.model)
+        print("tomorrowPrice:",tomorrowPrice)
+
+        # REMOVE FOR DOCKER VERSION: TODO: add try catch wrapper
+        # self.apiPersistPrediction(str(tomorrowPrice[0][0]))
 
         self.nodeManagerLock.acquire()
-        self.logManagerOperator.createLog('tomorrow price:' + str(tomorrowPrice[0][0]))
+        self.logManagerOperator.createLog('__tomorrow-price__:' + str(tomorrowPrice[0][0]))
         self.nodeManagerLock.release()
 
-        # TODO: check is model != None (initialized properly)
-
     def apiPersistPrediction(self, valueToPersist):
-        url = 'http://localhost:3006/push-node-stats'
+        url = 'http://172.17.0.1:3006/push-node-stats'
         myobj = {
-            'node_id': '63af35ba73282a4138d7f44e',
+            'node_id': node_id,
             'new_prediction': valueToPersist
         }
         x = requests.post(url, json=myobj)
 
+
     def run(self):
         self.predictTomorrow()
+
 
 class LogManager():
     logs = []
@@ -200,33 +235,23 @@ class LogManager():
 
     def createLog(self, content):
         e = datetime.datetime.now()
-
         separator = "__//__"
         finalContent = str(e) + separator + content
-
         self.logs.append(finalContent)
 
     def consumeLogs(self):
-        print("consume logs:")
-        print("last consumed:", self.lastConsumed)
-        print("logs:", self.logs)
-
-        # from last consumed to the end of logs
-        # update last consumed to the last existing inted
-
         lastConsumedCopy = self.lastConsumed
         self.lastConsumed = len(self.logs)
-        print("update last consumed:", self.lastConsumed)
-
         return self.logs[lastConsumedCopy:]
+
 
 # GLOBALS
 lock = threading.Lock()
 increment = 0
 connected_users = {}
 
-nodeCoreInterval = 5  # GLOBAL INTERVAL
-logsEmitInterval = 2
+nodeCoreInterval = 86400
+logsEmitInterval = 1
 logsLock = threading.Lock()
 
 logManager = LogManager()
@@ -259,7 +284,6 @@ class Worker(object):
 
             eventlet.sleep(logsEmitInterval)
 
-
 @socketio.on("connect")
 def connected():
     connected_users_len = connected_users.keys()
@@ -280,19 +304,8 @@ def connected():
     emit("connect", "test payload")
 
 
-# @socketio.on('data')
-# def handle_message(data):
-#     global increment
-#     lock.acquire()
-#     print("DATA:", increment)
-#     lock.release()
-#     print("data from the front end: ", str(data))
-#     emit("data", {'data': increment, 'id': request.sid}, broadcast=True)
-
-
 @socketio.on("disconnect")
 def disconnected():
-    """event listener when client disconnects to the server"""
     print("user disconnected:", request.sid)
 
     lock.acquire()
@@ -317,18 +330,18 @@ def set_interval(func, sec):
     t.start()
     return t
 
-
 def NodeAppRun():
-    # global increment
-    # lock.acquire()
-    # increment += 1
-    # print("new increment:", increment)
-    # lock.release()
-    print("---> Node app new run")
+    print("Create new prediction")
     nodeCore.run()
+
+def nodeHeartBeat():
+    print("Node Heart Beat")
+    logManager.createLog('__Alive__')
 
 
 if __name__ == '__main__':
-    set_interval(NodeAppRun, nodeCoreInterval)
-    socketio.run(app, debug=False, port=5000, host='0.0.0.0')
+    set_interval(NodeAppRun, 3)
+    # set_interval(NodeAppRun, nodeCoreInterval)
+    set_interval(nodeHeartBeat, 1)
 
+    socketio.run(app, debug=False, port=5000, host='0.0.0.0')

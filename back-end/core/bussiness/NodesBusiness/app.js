@@ -156,7 +156,6 @@ app.post('/establish-node-connection',async (req,res)=>{
     }
 })
 
-// TODO !!!!! - change into POST
 app.post('/push-node-stats',async (req,res)=>{
   
   console.log("push node stats")
@@ -186,6 +185,43 @@ app.post('/push-node-stats',async (req,res)=>{
       return res.status(403).send("Can't push node stats!")
   }
 })
+
+app.post('/push-node-training',async (req,res)=>{
+  console.log("push node stats")
+  let {node_id, intervals,values} = req.body;
+
+  console.log("push-node-training:",node_id, intervals, values);
+  let pairs = []
+  intervals.forEach((el,index)=>{
+    pairs.push({
+      interval: el,
+      value: values[index]
+    })
+  })
+
+  console.log("pairs:",pairs);
+  try{
+    
+    let push_stats_resp = await axios.post(
+      `http://localhost:3005/push_tests`,
+        {
+          data: pairs,
+          node_id: node_id
+        }
+    )
+
+   let extractedResponse = {...push_stats_resp.data}
+   return res.status(200).send(JSON.stringify({...extractedResponse}))
+
+  }
+  catch(e)
+  {
+      console.log("err:",e)
+      return res.status(403).send("Can't push node stats!")
+  }
+
+})
+
 
 app.listen(3006,()=>{
     console.log("api gateway is listening at 3006")

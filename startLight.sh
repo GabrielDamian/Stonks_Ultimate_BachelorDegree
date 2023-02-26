@@ -24,24 +24,8 @@ gnome-terminal --geometry=260x25-0+0 \
 --tab -t "Layers Business" -e "bash -c '$LayersBusiness'" \
 --tab -t "React App" -e "bash -c '$ReactApp'"
 
-# Start Zookeeper and Kafka
-# to do: check exit code and exit from main script in case of failure
-python3 ./start_shell.py
 
-echo "Wait for Kafka to initialize (20s)"
-sleep 20
-# Pipe Nodes
-nodePath="back-end/core/bussiness/DeploymentPipes"
-genericNode="./env/bin/python3 ./Generic_Node.py"
 
-# Balancer
-pipesBalancer="cd $nodePath && ./env/bin/python3 ./Balancer.py"
-
-node_1="cd $nodePath && $genericNode stage_1 pipe_1_stage_1 pipe_1_stage_2 stage_1"
-node_2="cd $nodePath && $genericNode stage_2 pipe_1_stage_2 pipe_1_stage_3 stage_2"
-node_3="cd $nodePath && $genericNode stage_3 pipe_1_stage_3 pipe_1_stage_4 stage_3"
-node_4="cd $nodePath && $genericNode stage_4 pipe_1_stage_4 pipe_1_stage_5 stage_4"
-node_5="cd $nodePath && $genericNode stage_5 pipe_1_stage_5 balancer-releaser stage_5"
 
 
 

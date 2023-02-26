@@ -31,6 +31,7 @@ export const fetchNodeData = async (nodeID, setStateCallback)=>{
             else 
             {
                 const data = await response.json();
+                console.log("node data:",data)
                 setStateCallback(data)
             }
       }

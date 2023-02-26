@@ -33,6 +33,10 @@ const nodeSchema = new mongoose.Schema({
     predictions:[{
         timestamp: String, 
         value: Number, 
+    }],
+    initTests:[{
+        interval: String,
+        value: String
     }]
 });
 

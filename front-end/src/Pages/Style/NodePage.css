@@ -13,11 +13,12 @@
 {
     height: 90%;
     display: flex;
+    justify-content: space-between;
     background-color: var(--dark);
     color: var(--font);
     padding: 20px;
 }
 .node-page-content-data-stats
 {
-    width: 40%;
+    width: 39%;
 }

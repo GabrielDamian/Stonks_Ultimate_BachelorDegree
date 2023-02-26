@@ -64,11 +64,11 @@ function App() {
       link: '/overview',
       icon: [OverviewIcon,OverviewIconLight]
     },
-    {
-      text: 'Buy Credit',
-      link: '/buy-credit',
-      icon: [CreditIcon,CreditIconLight]
-    },
+    // {
+    //   text: 'Buy Credit',
+    //   link: '/buy-credit',
+    //   icon: [CreditIcon,CreditIconLight]
+    // },
     {
       text: 'Add Block',
       link: '/add-block',
@@ -125,26 +125,26 @@ function App() {
             </ProtectedRoute>
           }/>
 
-          <Route exact path="/buy-credit" element={
+          {/* <Route exact path="/buy-credit" element={
             <ProtectedRoute>
               <AddCredit tabIndex={4} tabs={tabs} />
             </ProtectedRoute>
-          }/>
+          }/> */}
 
           <Route exact path="/add-block" element={
             <ProtectedRoute>
-              <AddBlock tabIndex={5} tabs={tabs} />
+              <AddBlock tabIndex={4} tabs={tabs} />
             </ProtectedRoute>
           }/>
           <Route exact path="/my-profile" element={
             <ProtectedRoute>
-              <MyProfile tabIndex={6} tabs={tabs} />
+              <MyProfile tabIndex={5} tabs={tabs} />
             </ProtectedRoute>
           }/>
 
           <Route exact path="/node-page" element={
             <ProtectedRoute>
-              <NodePage tabIndex={7} tabs={tabs}/>
+              <NodePage tabIndex={6} tabs={tabs}/>
             </ProtectedRoute>
           }/>
 

@@ -147,3 +147,29 @@ module.exports.push_stats = async (req,res)=>{
         res.status(400).send({test: "Can't update node stats!"})
     }
 }
+
+
+module.exports.push_tests = async (req,res)=>{
+    
+    let {data, node_id} = req.body;
+
+    console.log("data:",data)
+
+    const doc = await Node.findOne({ _id: node_id })
+
+
+    try{
+        data.forEach((el)=>{
+            doc.initTests.push(el)
+        })
+        await doc.save()
+        res.status(200).json({ 
+            node_id
+        });
+    }
+    catch(err)
+    {
+        console.log("err:", err)
+        res.status(400).send({test: "Can't update node stats!"})
+    }
+}
