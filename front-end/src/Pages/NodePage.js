@@ -189,7 +189,7 @@ function NodePage({tabIndex,setTabs,tabs,userId})
                    <NodeInfo nodeData={nodeData}/>
                    <div className='node-page-content-data-stats'>
                         <ChartComponent source={nodeData.predictions} realData={realData}/>
-                        <GraphStats source={nodeData.predictions} />
+                        <GraphStats realData={realData} />
                         <LastPriceWidget value={nodeData.predictions}/>
                         <LiveNodeConnector nodeAddress={nodeAddress}/>
                    </div>
