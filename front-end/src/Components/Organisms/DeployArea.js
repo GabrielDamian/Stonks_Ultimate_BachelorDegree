@@ -10,7 +10,7 @@ import {CssTextField} from '../../utils/utils';
 
 const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
-const marketsTemp =['IBM','TSLA']
+const marketsTemp =['IBM','ETH','USDT']
 const initMarketState = (marketsSource)=>{
     let marketObj = {}
     marketsSource.forEach((el)=>{

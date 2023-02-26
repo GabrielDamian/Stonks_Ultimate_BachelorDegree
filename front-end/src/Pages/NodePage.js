@@ -54,8 +54,14 @@ export let attachRealData = async (nodeDataParam, setStateParam)=>{
     }
     let realValuesLink = `https://api.coingecko.com/api/v3/coins/${translator[market]}/market_chart?vs_currency=usd&days=300&interval=1d`
     console.log("realValuesLink",realValuesLink)
-
-    let realValues = await axios.get(realValuesLink)
+    let realValues = undefined;
+    try{
+        realValues = await axios.get(realValuesLink)
+    }
+    catch(e)
+    {
+        return 
+    }
     console.log("realValues:", realValues)
     console.log("real data:",realValues.data.prices)
 
