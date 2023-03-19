@@ -1,3 +1,13 @@
+// DOCKER SETUP
+let hostPOV = 'localhost'
+console.log(process.argv[2])
+if(process.argv[2] !== undefined)
+{
+    hostPOV = '172.17.0.1'
+}
+console.log("HOST POV:", hostPOV)
+
+
 // USER BUSINESS
 const express = require('express');
 const cookieParser = require('cookie-parser');
@@ -30,7 +40,7 @@ app.post('/create-layer', async(req,res)=>{
     let token = req.cookies.jwt
   
     let reps_token_check = await axios.post(
-      "http://localhost:3002/check-token",
+      `http://${hostPOV}:3002/check-token`,
       {token}
     )
 
@@ -38,7 +48,7 @@ app.post('/create-layer', async(req,res)=>{
     {
       try{
         let create_layers_response = await axios.post(
-          "http://localhost:3007/create-layer",
+          `http://${hostPOV}:3007/create-layer`,
           {
             layerData,
             parameters
@@ -64,14 +74,14 @@ app.get('/fetch-layers',async (req,res)=>{
   console.log("token:", token)
 
   let reps_token_check = await axios.post(
-    "http://localhost:3002/check-token",
+    `http://${hostPOV}:3002/check-token`,
     {token}
   )
   console.log("token resp:",reps_token_check.data)
 
   try{
     let get_layers_response = await axios.get(
-      "http://localhost:3007/get-layers",
+      `http://${hostPOV}:3007/get-layers`,
     )
     return res.status(200).send({...get_layers_response.data})
   }

@@ -17,12 +17,12 @@ gnome-terminal --geometry=260x25-0+0 \
 --tab -t "User Db Serivice" -e "bash -c '$UserDbService'" \
 --tab -t "Node Db Service" -e "bash -c '$NodesDbService'" \
 --tab -t "Layers Db Service" -e "bash -c '$LayersDbService'" \
---tab -t "Api Gateway" -e "bash -c '$ApiGateway'" \
 --tab -t "User Bussiness" -e "bash -c '$UserBussiness'" \
 --tab -t "Deployment Business" -e "bash -c '$DeploymentBusiness'" \
 --tab -t "Nodes Business" -e "bash -c '$NodesBusiness'" \
 --tab -t "Layers Business" -e "bash -c '$LayersBusiness'" \
---tab -t "React App" -e "bash -c '$ReactApp'"
+--tab -t "React App" -e "bash -c '$ReactApp'" \
+--tab -t "Api Gateway" -e "bash -c '$ApiGateway'" 
 
 
 

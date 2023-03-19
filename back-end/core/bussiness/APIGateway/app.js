@@ -1,4 +1,15 @@
 // API GATEWAY
+
+
+// DOCKER SETUP
+let hostPOV = 'localhost'
+console.log(process.argv[2])
+if(process.argv[2] !== undefined)
+{
+    hostPOV = '172.17.0.1'
+}
+console.log("HOST POV:", hostPOV)
+
 const express = require('express');
 const cookieParser = require('cookie-parser');
 var cors = require('cors');
@@ -22,61 +33,61 @@ app.use(cors({
       "http://localhost:3003",
     ]
   ]}))
-// setupLogging(app);
 
 const ROUTES = {
     //user business layer
     'login_POST':{
         needsAuth: false,
         roles: [],
-        service: "http://localhost:3002/login"
+        service: `http://${hostPOV}:3002/login`
+        
     },
     'signup_POST':{
         needsAuth: false,
         roles: [],
-        service: "http://localhost:3002/signup"
+        service: `http://${hostPOV}:3002/signup`
     },
     'check-token_POST':{
         needsAuth: true,
         roles:[],
-        service: "http://localhost:3002/check-token"
+        service: `http://${hostPOV}:3002/check-token`
     },
     'collect-user-data_POST':{
         needsAuth: true,
         roles: [],
-        service: "http://localhost:3002/collect-user-data"
+        service: `http://${hostPOV}:3002/collect-user-data`
     },
     //deployment business layer
     'deploy-code_POST':{
         needsAuth: true,
         roles:[],
-        service: "http://localhost:3004/deploy-code"
+        service: `http://${hostPOV}:3004/deploy-code`
     },
     //fetch nodes
     'fetch-nodes_GET':{
         needsAuth: true,
         roles:[],
-        service: "http://localhost:3006/fetch-nodes"
+        service: `http://${hostPOV}:3006/fetch-nodes`
     },
     'fetch-node_GET':{
         needsAuth: true,
         roles:[],
-        service: "http://localhost:3006/fetch-node"
+        service: `http://${hostPOV}:3006/fetch-node`
     },
     'establish-node-connection_POST':{
         needsAuth: true,
         roles:[],
-        service: "http://localhost:3006/establish-node-connection"
+        service: `http://${hostPOV}:3006/establish-node-connection`
     },
     'create-layer_POST':{
         needsAuth: true,
         roles:[],
-        service: "http://localhost:3008/create-layer"
+        service: `http://${hostPOV}:3008/create-layer`
     },
      'fetch-layers_GET':{
         needsAuth: true,
         roles:[],
-        service: "http://localhost:3008/fetch-layers"
+        service: `http://${hostPOV}:3008/fetch-layers`
     },
 
     // block layers
@@ -84,7 +95,9 @@ const ROUTES = {
 
 }
 let mapIndexSeparator = "_";
-
+app.get('/test',(req,res)=>{
+    return res.send("node ok")
+})
 app.post('/:destination',async (req,res)=>{
     console.log("destination:",req.originalUrl.slice(1), req.method)
     console.log("token:", req.cookies.jwt);
@@ -110,7 +123,7 @@ app.post('/:destination',async (req,res)=>{
             try{
                 console.log("check token before post:", )
                 let reps_token_check = await axios.post(
-                    "http://localhost:3002/check-token",
+                    `http://${hostPOV}:3002/check-token`,
                     {token}
                 )
                console.log("token resp:",reps_token_check.data)
@@ -123,8 +136,9 @@ app.post('/:destination',async (req,res)=>{
            
         }
         try{
-            console.log("route public:", ROUTES[mapIndex].service)
-            console.log("route public:", ROUTES[mapIndex])
+            console.log("gett route public:", ROUTES[mapIndex])
+
+
             Proxy(ROUTES[mapIndex].service, req, res)
             .then((el)=>{
                 console.log("ok 1")
@@ -197,7 +211,7 @@ app.get('/:destination',async (req,res)=>{
             try{
                 console.log("check token before post:", )
                 let reps_token_check = await axios.post(
-                    "http://localhost:3002/check-token",
+                    `http://${hostPOV}:3002/check-token`,
                     {token}
                 )
                console.log("token resp:",reps_token_check.data)
@@ -214,6 +228,8 @@ app.get('/:destination',async (req,res)=>{
             
             let attachQueryPayload = ROUTES[mapIndex].service + queryParamsPayload
             console.log("final destination:",attachQueryPayload)
+
+            
 
             Proxy(attachQueryPayload, req, res)
             .then((el)=>{
@@ -248,5 +264,5 @@ app.get('/:destination',async (req,res)=>{
 })
 
 app.listen(3001,()=>{
-    console.log("api gateway is listening at 3001")
+    console.log("aaaapi gateway is listening at 3001")
 })

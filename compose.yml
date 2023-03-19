@@ -1,0 +1,20 @@
+version: '2'
+services:
+  a11pi_gateway:
+    build: ./back-end/core/bussiness/APIGateway
+    command: node app.js ceva
+    volumes:
+      - .:/usr/app/
+      - /usr/app/node_modules
+    ports:
+      - "3001:3001"
+
+  layers_busines:
+    build: ./back-end/core/bussiness/LayersBusiness
+    command: node app.js ceva
+    volumes:
+      - .:/usr/app/
+      - /usr/app/node_modules
+    ports:
+      - "3008:3008"
+    

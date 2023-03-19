@@ -2,7 +2,7 @@
 {
     height:100vh;
     width:100%;
-    border:1px solid magenta;
+    /* border:1px solid magenta; */
     display: flex;
 }
 .dashboard-content

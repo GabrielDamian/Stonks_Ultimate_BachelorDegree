@@ -31,8 +31,12 @@ const createToken = (id) => {
   });
 };
 
+app.get('/test',(req,res)=>{
+  return res.send('node ok')
+})
+
 app.post('/login',async (req,res)=>{
- 
+  console.log("entry login")
   let {email,password} = req.body;
 
   //check user data
