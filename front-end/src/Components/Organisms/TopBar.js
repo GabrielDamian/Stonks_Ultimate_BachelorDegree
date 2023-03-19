@@ -3,7 +3,7 @@ import './TopBar.css';
 import {collectUserData} from '../../API/apiCore';
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
-import CustomButton from '../Molecules/CustomButton';
+import CustomButton from '../Atoms/CustomButton';
 import LogoutIcon from '../../Media/Icons/menu/log-out.png';
 
 export default function TopBar({userId}){

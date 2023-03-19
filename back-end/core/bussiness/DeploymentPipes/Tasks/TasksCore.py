@@ -237,14 +237,15 @@ class NodeModelHandler:
     def collectStats(self, modelParam):
         print("collect Stats:")
 
-        # company = '""" + code_template_replace_company + """'\n
-        company = "IBM"
+        company = '""" + code_template_replace_company + """'\n
+        # company = "IBM"
         prediction_days = 60
 
         test_start = datetime.datetime(2015, 1, 1)
-        test_end = datetime.datetime(2020, 1, 1)
+        test_end = datetime.datetime(2022, 1, 1)
 
         data = pdr.get_data_yahoo(company, start=test_start, end=test_end)
+        # data = pdr.get_data_yahoo(company, start="2015-10-10", end="2020-10-10")
         print("DATA LEN:",len(data))
 
         scaler = MinMaxScaler(feature_range=(0, 1))
@@ -477,7 +478,8 @@ def nodeHeartBeat():
 
 
 if __name__ == '__main__':
-    set_interval(NodeAppRun, 3)
+    NodeAppRun()
+    set_interval(NodeAppRun, 43200)
     # set_interval(NodeAppRun, nodeCoreInterval)
     set_interval(nodeHeartBeat, 1)
 

@@ -10,7 +10,8 @@ import TopBar from '../Components/Organisms/TopBar';
 
 
 const code =`
-        model.add(LSTM(units=50, return_sequences=True, input_shape=(x_train.shape[1], 1)))  # units = neurons
+        #Code Example
+        model.add(LSTM(units=50, return_sequences=True, input_shape=(x_train.shape[1], 1)))  
         model.add(Dropout(0.2))
         model.add(LSTM(units=50, return_sequences=True))
         model.add(Dropout(0.2))

@@ -2,7 +2,7 @@ import React, {useState, useEffect } from 'react';
 import CustomMonaco from './CustomMonaco';
 import './NodeInfo.css';
 import Modal from '@mui/material/Modal';
-import CustomButton from '../Molecules/CustomButton';
+import CustomButton from '../Atoms/CustomButton';
 import Box from '@mui/material/Box';
 
 import { BarChart } from './BarChart.tsx';

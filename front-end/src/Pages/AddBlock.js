@@ -10,7 +10,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import {TranslateBlockStructureInPythonCode} from '../utils/utils.js';
 import {CssTextField} from '../utils/utils';
 import DeleteIcon from '../Media/Icons/remove.png';
-import CustomButton from '../Components/Molecules/CustomButton';
+import CustomButton from '../Components/Atoms/CustomButton';
 
 
 const CurrentParamValues = ({values, removeValue})=>{

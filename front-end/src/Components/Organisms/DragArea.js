@@ -1,7 +1,7 @@
 import React,{useState,Component, useEffect} from 'react';
 import {DragDropContext,Draggable,Droppable} from 'react-beautiful-dnd';
 import './DragArea.css';
-import DragItem from '../Molecules/DragItem';
+import DragItem from './DragItem';
 
 const menu = {
     width: '35px',

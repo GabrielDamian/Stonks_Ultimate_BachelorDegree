@@ -5,8 +5,8 @@ import LeftMenu from '../Components/Organisms/LeftMenu';
 import LiveNodeConnector from '../Components/Organisms/LiveNodeConnector/LiveNodeConnector';
 import NodeInfo from '../Components/Organisms/NodeInfo';
 import { ChartComponent } from '../Components/Organisms/ChartComponent';
-import LastPriceWidget from '../Components/Molecules/LastPriceWidget';
-import GraphStats from '../Components/Molecules/GraphStats';
+import LastPriceWidget from '../Components/Organisms/LastPriceWidget';
+import GraphStats from '../Components/Organisms/GraphStats';
 import axios from 'axios';
 
 
@@ -14,8 +14,7 @@ import axios from 'axios';
 export const fetchNodeData = async (nodeID, setStateCallback)=>{
     try{
         let destination = `http://localhost:3001/fetch-node/?nodeid=${nodeID}`
-
-        let response =await fetch(destination, { 
+        let response = await fetch(destination, { 
                 method: 'GET', 
                 headers: {
                 'Content-Type': 'application/json',
@@ -48,9 +47,11 @@ export let attachRealData = async (nodeDataParam, setStateParam)=>{
     let predictions = nodeDataParam.predictions
 
     let translator={
-        BTC: 'bitcoin',
-        ETH: 'ethereum',
-        USDT: 'tether'
+        AAPL: 'apple-tokenized-stock-defichain',
+        GOOG: 'google-tokenized-stock-defichain',
+        'ETH-USD': 'binance-eth',
+        'BTC-USD': 'binance-bitcoin'
+        // FB: 'facebook-tokenized-stock-defichain',
     }
     let realValuesLink = `https://api.coingecko.com/api/v3/coins/${translator[market]}/market_chart?vs_currency=usd&days=300&interval=1d`
     console.log("realValuesLink",realValuesLink)

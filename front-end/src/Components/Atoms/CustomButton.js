@@ -38,7 +38,7 @@ const BootstrapButton = styled(Button)({
     '&:focus': {
       boxShadow: '0 0 0 0.2rem rgb(189, 255, 46)',
     },
-  });
+});
 
 export default function CustomButton({text, onClick})
 {
@@ -46,8 +46,5 @@ export default function CustomButton({text, onClick})
         <BootstrapButton onClick={onClick} variant="contained" disableRipple>
         {text}
         </BootstrapButton>
-        // <Button onClick={onClick} variant="contained" color="#bcfe2f">
-        // {text}
-        // </Button>
     )
 }

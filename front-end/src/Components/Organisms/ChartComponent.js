@@ -164,6 +164,11 @@ function ChartComponentElem({source,realData}){
 
 export function ChartComponent({source,realData}){
 
+  useEffect(()=>{
+    console.log("weird 1:", source,)
+    console.log("weird 2:",realData);
+  },[source, realData])
+
   return (
     <div className="custom-char-component-container">
         <ChartComponentElem source={source} realData={realData}/>

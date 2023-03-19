@@ -38,7 +38,6 @@ export default function ProtectedRoute(
                 else 
                 {
                     const data = await response.json();
-                    console.log("ok data:", data)
                     setUserId(data.id);
                     setIsLoading(false);
                 }

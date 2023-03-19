@@ -5,12 +5,12 @@ import Button from '@mui/material/Button';
 import Switch from '@mui/material/Switch';
 import Checkbox from '@mui/material/Checkbox';
 import { alpha, styled } from '@mui/material/styles';
-import CustomButton from '../Molecules/CustomButton';
+import CustomButton from '../Atoms/CustomButton';
 import {CssTextField} from '../../utils/utils';
 
 const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
-const marketsTemp =['IBM','ETH','USDT']
+const marketsTemp =['BTC-USD','ETH-USD','AAPL','GOOG']
 const initMarketState = (marketsSource)=>{
     let marketObj = {}
     marketsSource.forEach((el)=>{
