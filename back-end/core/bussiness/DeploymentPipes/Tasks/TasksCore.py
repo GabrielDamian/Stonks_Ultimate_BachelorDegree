@@ -40,6 +40,7 @@ pandas==1.5.2
 pandas-datareader==0.9.0
 tensorflow==2.11.0
 scikit-learn==1.2.0
+dnspython==2.2.1
 yfinance
 """
 

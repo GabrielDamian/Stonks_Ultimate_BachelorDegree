@@ -8,7 +8,7 @@ if(process.argv[2] !== undefined)
 console.log("HOST POV:", hostPOV)
 
 
-// USER BUSINESS
+// LAYERS BUSINESS
 const express = require('express');
 const cookieParser = require('cookie-parser');
 var cors = require('cors');

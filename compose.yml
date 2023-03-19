@@ -1,6 +1,6 @@
 version: '2'
 services:
-  a11pi_gateway:
+  api44_gateway:
     build: ./back-end/core/bussiness/APIGateway
     command: node app.js ceva
     volumes:
@@ -17,4 +17,49 @@ services:
       - /usr/app/node_modules
     ports:
       - "3008:3008"
+  
+  nodes_business:
+    build: ./back-end/core/bussiness/NodesBusiness
+    command: node app.js ceva
+    volumes:
+      - .:/usr/app/
+      - /usr/app/node_modules
+    ports:
+      - "3006:3006"
+
+  user_business:
+    build: ./back-end/core/bussiness/UserBusiness
+    command: node app.js ceva
+    volumes:
+      - .:/usr/app/
+      - /usr/app/node_modules
+    ports:
+      - "3002:3002"
+
+  user_persistence:
+    build: ./back-end/core/db/UsersDbService
+    command: node app.js ceva
+    volumes:
+      - .:/usr/app/
+      - /usr/app/node_modules
+    ports:
+      - "3003:3003"
+
+  nodes_persistence:
+    build: ./back-end/core/db/NodesDbService
+    command: node app.js ceva
+    volumes:
+      - .:/usr/app/
+      - /usr/app/node_modules
+    ports:
+      - "3005:3005"
+
+  layers_persistence:
+    build: ./back-end/core/db/LayersDbService
+    command: node app.js ceva
+    volumes:
+      - .:/usr/app/
+      - /usr/app/node_modules
+    ports:
+      - "3007:3007"
     

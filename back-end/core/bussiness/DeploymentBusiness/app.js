@@ -1,3 +1,12 @@
+// DOCKER SETUP
+let hostPOV = 'localhost'
+console.log(process.argv[2])
+if(process.argv[2] !== undefined)
+{
+    hostPOV = '172.17.0.1'
+}
+console.log("HOST POV:", hostPOV)
+
 const express = require('express');
 var cors = require('cors');
 const axios = require('axios')
@@ -7,7 +16,7 @@ const app = express();
 const { Kafka } = require('kafkajs')
 const kafka = new Kafka({
   clientId: 'my-app',
-  brokers: ['localhost:9092'],
+  brokers: [`${hostPOV}:9092`],
 })
 const producer = kafka.producer()
 const cookieParser = require("cookie-parser");
@@ -32,7 +41,7 @@ app.post('/deploy-code',async (req,res)=>{
   let token = req.cookies.jwt
 
   let reps_token_check = await axios.post(
-    "http://localhost:3002/check-token",
+    `http://${hostPOV}:3002/check-token`,
     {token}
   )
   let ownerId = reps_token_check.data.id;
@@ -60,6 +69,10 @@ app.post('/deploy-code',async (req,res)=>{
 })
 
 // Port: 3004 by default !!!! Check dev temp fixes
+app.get('/test',(req,res)=>{
+  return res.send('deployment business node ok')
+})
+
 app.listen(3004,()=>{
     console.log("deployment business at 3004")
 })

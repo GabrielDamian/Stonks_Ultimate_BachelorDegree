@@ -1,0 +1,8 @@
+# deployment_business:
+#   build: ./back-end/core/bussiness/DeploymentBusiness
+#   command: node app.js ceva
+#   volumes:
+#     - .:/usr/app/
+#     - /usr/app/node_modules
+#   ports:
+#     - "3004:3004"

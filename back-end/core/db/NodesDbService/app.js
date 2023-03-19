@@ -1,3 +1,12 @@
+// DOCKER SETUP
+let hostPOV = 'localhost'
+console.log(process.argv[2])
+if(process.argv[2] !== undefined)
+{
+    hostPOV = '172.17.0.1'
+}
+console.log("HOST POV:", hostPOV)
+
 const express = require('express');
 const mongoose = require('mongoose');
 const nodesRoutes = require('./routes/nodesRoutes');
@@ -25,7 +34,7 @@ app.use(cors({
 // view engine
 
 // database connection
-const dbURI = 'mongodb://localhost:27017/nodes';
+const dbURI = `mongodb://${hostPOV}:27017/nodes`;
 mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex:true })
   .then((result) => app.listen(3005))
   .catch((err) => console.log(err));

@@ -1,3 +1,13 @@
+// DOCKER SETUP
+let hostPOV = 'localhost'
+console.log(process.argv[2])
+if(process.argv[2] !== undefined)
+{
+    hostPOV = '172.17.0.1'
+}
+console.log("HOST POV:", hostPOV)
+
+
 // USER BUSINESS
 const express = require('express');
 const cookieParser = require('cookie-parser');
@@ -44,7 +54,7 @@ app.post('/login',async (req,res)=>{
 
   let user_id = undefined;
   try{
-    let resp = await axios.post("http://localhost:3003/check-user",{email,password})
+    let resp = await axios.post(`http://${hostPOV}:3003/check-user`,{email,password})
     console.log("ok sigup:", resp.data.user)
     user_id = resp.data.user;
   }
@@ -68,7 +78,7 @@ app.post('/signup',async(req,res)=>{
 
   let user_id = undefined;
   try{
-    let resp = await axios.post("http://localhost:3003/create-user",{email,password,username})
+    let resp = await axios.post(`http://${hostPOV}:3003/create-user`,{email,password,username})
     console.log("ok sigup:", resp.data.user)
     user_id = resp.data.user;
   }
@@ -106,7 +116,7 @@ app.post('/check-token',async(req,res)=>{
       {
         console.log("decoded token:", decodedToken)
         //user user id from token to find user role
-        let userRole = await axios.post("http://localhost:3003/collect-user-data",{id:decodedToken.id})
+        let userRole = await axios.post(`http://${hostPOV}:3003/collect-user-data`,{id:decodedToken.id})
         console.log("userRole resp:", userRole.data.role)
 
         let user_rank = {
@@ -131,10 +141,10 @@ app.post('/collect-user-data', async(req,res)=>{
   console.log("userId:",userId)
 
   //user user id from token to find user role
-  let userInfo = await axios.post("http://localhost:3003/collect-user-data",{id:userId})
+  let userInfo = await axios.post(`http://${hostPOV}:3003/collect-user-data`,{id:userId})
   console.log("resp ok user datA:",userInfo.data)
 
-  let userNodes = await axios.post("http://localhost:3005/get-user-nodes",{owner:userId})
+  let userNodes = await axios.post(`http://${hostPOV}:3005/get-user-nodes`,{owner:userId})
   console.log("userNodes:",userNodes.data);
   userInfo.data['nodes'] = [...userNodes.data.nodes]
 
@@ -149,5 +159,5 @@ app.post('/collect-user-data', async(req,res)=>{
 })
 
 app.listen(3002,()=>{
-  console.log("user business at 3002")
+  console.log("User business at 3002")
 })

@@ -1,3 +1,12 @@
+// DOCKER SETUP
+let hostPOV = 'localhost'
+console.log(process.argv[2])
+if(process.argv[2] !== undefined)
+{
+    hostPOV = '172.17.0.1'
+}
+console.log("HOST POV:", hostPOV)
+
 // USER BUSINESS
 const express = require('express');
 const cookieParser = require('cookie-parser');
@@ -27,7 +36,7 @@ app.get('/fetch-nodes',async (req,res)=>{
     console.log("token:", token)
   
     let reps_token_check = await axios.post(
-      "http://localhost:3002/check-token",
+      `http://${hostPOV}:3002/check-token`,
       {token}
     )
     console.log("token resp:",reps_token_check.data)
@@ -36,7 +45,7 @@ app.get('/fetch-nodes',async (req,res)=>{
 
     try{
         let resp_user_nodes = await axios.post(
-            "http://localhost:3005/get-user-nodes",
+            `http://${hostPOV}:3005/get-user-nodes`,
             {owner:ownerId}
         )
        console.log("db service nodes resp:",resp_user_nodes.data)
@@ -60,7 +69,7 @@ app.get('/fetch-node',async(req,res)=>{
     console.log("token:", token)
   
     let reps_token_check = await axios.post(
-      "http://localhost:3002/check-token",
+      `http://${hostPOV}:3002/check-token`,
       {token}
     )
     console.log("token resp:",reps_token_check.data)
@@ -70,7 +79,7 @@ app.get('/fetch-node',async(req,res)=>{
     let nodeBdResp = null
     try{
        let nodeBd = await axios.get(
-        `http://localhost:3005/get-node/${nodeId}`,
+        `http://${hostPOV}:3005/get-node/${nodeId}`,
       )
       nodeBdResp = nodeBd.data;
     }
@@ -98,7 +107,7 @@ app.post('/establish-node-connection',async (req,res)=>{
     console.log("token:", token)
   
     let reps_token_check = await axios.post(
-      "http://localhost:3002/check-token",
+      `http://${hostPOV}:3002/check-token`,
       {token}
     )
     console.log("token resp:",reps_token_check.data)
@@ -108,7 +117,7 @@ app.post('/establish-node-connection',async (req,res)=>{
     let nodeBdResp = null
     try{
        let nodeBd = await axios.get(
-        `http://localhost:3005/get-node/${nodeId}`,
+        `http://${hostPOV}:3005/get-node/${nodeId}`,
       )
       nodeBdResp = nodeBd.data;
     }
@@ -168,7 +177,7 @@ app.post('/push-node-stats',async (req,res)=>{
   try{
     
     let push_stats_resp = await axios.post(
-      `http://localhost:3005/push-stats`,
+      `http://${hostPOV}:3005/push-stats`,
         {
           new_prediction,
           node_id
@@ -203,7 +212,7 @@ app.post('/push-node-training',async (req,res)=>{
   try{
     
     let push_stats_resp = await axios.post(
-      `http://localhost:3005/push_tests`,
+      `http://${hostPOV}:3005/push_tests`,
         {
           data: pairs,
           node_id: node_id
@@ -224,5 +233,5 @@ app.post('/push-node-training',async (req,res)=>{
 
 
 app.listen(3006,()=>{
-    console.log("api gateway is listening at 3006")
+    console.log("Node business is listening at 3006")
 })
