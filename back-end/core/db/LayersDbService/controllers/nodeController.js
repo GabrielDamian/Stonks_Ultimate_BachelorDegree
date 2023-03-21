@@ -9,8 +9,6 @@ module.exports.create_layer = async (req, res) => {
         parameters
     } = req.body;
 
-    console.log("layerData:",layerData)
-
     let layerName = layerData.name;
     let layerKeyword = layerData.keyword;
     let layerDescription = layerData.desc;
@@ -59,7 +57,6 @@ module.exports.get_layers = async(req,res)=>{
 
     try{
         const doc = await Layer.find({})
-        console.log("doc:",doc)
 
         res.status(200).json({layers: doc});
     }

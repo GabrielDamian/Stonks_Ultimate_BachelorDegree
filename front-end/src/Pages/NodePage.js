@@ -26,24 +26,21 @@ export const fetchNodeData = async (nodeID, setStateCallback)=>{
             })
             if(!response.ok)
             {
-                console.log("err  private route:",response.status)
+                console.error("NodePage Response:", response)
             }
             else 
             {
                 const data = await response.json();
-                console.log("node data:",data)
                 setStateCallback(data)
             }
       }
       catch(err)
       {
-          console.log("err:",err)
+        console.error("Node Page:", err)
       }
 }
 export let attachRealData = async (nodeDataParam, setStateParam)=>{
-    console.log("nodeDataParam:",nodeDataParam)
     let market = nodeDataParam.market;
-    console.log("market:",market)
     let predictions = nodeDataParam.predictions
 
     let translator={
@@ -54,7 +51,6 @@ export let attachRealData = async (nodeDataParam, setStateParam)=>{
         // FB: 'facebook-tokenized-stock-defichain',
     }
     let realValuesLink = `https://api.coingecko.com/api/v3/coins/${translator[market]}/market_chart?vs_currency=usd&days=300&interval=1d`
-    console.log("realValuesLink",realValuesLink)
     let realValues = undefined;
     try{
         realValues = await axios.get(realValuesLink)
@@ -63,8 +59,6 @@ export let attachRealData = async (nodeDataParam, setStateParam)=>{
     {
         return 
     }
-    console.log("realValues:", realValues)
-    console.log("real data:",realValues.data.prices)
 
     let flatRealValues = realValues.data.prices
     let flatPredictedValues = predictions.map((el)=>{
@@ -72,9 +66,6 @@ export let attachRealData = async (nodeDataParam, setStateParam)=>{
         let value = el.value
         return [timeStamp, value]
     })
-
-    console.log("prediflatRealValuesctions:",flatRealValues)
-    console.log("flatPredictedValues:",flatPredictedValues)
 
     let finalPairs = []
     flatPredictedValues.forEach((el)=>{
@@ -96,9 +87,6 @@ export let attachRealData = async (nodeDataParam, setStateParam)=>{
         let minutes = Math.floor(seconds / 60);
         let hours = Math.floor(minutes / 60);
 
-        console.log("min Dif:", minDif,seconds,minutes, hours)
-
-
         if(minDif < unitsDay)
         {
             let tempConcat = {
@@ -111,7 +99,6 @@ export let attachRealData = async (nodeDataParam, setStateParam)=>{
         }
     })
 
-    console.log("finalPairs:",finalPairs)
     setStateParam(finalPairs)
 }
 function NodePage({tabIndex,setTabs,tabs,userId})
@@ -121,8 +108,6 @@ function NodePage({tabIndex,setTabs,tabs,userId})
     const [nodeAddress, setNodeAddress] = useState(null);
     
     useEffect(()=>{
-        console.log("node data:", nodeData)
-        console.log("noed address:", nodeAddress)
         if(nodeData.market !== undefined)
         {
             attachRealData(nodeData,setRealData);
@@ -147,7 +132,7 @@ function NodePage({tabIndex,setTabs,tabs,userId})
                 })
                 if(!response.ok)
                 {
-                    console.log("err  private route:",response.status)
+                    console.error("NodePage:",response)
                 }
                 else 
                 {
@@ -160,7 +145,7 @@ function NodePage({tabIndex,setTabs,tabs,userId})
           }
           catch(err)
           {
-              console.log("err:",err)
+            console.error("NodePage:",err)
           }
     }
 
@@ -172,7 +157,7 @@ function NodePage({tabIndex,setTabs,tabs,userId})
         const nodeId = queryParams.get("nodeid")
         if(nodeId == undefined || nodeId == "" || nodeId == " ")
         {
-            console.log("invalid query param for nodeid")
+            console.error("Node Page: invalid query param for nodeid")
         }
         else 
         {

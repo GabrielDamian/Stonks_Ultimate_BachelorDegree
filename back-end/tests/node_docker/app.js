@@ -4,7 +4,7 @@ app.use(express.json());
 
 
 let hostPOV = 'localhost'
-console.log(process.argv[2])
+console.log(`Host: ${process.argv[2]}`)
 if(process.argv[2] !== undefined)
 {
     hostPOV = '172.17.0.1'
@@ -16,5 +16,5 @@ app.get('/ceva',(req,res)=>{
 
 const port = 3010
 app.listen(3010,()=>{
-    console.log(`Node is listening at post ${port}`)
+    console.log(`Test Node is listening at post ${port}`)
 })

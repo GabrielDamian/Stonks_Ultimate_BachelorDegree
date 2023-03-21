@@ -1,6 +1,7 @@
+//LAYERS PERSISTENCE SERVICE
+
 // DOCKER SETUP
 let hostPOV = 'localhost'
-console.log(process.argv[2])
 if(process.argv[2] !== undefined)
 {
     hostPOV = '172.17.0.1'

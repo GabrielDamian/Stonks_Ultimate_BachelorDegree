@@ -14,9 +14,7 @@ import CustomButton from '../Components/Atoms/CustomButton';
 
 
 const CurrentParamValues = ({values, removeValue})=>{
-    useEffect(()=>{
-        console.log("values deep:",values)
-    },[values])
+    
     return(
         <div className="content-data-center-row-parameters-current-params">
             {
@@ -105,7 +103,6 @@ function AddBlock({tabIndex,setTabs,tabs,userId})
     },[layerData, parameters])
 
     const handleFieldChange = (e)=>{
-        console.log("e:",e.target.value, e.target.name);
         
         setCurrentNewParam((prev)=>{
             let copy = {...prev}
@@ -127,7 +124,6 @@ function AddBlock({tabIndex,setTabs,tabs,userId})
         })
     }
     const handleAddNewParamValue = ()=>{
-        console.log("currentNewParamLoading:",currentNewParamLoading)
 
         if(currentNewParamLoading.value == '') {
             alert("please complete value field")
@@ -145,11 +141,8 @@ function AddBlock({tabIndex,setTabs,tabs,userId})
         })
     }
     const handleRemoveNewParameter = (parameter)=>{
-        console.log("handle delet:",parameter)
         let filtered = []
         currentNewParam.values.forEach((el)=>{
-            console.log("el",el)
-            console.log("parameter:", parameter);
 
             if(el.type == parameter.type && el.value == parameter.value) {
                 // ignore
@@ -159,7 +152,6 @@ function AddBlock({tabIndex,setTabs,tabs,userId})
                 filtered.push(el)
             }
         })
-        console.log("filtered:",filtered)
         setCurrentNewParam((prev)=>{
             let copy = {...prev}
             copy.values = [...filtered]
@@ -202,7 +194,6 @@ function AddBlock({tabIndex,setTabs,tabs,userId})
     const createBlockRequest = async ()=>{
 
         let packedData = {layerData, parameters}
-        console.log("packetData:", packedData)
 
         try{
             let response =await fetch('http://localhost:3001/create-layer', { 
@@ -218,31 +209,26 @@ function AddBlock({tabIndex,setTabs,tabs,userId})
                 })
                 if(!response.ok)
                 {
-                    console.log("err  private route:",response.status)
+                    console.error("AddBlock:", response)
                 }
                 else 
                 {
                     const data = await response.json();
-                    console.log("add block response ok:", data)
                 }
         }
         catch(err)
         {
-            console.log("err:",err)
+            console.error("AddBlock:", err)
         }
     }
     const handleAddBlock = ()=>{
-        console.log("add block")
-        console.log("layerData:",layerData)
-        console.log("parameteres:", parameters)
         if(layerData.name == '' || layerData.keyword == '' || layerData.desc == '' 
             || layerData.iconLink == '' || parameters.length == 0)
         {
-            console.log("please complete all field or add at leat 1 parameters")
+            alert("Please complete all field or add at leat 1 parameter.")
         }
         else 
         {
-            console.log("add block OOK") 
             createBlockRequest()
         }
     }

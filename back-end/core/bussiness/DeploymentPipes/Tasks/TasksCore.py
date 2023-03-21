@@ -480,7 +480,8 @@ def nodeHeartBeat():
 
 if __name__ == '__main__':
     NodeAppRun()
-    set_interval(NodeAppRun, 43200)
+    #set_interval(NodeAppRun, 43200)
+    set_interval(NodeAppRun, 10)
     # set_interval(NodeAppRun, nodeCoreInterval)
     set_interval(nodeHeartBeat, 1)
 

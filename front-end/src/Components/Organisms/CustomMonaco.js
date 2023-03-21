@@ -5,7 +5,6 @@ import Editor from "@monaco-editor/react";
 import { ClockLoader as Loader } from "react-spinners";
 import TestIcon from '../../Media/Icons/menu/user-light.png';
 import CircularProgress from '@mui/material/CircularProgress';
-// import examples from "./examples";
 
 let code = `print("Hello world")`
 
@@ -16,17 +15,11 @@ export default function CustomMonaco({editorValue,setEditorValue, options}) {
   const [handleOptions, setHandleOptions] = useState(null);
 
   useEffect(()=>{
-    console.log("options xxx:",options)
     if(options !== undefined)
     {
-      console.log("options ok:",options)
       setHandleOptions(options);
     }
   },[options])
-
-  useEffect(()=>{
-    console.log("ultmate check:",handleOptions)
-  },[handleOptions])
 
 
   return (

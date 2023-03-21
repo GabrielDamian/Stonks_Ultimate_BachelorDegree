@@ -9,8 +9,6 @@ import TopBar from '../Components/Organisms/TopBar';
 
 const magicTranslatorToPython = (source)=>{
     
-    console.log("magicTranslatorToPython:",source)
-
     let finalCode = ""
     let selected = source.selected;
 
@@ -25,22 +23,16 @@ const magicTranslatorToPython = (source)=>{
             }
 
             let formatParameters = formatParametersCalc(parameter.parameterValues)
-            console.log("formatParameters:",formatParameters)
 
             if(parameter.selectedValue !== undefined)
             {
                 //cauta tipul valorii in parameterValues pentru
                 let findParam = ''
-                console.log("to find:",parameter.selectedValue)
 
                 formatParameters.forEach((findParam_el)=>{
-                    console.log("findParam_el:",findParam_el)
-                    console.log("search:",findParam_el[1],parameter.selectedValue)
                     
                     if(findParam_el[1] == parameter.selectedValue)
                     {
-                        console.log("true")
-
                         if(findParam_el[0] == 'String')
                         {
                             findParam += `${parameter.paramKeyword}='${findParam_el[1]}', `
@@ -51,7 +43,6 @@ const magicTranslatorToPython = (source)=>{
                         }
                     }
                 })
-                console.log("findParam:",findParam)
                 layer_row += findParam
             }
             else 
@@ -83,12 +74,8 @@ function NodeStore({tabIndex,setTabs,tabs,userId})
 
     let [translatedLayersIntoCode, setTranslatedLayersIntoCode] = useState("");
 
-    // useEffect(()=>{
-    //     console.log("translatedLayerIntoCode update:",translatedLayersIntoCode)
-    // },[translatedLayersIntoCode])
 
     useEffect(()=>{
-        // console.log("code State update:", codeState);
         setTranslatedLayersIntoCode(magicTranslatorToPython(codeState));
     },[codeState])
 

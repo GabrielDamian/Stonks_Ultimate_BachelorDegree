@@ -48,10 +48,6 @@ const botsPerformanceTemp = [
 
 export default function Dashboard({tabIndex,setTabs,tabs,testProp,userId})
 {
-    useEffect(()=>{
-        console.log("Dash props:",testProp)
-    },[])
-    
     return (
         <div className='dashboard-container'>
             <LeftMenu tabIndex={tabIndex} setTabs={setTabs} tabs={tabs}/>

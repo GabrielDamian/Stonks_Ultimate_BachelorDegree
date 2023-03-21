@@ -3,10 +3,6 @@ import './OverviewPanel.css';
 
 export default function OverviewPanel({data})
 {
-    useEffect(()=>{
-        console.log("Overview panel data entry:",data)
-    },[data])
-    
     const [innerData, setInnerData] = useState([]);
 
     useEffect(()=>{

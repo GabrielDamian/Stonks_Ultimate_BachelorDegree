@@ -19,12 +19,11 @@ function Signup()
 
     const [errors,setErrors] = useState('');
 
-    useEffect(()=>{
-        console.log("userData update",userData)
-    },[userData])
+    
     const redirectTo = (des)=>{
         navigate(des)
     }
+
     const SignupHandler = async ()=>{
         if(userData.name !== '' && userData.password != '' && (userData.password == userData.repeatPass))
         {
@@ -39,13 +38,11 @@ function Signup()
                   headers: {'Content-Type': 'application/json'}
                 });
 
-                console.log("fill resp:",res)
                 const data = await res.json();
                 if(data.errors)
                 {
                     let extractErrors = ""
                     Object.keys(data.errors).forEach((key)=>{
-                        console.log("key:", data.errors[key])    
                         if(data.errors[key] !== '')
                         {
                             extractErrors += data.errors[key] + " // "
@@ -53,27 +50,22 @@ function Signup()
                     })
 
                     setErrors(extractErrors)
-                    console.log("extracted:",extractErrors)
 
                 }
                 else 
                 {
-                    console.log("body:", data)
                     let token = data.token;
                     cookies.set('jwt',token,{secure: true, sameSite: 'none'})
-                    console.log("raw token:", token)
                     navigate(`/`);
                 }
-                console.log("datA:",data)
               }
               catch (err) {
-                console.log(err);
+                console.error("Signup:", err)
               }
         }
         else 
         {
             setErrors('Please complete all fields!')
-            console.log("wrong signup data")
         }
     }
 
@@ -87,19 +79,6 @@ function Signup()
         })
     }
 
-    // return(
-    //     <div>
-    //         <input name="name" type="text" placeholder='name' onChange={handleInputChange}></input>
-    //         <input name="email" type="text" placeholder='email' onChange={handleInputChange}></input>
-
-    //         <input name="username" type="text" placeholder='username' onChange={handleInputChange}></input>
-
-    //         <input name="password" type="password" placeholder='password' onChange={handleInputChange}></input>
-    //         <input name="repeatPass" type="password" placeholder='repeatPass' onChange={handleInputChange}></input>
-    //         <button onClick={SignupHandler}>signup</button>
-    //         <span>{errors}</span>
-    //     </div>
-    // )
     return(
         <div 
             style={{

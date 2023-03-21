@@ -1,3 +1,6 @@
+// USER BUSINESS
+
+
 // DOCKER SETUP
 let hostPOV = 'localhost'
 console.log(process.argv[2])
@@ -8,7 +11,6 @@ if(process.argv[2] !== undefined)
 console.log("HOST POV:", hostPOV)
 
 
-// USER BUSINESS
 const express = require('express');
 const cookieParser = require('cookie-parser');
 var cors = require('cors');
@@ -46,24 +48,18 @@ app.get('/test',(req,res)=>{
 })
 
 app.post('/login',async (req,res)=>{
-  console.log("entry login")
   let {email,password} = req.body;
-
-  //check user data
-  console.log("login:", email, password);
 
   let user_id = undefined;
   try{
     let resp = await axios.post(`http://${hostPOV}:3003/check-user`,{email,password})
-    console.log("ok sigup:", resp.data.user)
     user_id = resp.data.user;
   }
   catch(err)
   {
-    console.log("err:")
+    console.log("err:",err)
     return res.status(err.response.status).send(JSON.stringify(err.response.data))
   }
-  console.log("user id:", user_id);
 
   let token = createToken(user_id)
   return res.status(200).send(JSON.stringify({token}))
@@ -73,24 +69,18 @@ app.post('/signup',async(req,res)=>{
   
   let {email,password, username} = req.body;
 
-  //check user data
-  console.log("signup:", email, password);
-
   let user_id = undefined;
   try{
     let resp = await axios.post(`http://${hostPOV}:3003/create-user`,{email,password,username})
-    console.log("ok sigup:", resp.data.user)
     user_id = resp.data.user;
   }
   catch(err)
   {
-    console.log("err:")
+    console.log("err:",err)
     return res.status(err.response.status).send(JSON.stringify(err.response.data))
   }
-  console.log("user id:", user_id);
 
   let token = createToken(user_id)
-  console.log("token out:", token)
   return res.status(200).send(JSON.stringify({token}))
 
 })
@@ -101,23 +91,17 @@ app.post('/check-token',async(req,res)=>{
 
   let {token} = req.body;
 
-  console.log("token:",token)
-
   if(token)
   {
-    console.log("case 1")
     jwt.verify(token, process.env.SECRET_TOKEN,async (err,decodedToken)=>{
       if(err)
       {
-        console.log("case 2")
         return res.status(403).send("Wrong token!");
       }
       else 
       {
-        console.log("decoded token:", decodedToken)
         //user user id from token to find user role
         let userRole = await axios.post(`http://${hostPOV}:3003/collect-user-data`,{id:decodedToken.id})
-        console.log("userRole resp:", userRole.data.role)
 
         let user_rank = {
           id:decodedToken.id,
@@ -130,7 +114,6 @@ app.post('/check-token',async(req,res)=>{
   }
   else 
   {
-    console.log("case 3")
     return res.status(401).send("Token is missing!");
   }
 });
@@ -138,14 +121,11 @@ app.post('/check-token',async(req,res)=>{
 app.post('/collect-user-data', async(req,res)=>{
   
   let userId = req.body.id;
-  console.log("userId:",userId)
 
   //user user id from token to find user role
   let userInfo = await axios.post(`http://${hostPOV}:3003/collect-user-data`,{id:userId})
-  console.log("resp ok user datA:",userInfo.data)
 
   let userNodes = await axios.post(`http://${hostPOV}:3005/get-user-nodes`,{owner:userId})
-  console.log("userNodes:",userNodes.data);
   userInfo.data['nodes'] = [...userNodes.data.nodes]
 
   let data = {}
@@ -153,11 +133,10 @@ app.post('/collect-user-data', async(req,res)=>{
   fields.forEach((field)=>{
     data[field] = userInfo.data[field]
   })
-  console.log("Data before return:".data)
 
   return res.status(200).send(JSON.stringify({...data}));
 })
 
 app.listen(3002,()=>{
-  console.log("User business at 3002")
+  console.log("User Business Service at port 3002")
 })

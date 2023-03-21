@@ -1,13 +1,14 @@
+//NODE BUSINESS
+
 // DOCKER SETUP
 let hostPOV = 'localhost'
-console.log(process.argv[2])
 if(process.argv[2] !== undefined)
 {
     hostPOV = '172.17.0.1'
 }
 console.log("HOST POV:", hostPOV)
 
-// USER BUSINESS
+
 const express = require('express');
 const cookieParser = require('cookie-parser');
 var cors = require('cors');
@@ -33,29 +34,24 @@ app.use(cors({
 app.get('/fetch-nodes',async (req,res)=>{
  
     let token = req.cookies.jwt
-    console.log("token:", token)
   
     let reps_token_check = await axios.post(
       `http://${hostPOV}:3002/check-token`,
       {token}
     )
-    console.log("token resp:",reps_token_check.data)
     let ownerId = reps_token_check.data.id;
-    console.log("Nodes owner:", ownerId);
 
     try{
         let resp_user_nodes = await axios.post(
             `http://${hostPOV}:3005/get-user-nodes`,
             {owner:ownerId}
         )
-       console.log("db service nodes resp:",resp_user_nodes.data)
        let extractedResponse = {...resp_user_nodes.data}
-       console.log("Final chekc:",extractedResponse)
        return res.status(200).send(JSON.stringify({...extractedResponse}))
     }
     catch(e)
     {
-        console.log("err:")
+        console.log("err:",e)
         return res.status(403).send("Can't get user nodes!")
     }
 
@@ -63,18 +59,14 @@ app.get('/fetch-nodes',async (req,res)=>{
 
 app.get('/fetch-node',async(req,res)=>{
   let nodeId = req.query.nodeid;
-  console.log("nodeID:",nodeId)
 
   let token = req.cookies.jwt
-    console.log("token:", token)
   
     let reps_token_check = await axios.post(
       `http://${hostPOV}:3002/check-token`,
       {token}
     )
-    console.log("token resp:",reps_token_check.data)
     let ownerId = reps_token_check.data.id;
-    console.log("Nodes owner:", ownerId);
 
     let nodeBdResp = null
     try{
@@ -99,20 +91,15 @@ app.get('/fetch-node',async(req,res)=>{
 })
 
 app.post('/establish-node-connection',async (req,res)=>{
-  console.log("------>establish-connection entry point")
   let nodeId = req.body.nodeID;
-  console.log("nodeID:",nodeId)
 
   let token = req.cookies.jwt
-    console.log("token:", token)
   
     let reps_token_check = await axios.post(
       `http://${hostPOV}:3002/check-token`,
       {token}
     )
-    console.log("token resp:",reps_token_check.data)
     let ownerId = reps_token_check.data.id;
-    console.log("Nodes owner:", ownerId);
 
     let nodeBdResp = null
     try{
@@ -128,10 +115,8 @@ app.post('/establish-node-connection',async (req,res)=>{
 
     if(nodeBdResp !== null && nodeBdResp.owner == ownerId)
     {
-      console.log("nodeBdResp ok:",nodeBdResp)
       //execute docker inspect and find out port to connect to node
       let containerID = nodeBdResp.containerId;
-      console.log("containerID:",containerID)
       exec(`docker inspect ${containerID}`, (error, stdout, stderr) => {
         if (error) {
             console.log(`error: ${error.message}`);
@@ -141,15 +126,11 @@ app.post('/establish-node-connection',async (req,res)=>{
           console.log(`stderr: ${stderr}`);
           return;
         }
-        console.log("stdout->>>:",  stdout)
-        // let parseOutput = JSON.parse(stdout[0])
-        // console.log("here--->:",parseOutput)
         let extractJson = stdout.substr(1).slice(0, -2) .trim()
 
         let parsedJson= JSON.parse(extractJson)
 
         let address = parsedJson["NetworkSettings"]["IPAddress"]
-        console.log("final:",address)
         
         let responsePacket = {
           status: address == ""?false:true,
@@ -167,13 +148,8 @@ app.post('/establish-node-connection',async (req,res)=>{
 
 app.post('/push-node-stats',async (req,res)=>{
   
-  console.log("push node stats")
   let {node_id, new_prediction} = req.body;
 
-  
-
-  console.log("test params:", node_id, new_prediction)
-  // return res.status(200).send('ceva')
   try{
     
     let push_stats_resp = await axios.post(
@@ -196,10 +172,8 @@ app.post('/push-node-stats',async (req,res)=>{
 })
 
 app.post('/push-node-training',async (req,res)=>{
-  console.log("push node stats")
   let {node_id, intervals,values} = req.body;
 
-  console.log("push-node-training:",node_id, intervals, values);
   let pairs = []
   intervals.forEach((el,index)=>{
     pairs.push({
@@ -208,7 +182,6 @@ app.post('/push-node-training',async (req,res)=>{
     })
   })
 
-  console.log("pairs:",pairs);
   try{
     
     let push_stats_resp = await axios.post(
@@ -233,5 +206,5 @@ app.post('/push-node-training',async (req,res)=>{
 
 
 app.listen(3006,()=>{
-    console.log("Node business is listening at 3006")
+    console.log("Node Business Service at port 3006")
 })

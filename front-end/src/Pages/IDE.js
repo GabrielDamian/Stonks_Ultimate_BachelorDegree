@@ -22,8 +22,6 @@ const code =`
 
 export default function IDE({tabIndex,setTabs,tabs,userId})
 {
-    console.log("tabs idex:", tabIndex)
-
     const [editorValue, setEditorValue] = useState(code)
 
     return (
@@ -32,9 +30,6 @@ export default function IDE({tabIndex,setTabs,tabs,userId})
             <div className='dashboard-content'>
                 <TopBar userId={userId}/>
                 <div className='ide-content'>
-                {/* <div className='ide-header'>
-                    <span>IDE Builder</span>
-                </div> */}
                 <div className='ide-core'>
                     <div className='ide-core-docs'>
                         <DocsSection/>

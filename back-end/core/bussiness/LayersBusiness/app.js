@@ -1,6 +1,7 @@
+//LAYERS BUSINESS SERVICE
+
 // DOCKER SETUP
 let hostPOV = 'localhost'
-console.log(process.argv[2])
 if(process.argv[2] !== undefined)
 {
     hostPOV = '172.17.0.1'
@@ -8,7 +9,6 @@ if(process.argv[2] !== undefined)
 console.log("HOST POV:", hostPOV)
 
 
-// LAYERS BUSINESS
 const express = require('express');
 const cookieParser = require('cookie-parser');
 var cors = require('cors');
@@ -68,16 +68,12 @@ app.post('/create-layer', async(req,res)=>{
 })
 app.get('/fetch-layers',async (req,res)=>{
 
-  console.log("fetch layers")
-  
   let token = req.cookies.jwt
-  console.log("token:", token)
 
   let reps_token_check = await axios.post(
     `http://${hostPOV}:3002/check-token`,
     {token}
   )
-  console.log("token resp:",reps_token_check.data)
 
   try{
     let get_layers_response = await axios.get(
@@ -94,5 +90,5 @@ app.get('/fetch-layers',async (req,res)=>{
 
 
 app.listen(3008,()=>{
-    console.log("Layers business is listening at 3008")
+    console.log("Layers Business Service at port 3008")
 })

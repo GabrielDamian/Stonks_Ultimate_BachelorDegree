@@ -36,17 +36,6 @@ export const options = {
 
 const labels = ['x', 'y', 'z', 't', 'g', 'h', 'h'];
 
-// export const data = {
-//   labels,
-//   datasets: [
-//     {
-//       label: 'Dataset 2',
-//       data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
-//       backgroundColor: '#bcfe2f',
-//     },
-//   ],
-// };
-
 export const data = {
     labels,
     datasets: [
@@ -71,21 +60,16 @@ export function BarChart({pairs}) {
     }
   )
   useEffect(()=>{
-    console.log("paiurs:", pairs);
-    console.log("faker:",faker.datatype.number({ min: 0, max: 1000 }))
 
     if(pairs !== undefined && pairs.length > 0)
     {
-      console.log("use efect check ok")
       let localLabels = []
       let localValues = []
 
       pairs.forEach((el)=>{
-        console.log("el:",el)
         localLabels.push(el["interval"])
         localValues.push(Number(el["value"]))
       })
-      console.log("TEST:",localLabels, localValues);
       let ceva = {
         labels: localLabels,
         datasets: [
@@ -96,7 +80,6 @@ export function BarChart({pairs}) {
           },
         ],
       }
-      console.log("before set state:", ceva)
 
       setChartData({
         labels: localLabels,
@@ -112,9 +95,7 @@ export function BarChart({pairs}) {
   },[pairs])
 
   
-  useEffect(()=>{
-    console.log("chartData update:",chartData)
-  },[chartData])
+  
   return (
       <Bar 
         options={options} 

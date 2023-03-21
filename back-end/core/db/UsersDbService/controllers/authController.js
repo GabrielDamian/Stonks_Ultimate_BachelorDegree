@@ -25,10 +25,7 @@ const handleErrors = (err) => {
 
   // validation errors
   if (err.message.includes('user validation failed')) {
-    // console.log(err);
     Object.values(err.errors).forEach(({ properties }) => {
-      // console.log(val);
-      // console.log(properties);
       errors[properties.path] = properties.message;
     });
   }
@@ -63,13 +60,11 @@ module.exports.signup_post = async (req, res) => {
 }
 
 module.exports.check_user_post = async (req, res) => {
-  console.log("login")
   const { email, password } = req.body;
 
   try {
     const user = await User.login(email, password);
     // const token = createToken(user._id);
-    console.log("response ok:", user._id);
     res.status(200).json({ 
       user: user._id,
       // token: token
@@ -85,20 +80,15 @@ module.exports.check_user_post = async (req, res) => {
 
 module.exports.collect_user_data = async(req,res)=>{
   const { id } = req.body;
-  console.log("id to fnd:",id)
   try{
     User.findById(id,(err,doc)=>{
-      console.log("full doc:",doc)
       if(err)
       {
-        console.log("err:",err)
         return res.status(401).send("Invalid token")
       }
       else
       {
-        console.log("iterate fields:")
         Object.keys(doc).forEach((key)=>{
-          console.log("key:",key)
         })
         return res.status(200).send(JSON.stringify({...doc._doc}))
       }

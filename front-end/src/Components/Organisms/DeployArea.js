@@ -20,26 +20,6 @@ const initMarketState = (marketsSource)=>{
 }
 
 
-// const CssTextField = styled(TextField)({
-//     '& label.Mui-focused': {
-//       color: '#bcfe2f',
-//     },
-//     '& .MuiInput-underline:after': {
-//       borderBottomColor: '#bcfe2f',
-//     },
-//     '& .MuiOutlinedInput-root': {
-//       '& fieldset': {
-//         borderColor: '#bcfe2f',
-//       },
-//       '&:hover fieldset': {
-//         borderColor: 'yellow',
-//       },
-//       '&.Mui-focused fieldset': {
-//         borderColor: '#a3db29',
-//       },
-//     },
-// });
-
 function DeployArea ({editorValue})
 {
 
@@ -67,7 +47,6 @@ function DeployArea ({editorValue})
                 })
                 if(!response.ok)
                 {
-                    console.log("err  private route:",response.status)
                     setDeployStatus("Can't deploy!")
                 }
                 else 
@@ -78,7 +57,7 @@ function DeployArea ({editorValue})
         }
         catch(err)
         {
-            console.log("err:",err)
+            console.error("DeployArea:", err)
         }
     }
 
@@ -127,9 +106,6 @@ function DeployArea ({editorValue})
                 code: editorValue
             }
 
-            console.log("editorValue:",editorValue)
-            console.log("packet:", packet)
-            
             setDeployStatus("Deployment Started")
             deployCodeRequest(packet)
         }
@@ -179,7 +155,6 @@ function DeployArea ({editorValue})
 
                                     checked={markets.el}
                                     onChange={(e)=>{
-                                        console.log("test:", e.target.value);
                                         handleCheckBoxChange(el)
                                     }}
                                     {...label}

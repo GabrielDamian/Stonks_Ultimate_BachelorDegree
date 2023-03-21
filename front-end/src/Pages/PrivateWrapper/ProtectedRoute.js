@@ -1,23 +1,21 @@
 import React, {useState,useEffect, Children } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
-import axios from 'axios';
 
 export default function ProtectedRoute(
     {
         children
     }
 ){
+    
     const navigate = useNavigate();
 
     const [isLoading, setIsLoading] = useState(true);
+    
     const [userId, setUserId] = useState(null);
     
     const apiCheck = async ()=>{
-        console.log("check cokie before send:",Cookies.get('jwt'))
         let testSring = JSON.stringify({jwt: Cookies.get('jwt')})
-        console.log("test json:", testSring);
-        
         try{
             let response =await fetch('http://localhost:3001/check-token', { 
                     method: 'POST', 
@@ -32,7 +30,6 @@ export default function ProtectedRoute(
                 })
                 if(!response.ok)
                 {
-                    console.log("err  private route:",response.status)
                     return navigate('/login')
                 }
                 else 
@@ -41,12 +38,10 @@ export default function ProtectedRoute(
                     setUserId(data.id);
                     setIsLoading(false);
                 }
-
-          
         }
         catch(err)
         {
-            console.log("err:",err)
+            console.error("Protected route:",err)
         }
     }
 
@@ -55,7 +50,6 @@ export default function ProtectedRoute(
     },[])
 
     const redenerChild = (children)=>{
-        // return children
         return Children.map(children,(child)=>{
             return (
                 <child.type

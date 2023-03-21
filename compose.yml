@@ -18,14 +18,14 @@ services:
     ports:
       - "3008:3008"
   
-  nodes_business:
-    build: ./back-end/core/bussiness/NodesBusiness
-    command: node app.js ceva
-    volumes:
-      - .:/usr/app/
-      - /usr/app/node_modules
-    ports:
-      - "3006:3006"
+  # nodes_business:
+  #   build: ./back-end/core/bussiness/NodesBusiness
+  #   command: node app.js ceva
+  #   volumes:
+  #     - .:/usr/app/
+  #     - /usr/app/node_modules
+  #   ports:
+  #     - "3006:3006"
 
   user_business:
     build: ./back-end/core/bussiness/UserBusiness

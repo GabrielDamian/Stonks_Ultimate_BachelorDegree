@@ -70,14 +70,9 @@ function ChartComponentElem({source,realData}){
       values: []
     }
   })
-  useEffect(()=>{
-    console.log("innerStat update:",innerState)
-  },[innerState])
-  
     useEffect(()=>{
       if(realData !== undefined && realData !== null)
       {
-        console.log("char component realData:", realData)
 
         let realValues = []
         let realLabels = []
@@ -108,34 +103,6 @@ function ChartComponentElem({source,realData}){
   
   let howManyBehind = 20;
 
-  // useEffect(()=>{
-    
-  //   if(source !== undefined)
-  //   {
-  //     prepareForInnerState(source)
-  //   }
-
-  // },[source])
-  
-  // let prepareForInnerState = (source)=>{
-
-  //   let sliced = source.slice(0,howManyBehind)
-  //   let labels = []
-  //   let values = []
-
-  //   sliced.forEach((el)=>{
-  //     let timestamp = Number(el.timestamp);
-  //     let formattedDate = new Date(timestamp).toLocaleDateString('en-us', { weekday:"long", year:"numeric", month:"short", day:"numeric"})
-  //     labels.push(formattedDate)
-
-  //     values.push(el.value)
-  //   })
-
-   
-  // }
-
-  
-  
   return <Line options={options} data={
     {
       // labels,
@@ -163,11 +130,6 @@ function ChartComponentElem({source,realData}){
 }
 
 export function ChartComponent({source,realData}){
-
-  useEffect(()=>{
-    console.log("weird 1:", source,)
-    console.log("weird 2:",realData);
-  },[source, realData])
 
   return (
     <div className="custom-char-component-container">

@@ -36,7 +36,6 @@ export default function Overview({tabIndex,setTabs,tabs,userId})
   const [nodes, setNodes] = useState([]);
 
   let collectUserNodes = async()=>{
-    console.log("fetch nodes")
       try{
         let response =await fetch('http://localhost:3001/fetch-nodes', { 
                 method: 'GET', 
@@ -50,12 +49,11 @@ export default function Overview({tabIndex,setTabs,tabs,userId})
             })
             if(!response.ok)
             {
-                console.log("err  private route:",response.status)
+                console.error("Overview:",response.status )
             }
             else 
             {
                 const data = await response.json();
-                console.log("Nodes:", data)
                 setNodes(data.nodes);
                 if(data.nodes.length > 0)
                 {
@@ -65,18 +63,14 @@ export default function Overview({tabIndex,setTabs,tabs,userId})
       }
       catch(err)
       {
-          console.log("err:",err)
+        console.error("Overview:", err)
       }
   }
     useEffect(()=>{
       collectUserNodes() 
     },[])
 
-    useEffect(()=>{
-      console.log("nodes update:",nodes)  
-    },[nodes])
 
-    // TODO: handle selected node logic 
     const selectedIndex = 0;
     const [selected, setSelected] = useState(undefined);
 
@@ -84,7 +78,6 @@ export default function Overview({tabIndex,setTabs,tabs,userId})
     const [realData, setRealData] = useState(null);
 
     useEffect(()=>{
-      console.log("selectedData update:", selectedData)
       if(selectedData !== undefined && selectedData.market !== undefined)
       {
           attachRealData(selectedData,setRealData);
@@ -95,7 +88,6 @@ export default function Overview({tabIndex,setTabs,tabs,userId})
       if(selected !== undefined)
       {
         let extractSelectedId = nodes[selected].id;
-        console.log("to fetch node:", extractSelectedId);
         fetchNodeData(extractSelectedId, setSelectedData);
 
       }
@@ -106,21 +98,6 @@ export default function Overview({tabIndex,setTabs,tabs,userId})
             <div className='dashboard-content'>
                 <TopBar userId={userId}/>
                 <div className='overview-content-data'>
-                    {/* <div className='overview-content-data-header'>
-                    <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
-                        <InputLabel id="demo-simple-select-standard-label">Node Types</InputLabel>
-                        <Select
-                            labelId="demo-simple-select-standard-label"
-                            id="demo-simple-select-standard"
-                            // value={age}
-                            // onChange={handleChange}
-                            label="Node Types"
-                        >
-                            <MenuItem value={10}>Own Nodes</MenuItem>
-                            <MenuItem value={20}>Subscribed Nodes</MenuItem>
-                        </Select>
-                        </FormControl>
-                    </div> */}
                     <div className='overview-content-data-selection'>
                         <div className='content-data-selection-list'>
                             {
@@ -129,7 +106,6 @@ export default function Overview({tabIndex,setTabs,tabs,userId})
                                             obj={el} 
                                             handleClickIndex={()=>{setSelected(index)}}
                                             selected={selected !== undefined ? (selected == index ? true:false):false}/>)
-                                            
                                 })
                             }
                         </div>

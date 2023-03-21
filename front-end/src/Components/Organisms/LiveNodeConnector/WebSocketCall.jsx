@@ -19,17 +19,6 @@ export default function WebSocketCall({ socket }) {
     // setMessage("");
   };
 
-  useEffect(() => {
-    // socket.on("data", (data) => {
-    //   setMessages([...messages, data.data]);
-    // });
-    // return () => {
-    //   socket.off("data", () => {
-    //     console.log("data event was removed");
-    //   });
-    // };
-  }, [socket, messages]);
-
   return (
     <div>
       <h2>WebSocket Communication</h2>

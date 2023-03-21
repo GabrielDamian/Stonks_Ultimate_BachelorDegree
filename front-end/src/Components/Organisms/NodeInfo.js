@@ -10,11 +10,6 @@ import { BarChart } from './BarChart.tsx';
 
 export default function NodeInfo({nodeData})
 {
-    useEffect(()=>{
-        console.log("nodeData:",nodeData)
-
-    },[nodeData])
-
     const [localData, setLocalData] = useState({
         BuildName: 'x',
         Status: 'x',
@@ -52,7 +47,6 @@ export default function NodeInfo({nodeData})
     const extractAverage = (initTestsParam)=>{
         if(initTestsParam !== undefined)
         {
-            console.log("extractAverage:",initTestsParam)
             let totalDif = 0;
             let count = 0;
             initTestsParam.forEach((el)=>{
@@ -69,23 +63,15 @@ export default function NodeInfo({nodeData})
                     valueItem = values[1]
                 }
                 
-                console.log("value diof:",Number(el.value))
-
                 totalDif +=  Number(el.value) * valueItem;
                 count += Number(el.value)
             })
 
-            console.log("totalDif:",typeof totalDif)
-            console.log("len__:",typeof initTestsParam.length)
-
             let average = totalDif/count;
-            console.log("average:",average)
             if (average !== NaN)
             {
                 return average.toFixed(2)
             }
-            
-            
         }
        
         return '_'
@@ -182,12 +168,6 @@ const CodeEditorNodeDisplay = ({codeSource})=>{
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={style}>
-                {/* <Typography id="modal-modal-title" variant="h6" component="h2">
-                    Text in a modal
-                </Typography>
-                <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                    Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-                </Typography> */}
                     <CustomMonaco  editorValue={codeSource} setEditorValue={()=>{}} options={{readOnly: true}}/>
                 </Box>
             </Modal>

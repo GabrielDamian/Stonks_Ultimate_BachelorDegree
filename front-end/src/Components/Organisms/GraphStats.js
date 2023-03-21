@@ -5,7 +5,6 @@ import './GraphStats.css';
 export default function GraphStats({realData}){
 
     useEffect(()=>{
-        console.log("Graph Stats:",realData)
         extractAverages(realData)
     },[realData])
 
@@ -17,7 +16,6 @@ export default function GraphStats({realData}){
     const extractAverages = (sourceParam)=>{
         if (sourceParam == null) return
 
-        console.log("extractAverages:",sourceParam)
         if(realData.length > 7)
         {
             let dif7Days = 0;
@@ -33,7 +31,6 @@ export default function GraphStats({realData}){
             }
             let avg7Days = (dif7Days / 7).toFixed(2);
             let avgLifetime = (lifeTime/realData.length).toFixed(2);
-            console.log("avg7Days:",avg7Days,avgLifetime)
 
             setInnerState({
                 avgLast: avg7Days,
@@ -49,7 +46,6 @@ export default function GraphStats({realData}){
                 total += Math.abs(realData[i].predictedValue - realData[i].realValue)
             }
             let avgTotal = (total / realData.length).toFixed(2);
-            console.log("avgTotal:",avgTotal)
             setInnerState({
                 avgLast: avgTotal,
                 avgLife: avgTotal

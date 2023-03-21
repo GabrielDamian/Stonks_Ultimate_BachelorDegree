@@ -1,6 +1,8 @@
+//NODES PERSISTENCE SERVICE
+
+
 // DOCKER SETUP
 let hostPOV = 'localhost'
-console.log(process.argv[2])
 if(process.argv[2] !== undefined)
 {
     hostPOV = '172.17.0.1'
@@ -31,7 +33,6 @@ app.use(cors({
     "http://localhost:3006",
   ]
 ]}))
-// view engine
 
 // database connection
 const dbURI = `mongodb://${hostPOV}:27017/nodes`;
@@ -39,5 +40,4 @@ mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true, useCr
   .then((result) => app.listen(3005))
   .catch((err) => console.log(err));
 
-// routes
 app.use(nodesRoutes);

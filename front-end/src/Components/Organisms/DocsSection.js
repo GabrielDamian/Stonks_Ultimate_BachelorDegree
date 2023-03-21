@@ -34,9 +34,6 @@ function DocsSection(){
     const handleClose = () => setOpen(false);
 
     const [currentFrame, setCurrentFrame] = useState("https://keras.io/api/layers/core_layers/dense/")
-    React.useEffect(()=>{
-      console.log("currentFrame:",currentFrame)
-    },[currentFrame])
 
     const treeConfig = {
       'Intro':[

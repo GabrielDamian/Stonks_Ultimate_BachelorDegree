@@ -1,11 +1,12 @@
+//BUSINESS DEPLOYMENT SERVICE
+
+
 // DOCKER SETUP
 let hostPOV = 'localhost'
-console.log(process.argv[2])
 if(process.argv[2] !== undefined)
 {
     hostPOV = '172.17.0.1'
 }
-console.log("HOST POV:", hostPOV)
 
 const express = require('express');
 var cors = require('cors');
@@ -54,8 +55,6 @@ app.post('/deploy-code',async (req,res)=>{
     owner: ownerId
   }
   
-  console.log("FrontEndPayload:",frontEndPayload)
-  
   await producer.connect()
   await producer.send({
     topic: 'to-balancer',
@@ -68,11 +67,10 @@ app.post('/deploy-code',async (req,res)=>{
   return res.status(200).send({test:'ceva'}) 
 })
 
-// Port: 3004 by default !!!! Check dev temp fixes
 app.get('/test',(req,res)=>{
   return res.send('deployment business node ok')
 })
 
 app.listen(3004,()=>{
-    console.log("deployment business at 3004")
+    console.log("Deployment Business Service at port 3004")
 })

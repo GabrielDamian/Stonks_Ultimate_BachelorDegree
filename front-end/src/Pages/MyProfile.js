@@ -10,9 +10,7 @@ import NodeIcon from '../Media/Icons/node.png';
 import { useNavigate} from 'react-router-dom';
 
 const NodeItem = ({data})=>{
-    useEffect(()=>{
-        console.log("Deee:p:",data)
-    },[data])
+    
     const [anchorEl, setAnchorEl] = React.useState(null);
 
     const handlePopoverOpen = (event) => {
@@ -72,9 +70,6 @@ const NodeItem = ({data})=>{
 export default function MyProfile({tabIndex,setTabs,tabs,userId}){
     
     const [userData, setUserData] = useState({})
-    useEffect(()=>{
-        console.log("userData update:",userData)
-    },[userData])
     
     useEffect(()=>{
         if(userId !== null && userId !== undefined)
@@ -113,13 +108,7 @@ export default function MyProfile({tabIndex,setTabs,tabs,userId}){
                             </div>
                         </div>
                     </div>
-                    {/* <p>User id:---- {userData._id}</p>
-                    <p>Username:--- {userData.username}</p>
-                    <p>Email:--- {userData.email}</p>
-                    <p>Role:--- {userData.role}</p>
-                    <p>Nodes:--- {userData.nodes ? userData.nodes.map((node)=>{
-                        return<b>-{node}-</b>
-                    }):null}</p> */}
+                    
                 </div>
             </div>
         </div>
