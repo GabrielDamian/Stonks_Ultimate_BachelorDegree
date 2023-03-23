@@ -2,28 +2,16 @@ import React,{useState, useEffect} from 'react';
 import './Style/Overview.css';
 import LeftMenu from '../Components/Organisms/LeftMenu';
 
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
-
 import ListSubheader from '@mui/material/ListSubheader';
 import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Collapse from '@mui/material/Collapse';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import DraftsIcon from '@mui/icons-material/Drafts';
-import SendIcon from '@mui/icons-material/Send';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
-import InfoIcon from '@mui/icons-material/Info';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import Icon1 from '../Media/Icons/artificial-intelligence.png';
 import {ChartComponent} from '../Components/Organisms/ChartComponent';
-import Switch from '@mui/material/Switch';
-import Button from '@mui/material/Button';
 import TopBar from '../Components/Organisms/TopBar';
 import {Link} from 'react-router-dom';
 import RedirectIcon from '../Media/Icons/maximize.png';
@@ -71,7 +59,6 @@ export default function Overview({tabIndex,setTabs,tabs,userId})
     },[])
 
 
-    const selectedIndex = 0;
     const [selected, setSelected] = useState(undefined);
 
     const [selectedData, setSelectedData] = useState(undefined);
@@ -120,16 +107,11 @@ export default function Overview({tabIndex,setTabs,tabs,userId})
     )
 }
 
-const label = { inputProps: { 'aria-label': 'Switch demo' } };
 
 function NodeListElem({obj,selected,handleClickIndex})
 {
-    const [open, setOpen] = React.useState(false);
-    const [open2, setOpen2] = React.useState(false);
-
-  const handleClick = () => {
-    setOpen(!open);
-  };
+  const [open, setOpen] = React.useState(false);
+  const [open2, setOpen2] = React.useState(false);
 
   const handleClick2 = () => {
     setOpen2(!open2);

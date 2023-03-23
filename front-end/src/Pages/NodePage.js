@@ -9,8 +9,6 @@ import LastPriceWidget from '../Components/Organisms/LastPriceWidget';
 import GraphStats from '../Components/Organisms/GraphStats';
 import axios from 'axios';
 
-
-
 export const fetchNodeData = async (nodeID, setStateCallback)=>{
     try{
         let destination = `http://localhost:3001/fetch-node/?nodeid=${nodeID}`
@@ -48,7 +46,6 @@ export let attachRealData = async (nodeDataParam, setStateParam)=>{
         GOOG: 'google-tokenized-stock-defichain',
         'ETH-USD': 'binance-eth',
         'BTC-USD': 'binance-bitcoin'
-        // FB: 'facebook-tokenized-stock-defichain',
     }
     let realValuesLink = `https://api.coingecko.com/api/v3/coins/${translator[market]}/market_chart?vs_currency=usd&days=300&interval=1d`
     let realValues = undefined;

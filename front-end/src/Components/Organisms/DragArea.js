@@ -1,23 +1,9 @@
-import React,{useState,Component, useEffect} from 'react';
+import React,{Component} from 'react';
 import {DragDropContext,Draggable,Droppable} from 'react-beautiful-dnd';
 import './DragArea.css';
 import DragItem from './DragItem';
 
-const menu = {
-    width: '35px',
-    height: '5px',
-    backgroundColor: 'black',
-    margin: '6px 0',
-};
-// fake data generator
-const getItems = (count, offset = 0) =>
-{
-    let temp =  Array.from({ length: count }, (v, k) => k).map(k => ({
-        id: `item-${k + offset}`,
-        content: `item ${k + offset}`
-    }));
-    return temp
-}
+
 
 // a little function to help us with reordering the result
 const reorder = (list, startIndex, endIndex) => {

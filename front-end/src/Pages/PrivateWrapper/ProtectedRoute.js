@@ -9,9 +9,7 @@ export default function ProtectedRoute(
 ){
     
     const navigate = useNavigate();
-
     const [isLoading, setIsLoading] = useState(true);
-    
     const [userId, setUserId] = useState(null);
     
     const apiCheck = async ()=>{
@@ -80,7 +78,6 @@ export default function ProtectedRoute(
         </>
     )
 }
-
 
 const LoadingComponent = ()=>{
     return(

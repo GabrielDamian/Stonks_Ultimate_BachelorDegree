@@ -10,7 +10,6 @@ import {
   Legend,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
-import faker from 'faker';
 import './ChartComponent.css';
 
 ChartJS.register(
@@ -101,16 +100,13 @@ function ChartComponentElem({source,realData}){
       }
     },[realData])
   
-  let howManyBehind = 20;
 
   return <Line options={options} data={
     {
-      // labels,
       labels:[...innerState.real.labels],
       datasets: [
         {
           label: 'Real', 
-          // data: valuesGrahp,
           data: [...innerState.real.values],
           borderColor: '#b0afb2',
           backgroundColor: '#bcfe2f',
@@ -118,7 +114,6 @@ function ChartComponentElem({source,realData}){
         },
         {
           label: 'Predicted', 
-          // data: valuesGrahp,
           data: [...innerState.predicted.values],
           borderColor: 'red',
           backgroundColor: '#bcfe2f',

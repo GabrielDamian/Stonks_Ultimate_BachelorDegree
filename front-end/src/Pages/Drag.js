@@ -1,9 +1,7 @@
 import React,{useState,Component, useEffect} from 'react';
 import './Style/NodeStore.css';
 import LeftMenu from '../Components/Organisms/LeftMenu';
-import {DragDropContext,Draggable,Droppable} from 'react-beautiful-dnd';
 import DragArea from '../Components/Organisms/DragArea';
-import DragItem from '../Components/Organisms/DragItem';
 import DeployArea from '../Components/Organisms/DeployArea';
 import TopBar from '../Components/Organisms/TopBar';
 
@@ -96,7 +94,6 @@ function NodeStore({tabIndex,setTabs,tabs,userId})
         </div>
     )
 }
-
 
 
 export default NodeStore;

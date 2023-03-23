@@ -1,9 +1,7 @@
-import React,{useState,useEffect} from 'react';
+import React,{useState} from 'react';
 import LeftMenu from '../Components/Organisms/LeftMenu';
 import './Style/IDE.css';
-import MonacoEditor from 'react-monaco-editor'
 import CustomMonaco from '../Components/Organisms/CustomMonaco';
-
 import DocsSection from '../Components/Organisms/DocsSection';
 import DeployArea from '../Components/Organisms/DeployArea';
 import TopBar from '../Components/Organisms/TopBar';

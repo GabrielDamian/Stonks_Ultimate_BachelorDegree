@@ -1,6 +1,3 @@
-import HttpCall from "./HttpCall";
-import WebSocketCall from "./WebSocketCall";
-// import { io } from "socket.io-client";
 import { io } from "socket.io-client";
 import { useEffect, useState } from "react";
 import './LiveConnector.css';

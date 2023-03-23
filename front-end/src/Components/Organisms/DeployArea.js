@@ -1,10 +1,6 @@
-import React,{useState, useEffect} from 'react';
+import React,{useState} from 'react';
 import './DeployArea.css'
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import Switch from '@mui/material/Switch';
 import Checkbox from '@mui/material/Checkbox';
-import { alpha, styled } from '@mui/material/styles';
 import CustomButton from '../Atoms/CustomButton';
 import {CssTextField} from '../../utils/utils';
 
@@ -166,7 +162,6 @@ function DeployArea ({editorValue})
                 }
             </div>
             <div className='ide-deploy-action'>
-                {/* <Button variant="contained" onClick={handleDeployAction}>Deploy</Button> */}
                 <CustomButton text="Deploy" onClick={handleDeployAction}/>
             </div>
              <div className='ide-deploy-field' style={{flexDirection: 'column'}}>

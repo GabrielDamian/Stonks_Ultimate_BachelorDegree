@@ -5,7 +5,6 @@ import TopBar from '../Components/Organisms/TopBar';
 import {collectUserData} from '../API/apiCore';
 import ProfileIcon from '../Media/Icons/profile.png';
 import Popover from '@mui/material/Popover';
-import Typography from '@mui/material/Typography';
 import NodeIcon from '../Media/Icons/node.png';
 import { useNavigate} from 'react-router-dom';
 

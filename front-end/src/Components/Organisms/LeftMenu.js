@@ -1,16 +1,9 @@
-import React,{useState,useEffect} from 'react';
+import React from 'react';
 import './LeftMenu.css';
 import { useNavigate } from 'react-router-dom';
-import PropTypes from 'prop-types';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
-import { tabsListUnstyledClasses } from '@mui/base';
 import LogoIcon from '../../Media/logo.png';
 
 export default function LeftMenu({tabIndex,tabs}){
-  
 
   const decideSelected = (el,index)=>{
     return el.text == tabs[tabIndex].text

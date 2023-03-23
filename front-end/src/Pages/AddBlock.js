@@ -1,12 +1,10 @@
 import React,{useState, useEffect} from 'react';
 import './Style/AddBlock.css';
 import LeftMenu from '../Components/Organisms/LeftMenu';
-import TextField from '@mui/material/TextField';
 import CustomMonaco from '../Components/Organisms/CustomMonaco';
-import Button from '@mui/material/Button';
 import TopBar from '../Components/Organisms/TopBar';
 import MenuItem from '@mui/material/MenuItem';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import Select from '@mui/material/Select';
 import {TranslateBlockStructureInPythonCode} from '../utils/utils.js';
 import {CssTextField} from '../utils/utils';
 import DeleteIcon from '../Media/Icons/remove.png';
@@ -70,9 +68,6 @@ const ParametersContainer = ({parameters,deleteParameter})=>{
 }
 function AddBlock({tabIndex,setTabs,tabs,userId})
 {
-    const TextAreaStyle={
-        width: '100%',
-    }
     const [layerData, setLayerData] = useState({
         name: '',
         keyword:'',

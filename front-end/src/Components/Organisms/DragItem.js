@@ -6,18 +6,14 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Collapse from '@mui/material/Collapse';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import DraftsIcon from '@mui/icons-material/Drafts';
-import SendIcon from '@mui/icons-material/Send';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import InfoIcon from '@mui/icons-material/Info';
 import DataObjectIcon from '@mui/icons-material/DataObject';
-import Icon1 from '../../Media/Icons/artificial-intelligence.png';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import DocumentsIcon from '../../Media/Icons/document.png';
-import makeStyles from '@mui/styles/makeStyles';
+
 function DragItem({data, hyperParamsActive,handleParameterValueChange})
 {
   const [interState, setInternState] = useState({
@@ -78,7 +74,6 @@ function DragItem({data, hyperParamsActive,handleParameterValueChange})
           </ListSubheader>
         }
       >
-        {/* ABOUT */}
         <ListItemButton onClick={handleClick}>
           <ListItemIcon>
             <InfoIcon sx={{color: '#bcfe2f'}}/>
@@ -95,7 +90,6 @@ function DragItem({data, hyperParamsActive,handleParameterValueChange})
             <p>{interState.layerDescription}</p><br/>
 
             <div 
-              // href={interState.docLink}
               style={{
                 width:'100%',
                 display: 'flex',
@@ -113,7 +107,6 @@ function DragItem({data, hyperParamsActive,handleParameterValueChange})
           </div>
         </Collapse>
 
-        {/* HYPERPARAMETERS */}
         {hyperParamsActive == true?
         <>
           <ListItemButton onClick={handleClick2}>
