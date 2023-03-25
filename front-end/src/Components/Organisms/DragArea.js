@@ -100,6 +100,7 @@ class DragArea extends Component {
         })
     }
 
+
     componentDidMount()
     {
         fetch('http://localhost:3001/fetch-layers', { 
@@ -135,10 +136,12 @@ class DragArea extends Component {
 
                 attachId.push(temp)
             })
-
+            
             this.props.setCodeState((prev)=>{
+
                 let copy = {...prev}
                 copy.items = [...attachId]
+
                 return copy
             })
         })
@@ -148,6 +151,12 @@ class DragArea extends Component {
 
     onDragEnd = result => {
         const { source, destination } = result;
+
+        if(destination.droppableId == 'droppable') return
+        if(destination.droppableId == 'droppable2' && source.droppableId !== 'droppable2')
+        {
+            this.props.replicateItem(this.props.codeState.items[source.index], source.index)
+        }
 
         // dropped outside the list
         if (!destination) {
@@ -224,7 +233,10 @@ class DragArea extends Component {
                                                             )}>
                                                             <DragItem 
                                                             handleParameterValueChange={()=>{}}
-                                                            data={item} hyperParamsActive={false}/>
+                                                            data={item} hyperParamsActive={false}
+                                                            deleteIcon={false}
+                                                            deleteCallback={()=>{}}
+                                                            />
                                                         </div>
                                                     </div>
                                                 )}
@@ -260,10 +272,13 @@ class DragArea extends Component {
                                                         provided.draggableProps.style
                                                     )}
                                                     >
+                                                        {/* <span style={{color: 'white'}} onClick={}>x</span> */}
                                                     <DragItem 
                                                         handleParameterValueChange={this.handleParameterValueChange}
                                                         data={item} 
                                                         hyperParamsActive={true}
+                                                        deleteIcon={true}
+                                                        deleteCallback={()=>this.props.deleteItem(item.id)}
                                                     />
                                                 </div>
                                             </div>

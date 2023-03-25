@@ -7,9 +7,6 @@ import {collectUserData} from '../../API/apiCore';
 export default function LeftMenu({userId, tabIndex,tabs}){
 
   const [userRole, setUserRole] = useState('normal'); //normal || admin
-  useEffect(()=>{
-    console.log("useRole:",userRole)
-  },[userRole])
 
   useEffect(()=>{
     if(userId !== null && userId !== undefined)
@@ -31,7 +28,6 @@ export default function LeftMenu({userId, tabIndex,tabs}){
           <div className='left-bar-items'>
             {
               tabs.map((el, index)=>{
-                console.log("el:",el.roles)
                 if(el.roles.includes(userRole.role))
                 {
                   return <TabItem text={el.text} link={el.link} selected={decideSelected(el,index)} icon={el.icon}/>

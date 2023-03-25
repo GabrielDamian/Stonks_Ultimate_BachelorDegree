@@ -30,6 +30,20 @@
     padding: 10px;
 
 }
+
+.header-item-list span img
+{
+    height: 20px;
+    object-fit: contain;
+    margin-right: 10px;
+}
+
+.header-item-list span img:hover
+{
+    transform: scale(1.1);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
 .header-item-list img 
 {
     height: 25px;

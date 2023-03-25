@@ -13,8 +13,9 @@ import DataObjectIcon from '@mui/icons-material/DataObject';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import DocumentsIcon from '../../Media/Icons/document.png';
+import DeleteIcon from '../../Media/Icons/remove.png';
 
-function DragItem({data, hyperParamsActive,handleParameterValueChange})
+function DragItem({data, hyperParamsActive,handleParameterValueChange, deleteIcon, deleteCallback})
 {
   const [interState, setInternState] = useState({
     layerName: '',
@@ -67,7 +68,20 @@ function DragItem({data, hyperParamsActive,handleParameterValueChange})
         subheader={
           <ListSubheader component="div" id="nested-list-subheader">
             <div className="header-item-list">
-              <span>{interState.layerName}</span>
+              <span style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center'
+                }}>
+                {
+                  deleteIcon == true 
+                  ?
+                  <img title="Delete Layer" src={DeleteIcon} style={{}} onClick={deleteCallback}/>
+                  :
+                  null
+                }
+                {interState.layerName}
+              </span>
               <img src={interState.iconLink} alt="icon"/>
             </div>
 
