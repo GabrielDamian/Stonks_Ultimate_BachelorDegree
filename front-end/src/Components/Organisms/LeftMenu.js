@@ -1,9 +1,22 @@
-import React from 'react';
+import React,{useState, useEffect} from 'react';
 import './LeftMenu.css';
 import { useNavigate } from 'react-router-dom';
 import LogoIcon from '../../Media/logo.png';
+import {collectUserData} from '../../API/apiCore';
 
-export default function LeftMenu({tabIndex,tabs}){
+export default function LeftMenu({userId, tabIndex,tabs}){
+
+  const [userRole, setUserRole] = useState('normal'); //normal || admin
+  useEffect(()=>{
+    console.log("useRole:",userRole)
+  },[userRole])
+
+  useEffect(()=>{
+    if(userId !== null && userId !== undefined)
+    {
+        collectUserData(userId,['role'],setUserRole)
+    }
+  },[userId])
 
   const decideSelected = (el,index)=>{
     return el.text == tabs[tabIndex].text
@@ -18,7 +31,15 @@ export default function LeftMenu({tabIndex,tabs}){
           <div className='left-bar-items'>
             {
               tabs.map((el, index)=>{
-                return <TabItem text={el.text} link={el.link} selected={decideSelected(el,index)} icon={el.icon}/>
+                console.log("el:",el.roles)
+                if(el.roles.includes(userRole.role))
+                {
+                  return <TabItem text={el.text} link={el.link} selected={decideSelected(el,index)} icon={el.icon}/>
+                }
+                else
+                {
+                  return null;
+                }
               })
             }
           </div>

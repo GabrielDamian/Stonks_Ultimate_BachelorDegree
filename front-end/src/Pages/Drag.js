@@ -79,7 +79,7 @@ function NodeStore({tabIndex,setTabs,tabs,userId})
 
     return (
         <div className='node-store-container'>
-            <LeftMenu tabIndex={tabIndex} setTabs={setTabs} tabs={tabs}/>
+            <LeftMenu userId={userId} tabIndex={tabIndex} setTabs={setTabs} tabs={tabs}/>
             <div className='dashboard-content'>
                 <TopBar userId={userId}/>
                 <div className='node-store-content-data'>

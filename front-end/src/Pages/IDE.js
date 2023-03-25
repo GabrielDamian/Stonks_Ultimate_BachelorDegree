@@ -24,7 +24,7 @@ export default function IDE({tabIndex,setTabs,tabs,userId})
 
     return (
         <div className='ide-container'>
-            <LeftMenu tabIndex={tabIndex} setTabs={setTabs} tabs={tabs}/>
+            <LeftMenu userId={userId} tabIndex={tabIndex} setTabs={setTabs} tabs={tabs}/>
             <div className='dashboard-content'>
                 <TopBar userId={userId}/>
                 <div className='ide-content'>

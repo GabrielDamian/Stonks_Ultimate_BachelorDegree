@@ -38,32 +38,38 @@ function App() {
     {
       text: 'Drag',
       link: '/drag',
-      icon: [DragIcon,DragIconLight]
+      icon: [DragIcon,DragIconLight],
+      roles: ['user','admin']
     },
     {
       text: 'Ide',
       link: '/ide',
-      icon: [IdeIcon,IdeIconLight]
+      icon: [IdeIcon,IdeIconLight],
+      roles: ['user','admin']
     },
     {
       text: 'Overview',
       link: '/overview',
-      icon: [OverviewIcon,OverviewIconLight]
+      icon: [OverviewIcon,OverviewIconLight],
+      roles: ['user','admin']
     },
     {
       text: 'Add Block',
       link: '/add-block',
-      icon: [AddIcon,AddIconLight]
+      icon: [AddIcon,AddIconLight],
+      roles: ['admin']
     },
     {
       text: 'My Profile',
       link: '/my-profile',
-      icon: [ProfileIcon,ProfileIconLight]
+      icon: [ProfileIcon,ProfileIconLight],
+      roles: ['user','admin']
     },
     {
       text: 'Node Page',
       link: '/node-page',
-      icon: [NodeIcon,NodeIconLight]
+      icon: [NodeIcon,NodeIconLight],
+      roles: ['user','admin']
     },
   ]
 

@@ -81,7 +81,7 @@ export default function Overview({tabIndex,setTabs,tabs,userId})
     },[selected])
     return (
         <div className='overview-container'>
-            <LeftMenu tabIndex={tabIndex} setTabs={setTabs} tabs={tabs}/>
+            <LeftMenu userId={userId} tabIndex={tabIndex} setTabs={setTabs} tabs={tabs}/>
             <div className='dashboard-content'>
                 <TopBar userId={userId}/>
                 <div className='overview-content-data'>

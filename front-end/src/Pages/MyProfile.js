@@ -79,7 +79,7 @@ export default function MyProfile({tabIndex,setTabs,tabs,userId}){
     
     return(
         <div className='my-profile-container'>
-            <LeftMenu tabIndex={tabIndex} setTabs={setTabs} tabs={tabs}/>
+            <LeftMenu userId={userId} tabIndex={tabIndex} setTabs={setTabs} tabs={tabs}/>
             <div className='my-profile-content'>
                 <TopBar userId={userId}/>
                 <div className='my-profile-content-data'>

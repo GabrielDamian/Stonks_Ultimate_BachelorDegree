@@ -257,7 +257,7 @@ function AddBlock({tabIndex,setTabs,tabs,userId})
       }
     return(
         <div className='add-block-container'>
-            <LeftMenu tabIndex={tabIndex} setTabs={setTabs} tabs={tabs}/>
+            <LeftMenu userId={userId} tabIndex={tabIndex} setTabs={setTabs} tabs={tabs}/>
             <div className='dashboard-content'>
                 <TopBar userId={userId}/>
                 <div className="add-block-content-data">

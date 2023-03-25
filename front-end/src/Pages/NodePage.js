@@ -165,7 +165,7 @@ function NodePage({tabIndex,setTabs,tabs,userId})
 
     return(
         <div className='node-page-container'>
-            <LeftMenu tabIndex={tabIndex} setTabs={setTabs} tabs={tabs}/>
+            <LeftMenu userId={userId} tabIndex={tabIndex} setTabs={setTabs} tabs={tabs}/>
             <div className='node-page-content'>
                 <TopBar userId={userId}/>
                 <div className='node-page-content-data'>

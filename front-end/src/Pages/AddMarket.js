@@ -57,7 +57,7 @@ function AddMarket({tabIndex,setTabs,tabs,userId}){
 
     return(
         <div className='add-market-container'>
-            <LeftMenu tabIndex={tabIndex} setTabs={setTabs} tabs={tabs}/>
+            <LeftMenu userId={userId} tabIndex={tabIndex} setTabs={setTabs} tabs={tabs}/>
             <div className='add-market-content'>
             <div className="add-market-content-header">
                     <span>Add market Area (ADMIN)</span>

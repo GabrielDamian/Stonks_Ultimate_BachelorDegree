@@ -20,8 +20,4 @@ export const collectUserData = async (userIdParam,fields,setStateParam)=>{
                 })
                 setStateParam({...extractFields})
             }
-            else 
-            {
-                let data = await response.json()
-            }
 }
