@@ -3,6 +3,9 @@
 
 // DOCKER SETUP
 let hostPOV = 'localhost'
+const SERVER_ADDRESS = 3004
+const service_id = "Deployment Business"
+
 if(process.argv[2] !== undefined)
 {
     hostPOV = '172.17.0.1'
@@ -71,6 +74,57 @@ app.get('/test',(req,res)=>{
   return res.send('deployment business node ok')
 })
 
-app.listen(3004,()=>{
-    console.log("Deployment Business Service at port 3004")
+app.listen(SERVER_ADDRESS,()=>{
+    console.log(`Deployment Business Service at port ${SERVER_ADDRESS}`)
 })
+
+
+// API GATEWAY LOGIC
+const SubscribeAction = async ()=>{
+  function sleep(milliseconds) {  
+    return new Promise(resolve => setTimeout(resolve, milliseconds));  
+} 
+  const resources = {
+    'deploy-code_POST':{
+      needsAuth: true,
+      roles: [],
+      route: 'deploy-code'
+  },
+
+  }
+  let status_subscribe = false;
+  while(!status_subscribe)
+  {
+    await sleep(1000);
+    try{
+      await axios.post(`http://${hostPOV}:3001/subscribe`,{
+        service_id,
+        SERVER_ADDRESS,
+        resources
+      })
+      status_subscribe = true;
+    }
+    catch(e)
+    {
+      console.log("Failed to subscribe")
+    }
+  }
+}
+
+const HeartBeat = async ()=>{
+try{
+  await axios.post(`http://${hostPOV}:3001/heart-beat`,{
+    service_id,
+  })
+}
+catch(e)
+{
+  console.log("Failed to HeartBeat")
+}
+}
+
+setInterval(()=>{
+HeartBeat();
+},5000)
+
+SubscribeAction()

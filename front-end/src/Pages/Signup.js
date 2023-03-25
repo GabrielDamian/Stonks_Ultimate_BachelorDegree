@@ -56,7 +56,7 @@ function Signup()
                 {
                     let token = data.token;
                     cookies.set('jwt',token,{secure: true, sameSite: 'none'})
-                    navigate(`/`);
+                    navigate(`/login`);
                 }
               }
               catch (err) {

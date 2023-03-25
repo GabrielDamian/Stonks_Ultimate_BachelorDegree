@@ -2,6 +2,9 @@
 
 // DOCKER SETUP
 let hostPOV = 'localhost'
+const SERVER_ADDRESS = 3008
+const service_id = "Layers Business"
+
 if(process.argv[2] !== undefined)
 {
     hostPOV = '172.17.0.1'
@@ -89,6 +92,60 @@ app.get('/fetch-layers',async (req,res)=>{
 })
 
 
-app.listen(3008,()=>{
-    console.log("Layers Business Service at port 3008")
+app.listen(SERVER_ADDRESS,()=>{
+    console.log(`Layers Business Service at port ${SERVER_ADDRESS}`)
 })
+
+// API GATEWAY LOGIC
+const SubscribeAction = async ()=>{
+  function sleep(milliseconds) {  
+    return new Promise(resolve => setTimeout(resolve, milliseconds));  
+} 
+  const resources = {
+    'create-layer_POST':{
+      needsAuth: true,
+      roles: [],
+      route: 'create-layer'
+  },
+  'fetch-layers_GET':{
+      needsAuth: true,
+      roles: [],
+      route: 'fetch-layers'
+  }
+  }
+  let status_subscribe = false;
+  while(!status_subscribe)
+  {
+    await sleep(1000);
+    try{
+      await axios.post(`http://${hostPOV}:3001/subscribe`,{
+        service_id,
+        SERVER_ADDRESS,
+        resources
+      })
+      status_subscribe = true;
+    }
+    catch(e)
+    {
+      console.log("Failed to subscribe")
+    }
+  }
+}
+
+const HeartBeat = async ()=>{
+try{
+  await axios.post(`http://${hostPOV}:3001/heart-beat`,{
+    service_id,
+  })
+}
+catch(e)
+{
+  console.log("Failed to HeartBeat")
+}
+}
+
+setInterval(()=>{
+HeartBeat();
+},5000)
+
+SubscribeAction()

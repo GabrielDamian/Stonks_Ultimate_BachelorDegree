@@ -3,6 +3,9 @@
 
 // DOCKER SETUP
 let hostPOV = 'localhost'
+const SERVER_ADDRESS = 3002
+const service_id = "User Business"
+
 console.log(process.argv[2])
 if(process.argv[2] !== undefined)
 {
@@ -137,6 +140,70 @@ app.post('/collect-user-data', async(req,res)=>{
   return res.status(200).send(JSON.stringify({...data}));
 })
 
-app.listen(3002,()=>{
-  console.log("User Business Service at port 3002")
+app.listen(SERVER_ADDRESS,()=>{
+  console.log(`User Business Service at port ${SERVER_ADDRESS} `)
 })
+
+// API GATEWAY LOGIC
+const SubscribeAction = async ()=>{
+    function sleep(milliseconds) {  
+      return new Promise(resolve => setTimeout(resolve, milliseconds));  
+  } 
+    const resources = {
+      'login_POST':{
+        needsAuth: false,
+        roles: [],
+        route: 'login'
+    },
+    'signup_POST':{
+        needsAuth: false,
+        roles: [],
+        route: 'signup'
+    },
+    'check-token_POST':{
+        needsAuth: true,
+        roles:[],
+        route: 'check-token'
+    },
+    'collect-user-data_POST':{
+        needsAuth: true,
+        roles: [],
+        route: 'collect-user-data'
+    },
+    }
+    let status_subscribe = false;
+    while(!status_subscribe)
+    {
+      await sleep(1000);
+      try{
+        await axios.post(`http://${hostPOV}:3001/subscribe`,{
+          service_id,
+          SERVER_ADDRESS,
+          resources
+        })
+        status_subscribe = true;
+      }
+      catch(e)
+      {
+        console.log("Failed to subscribe")
+      }
+    }
+}
+
+const HeartBeat = async ()=>{
+  try{
+    await axios.post(`http://${hostPOV}:3001/heart-beat`,{
+      service_id,
+    })
+  }
+  catch(e)
+  {
+    console.log("Failed to HeartBeat")
+  }
+}
+
+setInterval(()=>{
+  HeartBeat();
+},5000)
+
+SubscribeAction()

@@ -61,7 +61,7 @@ function Login()
                     //set cookies
                     let token = data.token;
                     cookies.set('jwt',token,{secure: true, sameSite: 'none'})
-                    navigate(`/dashboard`);
+                    navigate(`/ide`);
                 }
               }
               catch (err) {
