@@ -113,6 +113,9 @@ function NodeStore({tabIndex,setTabs,tabs,userId})
     }
 
     let [translatedLayersIntoCode, setTranslatedLayersIntoCode] = useState("");
+    useEffect(()=>{
+        console.log("translatedLayersIntoCode:",translatedLayersIntoCode)
+    },[translatedLayersIntoCode])
 
     useEffect(()=>{
         setTranslatedLayersIntoCode(magicTranslatorToPython(codeState));

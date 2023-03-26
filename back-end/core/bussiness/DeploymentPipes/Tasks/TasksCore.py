@@ -8,10 +8,13 @@ import json
 import requests
 
 # utils
+
+
 def createFile(fileName, content):
     fp = open(fileName, 'w')
     fp.write(content)
     fp.close()
+
 
 dockerFileTemplate = """
 # syntax=docker/dockerfile:1
@@ -61,7 +64,7 @@ import pandas as pd
 import datetime
 from sklearn.preprocessing import MinMaxScaler
 from keras.models import Sequential
-from keras.layers import Dense, Dropout, LSTM
+from keras.layers import Dense, Dropout, LSTM, MultiHeadAttention, LayerNormalization, Conv1D, MaxPooling1D, Bidirectional, GRU
 from keras.models import load_model
 from pandas_datareader import data as pdr
 import requests
@@ -184,7 +187,7 @@ class NodeModelHandler:
 
         # --->> Dev Mode
         # company = "IBM"
-        company = '""" + code_template_replace_company + """'\n
+        company = 'AAPL'
 
         prediction_days = 60
 
@@ -209,7 +212,37 @@ class NodeModelHandler:
         x_test = np.reshape(x_test, (x_test.shape[0], x_test.shape[1], 1))
 
         predicted_prices = modelParam.predict(x_test)
-        predicted_prices = scaler.inverse_transform(predicted_prices)
+        print("predicted_prices:",predicted_prices)
+
+        simpleFormat = True
+        # True - case 1 (first model)
+        # False - case 2 (rest of the model)
+
+        try:
+            testFormat = predicted_prices[0][0][0]
+
+            # if the item x[0][0][0] exits => there is no simple format
+            simpleFormat = False
+
+        except:
+            print("Simple format case")
+
+        # FIX 1: working for first example
+        # predicted_prices = scaler.inverse_transform(predicted_prices)
+
+        # FIX 2: working for the rest of the examples
+        # predicted_prices = [[a[0][-1]] for a in predicted_prices]
+        # predicted_prices = scaler.inverse_transform(predicted_prices)
+
+        if simpleFormat:
+            print("case 1")
+            predicted_prices = scaler.inverse_transform(predicted_prices)
+        else:
+            print("case 2")
+            predicted_prices = [[a[0][-1]] for a in predicted_prices]
+            predicted_prices = scaler.inverse_transform(predicted_prices)
+
+
         offsetItem = [0] * prediction_days
         predictedWithOffset = offsetItem + [a[0] for a in predicted_prices]
 
@@ -223,6 +256,7 @@ class NodeModelHandler:
         # plt.show()
 
         tommorow_price = predictedWithOffset[len(predictedWithOffset) - 1]
+        print("TM price:",tommorow_price)
         return [[tommorow_price]]  # weird format, needs fix
 
     def persistInitialStats(self, pairValues):
@@ -266,7 +300,30 @@ class NodeModelHandler:
         x_test = np.reshape(x_test, (x_test.shape[0], x_test.shape[1], 1))
 
         predicted_prices = modelParam.predict(x_test)
-        predicted_prices = scaler.inverse_transform(predicted_prices)
+
+        # FORMAT FIX
+        print("predicted_prices:", predicted_prices)
+        simpleFormat = True
+        try:
+            testFormat = predicted_prices[0][0][0]
+
+            # if the item x[0][0][0] exits => there is no simple format
+            simpleFormat = False
+
+        except:
+            print("Simple format case")
+
+        if simpleFormat:
+            print("case 1")
+            predicted_prices = scaler.inverse_transform(predicted_prices)
+        else:
+            print("case 2")
+            predicted_prices = [[a[0][-1]] for a in predicted_prices]
+            predicted_prices = scaler.inverse_transform(predicted_prices)
+
+        #predicted_prices = scaler.inverse_transform(predicted_prices)
+        #predicted_prices = scaler.inverse_transform(predicted_prices)
+
         offsetItem = [0] * prediction_days
         predictedWithOffset = offsetItem + [a[0] for a in predicted_prices]
 
@@ -480,8 +537,8 @@ def nodeHeartBeat():
 
 if __name__ == '__main__':
     NodeAppRun()
-    #set_interval(NodeAppRun, 43200)
-    set_interval(NodeAppRun, 10)
+    set_interval(NodeAppRun, 43200)
+    #set_interval(NodeAppRun, 10)
     # set_interval(NodeAppRun, nodeCoreInterval)
     set_interval(nodeHeartBeat, 1)
 
@@ -494,11 +551,11 @@ def Stage_1_Task(packetSource):
     global code_template_node
 
     try:
-        print("paket source init:",packetSource)
+        print("paket source init:", packetSource)
 
         marketPayload = packetSource['payload']['market']
         print("Extracted market:", marketPayload)
-        
+
         # decorate front-end code
         localPacket = packetSource.copy()
         localPacket['history'] = localPacket['history'] + "_" + 'stage_1'
@@ -511,25 +568,30 @@ def Stage_1_Task(packetSource):
         print("Extract market:", packetSource['payload'])
         print("Front end code:", frontEndCode)
 
-        #replace company symbol
+        # replace company symbol
         # extractedCompany = '"IBM"'
-        code_template_code_copy = code_template_node[:] #make a copy
-        print("copy here:",code_template_code_copy)
+        code_template_code_copy = code_template_node[:]  # make a copy
+        print("copy here:", code_template_code_copy)
 
-        print("find test company:",code_template_code_copy.find(code_template_replace_company))
+        print("find test company:", code_template_code_copy.find(
+            code_template_replace_company))
 
-        #Populate node_id
-        #TO DO: extract from payload
+        # Populate node_id
+        # TO DO: extract from payload
         # fake_node_id = "63af35ba73282a4138d7f44e"
-        code_template_code_copy = code_template_code_copy.replace(code_template_node_id, nodeId)
+        code_template_code_copy = code_template_code_copy.replace(
+            code_template_node_id, nodeId)
 
-        #Populate market
-        code_template_code_copy = code_template_code_copy.replace(code_template_replace_company, marketPayload)
-        
-        #Populate tensor flow layers
-        code_template_code_copy = code_template_code_copy.replace(code_template_replace_layers, frontEndCode)
+        # Populate market
+        code_template_code_copy = code_template_code_copy.replace(
+            code_template_replace_company, marketPayload)
 
-        code_template_code_copy +=  "\n#decorate code_"+ localPacket['payload']['id'] +" ->>>\n"
+        # Populate tensor flow layers
+        code_template_code_copy = code_template_code_copy.replace(
+            code_template_replace_layers, frontEndCode)
+
+        code_template_code_copy += "\n#decorate code_" + \
+            localPacket['payload']['id'] + " ->>>\n"
         # localPacket['payload']['code'] += "\n#decorate code_"+ localPacket['payload']['id'] +" ->>>\n"
         localPacket['payload']['code'] = code_template_code_copy
 
@@ -537,7 +599,7 @@ def Stage_1_Task(packetSource):
         return localPacket
 
     except Exception as bomb:
-        print("An exception occurred:", bomb) 
+        print("An exception occurred:", bomb)
 
 
 def Stage_2_Task(packetSource):
@@ -567,7 +629,6 @@ def Stage_2_Task(packetSource):
     localPacket['payload']['dockerPath'] = newPath
     localPacket['payload']['buildName'] = buildName
 
-
     print("\nstage 2 localPacket")
     print(localPacket)
     return localPacket
@@ -584,7 +645,8 @@ def Stage_3_Task(packetSource):
     # print("final docker command:", ["docker", "build", "--no-cache", "--tag", f"{buildName}", dockerPath])
     # !!!!!! NO CACHE IS A MUST !!!!!!!!
     # test = subprocess.Popen(["docker", "build", "--no-cache", "--tag", f"{buildName}", dockerPath], stdout=subprocess.PIPE)
-    test = subprocess.Popen(["docker", "build", "--tag", f"{buildName}", dockerPath], stdout=subprocess.PIPE)
+    test = subprocess.Popen(
+        ["docker", "build", "--tag", f"{buildName}", dockerPath], stdout=subprocess.PIPE)
     output = test.communicate()[0]
     print("out:", output)
     print("\n\n\nReturn from task 3")
@@ -600,39 +662,41 @@ def Stage_4_Task(packetSource):
         buildName = localPacket['payload']['buildName']
 
         # imageRunOutput = subprocess.Popen(["docker", "run", "-d",'--network=host',buildName], stdout=subprocess.PIPE)
-        imageRunOutput = subprocess.Popen(["docker", "run", "-d",buildName], stdout=subprocess.PIPE)
-        print("imageRunOutput:",imageRunOutput)
+        imageRunOutput = subprocess.Popen(
+            ["docker", "run", "-d", buildName], stdout=subprocess.PIPE)
+        print("imageRunOutput:", imageRunOutput)
 
         output = imageRunOutput.communicate()[0]
-        print("output:",output)
+        print("output:", output)
 
-        decodedOutput = output.decode().rstrip() #remove '\n'
-        print("decodedOutput:",decodedOutput)
+        decodedOutput = output.decode().rstrip()  # remove '\n'
+        print("decodedOutput:", decodedOutput)
 
-        imageInspect = subprocess.Popen(["docker", "inspect", decodedOutput], stdout=subprocess.PIPE)
+        imageInspect = subprocess.Popen(
+            ["docker", "inspect", decodedOutput], stdout=subprocess.PIPE)
         imageInspectOut = imageInspect.communicate()[0]
         objParsed = json.loads(imageInspectOut.decode())
-        print("obj parsed:",objParsed)
+        print("obj parsed:", objParsed)
 
         containerId = objParsed[0]['Config']['Hostname']
         localPacket['payload']['containerId'] = containerId
 
         # start container
-        startContainer = subprocess.Popen(["docker", "start", containerId], stdout=subprocess.PIPE)
+        startContainer = subprocess.Popen(
+            ["docker", "start", containerId], stdout=subprocess.PIPE)
         resultStartContainer = startContainer.communicate()[0]
-        print("Result start container:",resultStartContainer)
+        print("Result start container:", resultStartContainer)
 
         return localPacket
 
     except Exception as bomb:
-        
-        print("An exception occurred in stage 4:", bomb) 
+
+        print("An exception occurred in stage 4:", bomb)
 
 
 def Stage_5_Task(packetSource):
     localPacket = packetSource.copy()
     localPacket['history'] = localPacket['history'] + "_" + 'stage_5'
-
 
     docId_persist = localPacket['payload']['buildName']
     code_persist = localPacket['payload']['code']
@@ -649,8 +713,8 @@ def Stage_5_Task(packetSource):
     url = 'http://localhost:3005/populate-node'
     response = requests.post(url, json=bodyPersistNode)
     decodedResponse = response.content.decode()
-    print("decodedResp:", decodedResponse)  
-    
+    print("decodedResp:", decodedResponse)
+
     return localPacket
 
 

@@ -9,7 +9,7 @@ import pandas as pd
 import datetime
 from sklearn.preprocessing import MinMaxScaler
 from keras.models import Sequential
-from keras.layers import Dense, Dropout, LSTM
+from keras.layers import Dense, Dropout, LSTM, MultiHeadAttention, LayerNormalization, Conv1D, MaxPooling1D, Bidirectional, GRU
 from keras.models import load_model
 from pandas_datareader import data as pdr
 import requests
@@ -46,7 +46,7 @@ class NodeModelHandler:
 
         # !!!!! REPLACE BEFORE DOCKER MODE
         # company = '""" + code_template_replace_company + """'\n
-        company = 'IBM'
+        company = 'AAPL'
         data = pdr.get_data_yahoo(company, start="2019-10-10", end="2020-10-10")
         print("data:",data)
 
@@ -78,13 +78,77 @@ class NodeModelHandler:
         print("2 y_train:",y_train)
 
         model = Sequential()
-        model.add(LSTM(units=50, return_sequences=True, input_shape=(x_train.shape[1], 1)))  # units = neurons
-        model.add(Dropout(0.2))
-        model.add(LSTM(units=50, return_sequences=True))
-        model.add(Dropout(0.2))
-        model.add(LSTM(units=50))
-        model.add(Dropout(0.2))
-        model.add(Dense(units=1))
+
+
+        # # working - model 1
+        # model.add(LSTM(units=50, return_sequences=True, input_shape=(x_train.shape[1], 1)))  # units = neurons
+        # model.add(Dropout(0.2))
+        # model.add(LSTM(units=50, return_sequences=True))
+        # model.add(Dropout(0.2))
+        # model.add(LSTM(units=50))
+        # model.add(Dropout(0.2))
+        # model.add(Dense(units=1))
+
+
+        #working with custom fix for inverse_transform
+        # model.add(Bidirectional(LSTM(units=50, return_sequences=True), input_shape=(x_train.shape[1], 1)))
+        # model.add(Dropout(0.2))
+        # model.add(Bidirectional(LSTM(units=50, return_sequences=True)))
+        # model.add(Dropout(0.2))
+        # model.add(Dense(units=1))
+
+        #working
+        # model.add(Conv1D(filters=64, kernel_size=3, activation='relu', input_shape=(x_train.shape[1], 1)))
+        # model.add(MaxPooling1D(pool_size=2))
+        # model.add(LSTM(units=50, return_sequences=True))
+        # model.add(Dropout(0.2))
+        # model.add(Dense(units=1))
+
+        # model.add(GRU(units=50, return_sequences=True, input_shape=(x_train.shape[1], 1)))
+        # model.add(Dropout(0.2))
+        # model.add(GRU(units=50, return_sequences=True))
+        # model.add(Dropout(0.2))
+        # model.add(Dense(units=1))
+
+        # model.add(Conv1D(filters=64, kernel_size=3, activation='relu', input_shape=(x_train.shape[1], 1)))
+        # model.add(Conv1D(filters=32, kernel_size=3, activation='relu'))
+        # model.add(MaxPooling1D(pool_size=2))
+        # model.add(LSTM(units=32, return_sequences=True))
+        # model.add(LSTM(units=16, return_sequences=False))
+        # model.add(Dense(units=32, activation='relu'))
+        # model.add(Dense(units=1))
+
+        # model.add(LSTM(units=64, return_sequences=True, input_shape=(x_train.shape[1], 1)))
+        # model.add(LSTM(units=32, return_sequences=True))
+        # model.add(LSTM(units=16, return_sequences=False))
+        # model.add(Dense(units=32, activation='relu'))
+        # model.add(Dense(units=1))
+
+        # model.add(Bidirectional(LSTM(units=64, return_sequences=True, input_shape=(x_train.shape[1], 1))))
+        # model.add(Bidirectional(LSTM(units=32, return_sequences=True)))
+        # model.add(Bidirectional(LSTM(units=16, return_sequences=False)))
+        # model.add(Dense(units=32, activation='relu'))
+        # model.add(Dense(units=1))
+
+        # model.add(Conv1D(filters=32, kernel_size=3, activation='relu', input_shape=(x_train.shape[1], 1)))
+        # model.add(MaxPooling1D(pool_size=2))
+        # model.add(Conv1D(filters=64, kernel_size=3, activation='relu'))
+        # model.add(MaxPooling1D(pool_size=2))
+        # model.add(Conv1D(filters=128, kernel_size=3, activation='relu'))
+        # model.add(LSTM(units=64, return_sequences=True))
+        # model.add(Dropout(0.2))
+        # model.add(LSTM(units=32, return_sequences=True))
+        # model.add(Dropout(0.2))
+        # model.add(Dense(units=1))
+
+        # model.add(LSTM(units=64, return_sequences=True, input_shape=(x_train.shape[1], 1)))
+        # model.add(Dropout(0.2))
+        # model.add(LayerNormalization(epsilon=1e-6))
+        # model.add(LSTM(units=64, return_sequences=True))
+        # model.add(Dropout(0.2))
+        # model.add(LayerNormalization())
+        # model.add(Dense(units=1))
+
 
         model.compile(optimizer='adam', loss='mean_squared_error')
         model.fit(x_train, y_train, epochs=25, batch_size=32)
@@ -125,31 +189,23 @@ class NodeModelHandler:
     def predictNextDay(self, modelParam):
         print("predictNextDay:")
 
-        # company = '""" + code_template_replace_company + """'\n
-        company = "IBM"
-        data = pdr.get_data_yahoo(company, start="2018-10-10", end="2020-10-10")
-        print("data:",data)
+        # --->> Dev Mode
+        # company = "IBM"
+        company = 'AAPL'
 
+        prediction_days = 60
+
+        test_start = datetime.datetime(2015, 1, 1)
+        test_end = datetime.datetime.now()
+
+        data = pdr.get_data_yahoo(company, start=test_start, end=test_end)
         scaler = MinMaxScaler(feature_range=(0, 1))
         scaler.fit_transform(data['Close'].values.reshape(-1, 1))  # keep only 'close' column
-        prediction_days = 60
-        print("scaler:",scaler)
 
-        test_data = pdr.get_data_yahoo("TSLA", start="2020-10-10", end="2021-10-10")
-        actual_prices = test_data['Close'].values
-        print("actual_prices:",actual_prices)
-
-        total_dataset = pd.concat((data['Close'], test_data['Close']), axis=0)
-        print("total_dataset:",total_dataset)
-
-
-        model_inputs = total_dataset[len(total_dataset) - len(test_data) - prediction_days:].values
-        print(" 1 model_inputs:",model_inputs)
+        model_inputs = data['Close'].values
 
         model_inputs = model_inputs.reshape(-1, 1)
         model_inputs = scaler.transform(model_inputs)
-
-        print("2 model_inputs:",model_inputs)
 
         x_test = []
 
@@ -159,32 +215,53 @@ class NodeModelHandler:
         x_test = np.array((x_test))
         x_test = np.reshape(x_test, (x_test.shape[0], x_test.shape[1], 1))
 
-        print("len x_test:", len(x_test))
-        print("x_test",x_test)
-
-
         predicted_prices = modelParam.predict(x_test)
         print("predicted_prices:",predicted_prices)
 
-        predicted_prices = scaler.inverse_transform(predicted_prices)
-        print("2 predicted_prices:",predicted_prices)
+        simpleFormat = True
+        # True - case 1 (first model)
+        # False - case 2 (rest of the model)
 
-        print("predicted_prices:",predicted_prices)
-        print("actual_prices:",actual_prices)
-        plt.plot(actual_prices, color="black")
-        plt.plot(predicted_prices,color="red")
-        plt.show()
+        try:
+            testFormat = predicted_prices[0][0][0]
 
-        real_data = [model_inputs[len(model_inputs) + 1 - prediction_days:len(model_inputs + 1), 0]]
-        real_data = np.array(real_data)
-        real_data = np.reshape(real_data, (real_data.shape[0], real_data.shape[1], 1))
+            # if the item x[0][0][0] exits => there is no simple format
+            simpleFormat = False
 
-        print("real data:",real_data)
+        except:
+            print("Simple format case")
 
-        prediction = modelParam.predict(real_data)
-        prediction = scaler.inverse_transform(prediction)
-        return prediction
+        # FIX 1: working for first example
+        # predicted_prices = scaler.inverse_transform(predicted_prices)
 
+        # FIX 2: working for the rest of the examples
+        # predicted_prices = [[a[0][-1]] for a in predicted_prices]
+        # predicted_prices = scaler.inverse_transform(predicted_prices)
+
+        if simpleFormat:
+            print("case 1")
+            predicted_prices = scaler.inverse_transform(predicted_prices)
+        else:
+            print("case 2")
+            predicted_prices = [[a[0][-1]] for a in predicted_prices]
+            predicted_prices = scaler.inverse_transform(predicted_prices)
+
+
+        offsetItem = [0] * prediction_days
+        predictedWithOffset = offsetItem + [a[0] for a in predicted_prices]
+
+        real_data_final = data['Close'].values
+        for a in range(prediction_days):
+            real_data_final = real_data_final[1:]
+            predictedWithOffset = predictedWithOffset[1:]
+
+        # plt.plot(real_data_final, color="black")
+        # plt.plot(predictedWithOffset,color="red")
+        # plt.show()
+
+        tommorow_price = predictedWithOffset[len(predictedWithOffset) - 1]
+        print("TM price:",tommorow_price)
+        return [[tommorow_price]]  # weird format, needs fix
 
 class NodeCore:
 
@@ -340,8 +417,9 @@ def nodeHeartBeat():
 
 
 if __name__ == '__main__':
-    set_interval(NodeAppRun, 3)
-    # set_interval(NodeAppRun, nodeCoreInterval)
+    NodeAppRun()
+    # set_interval(NodeAppRun, 43200)  # real use
+    set_interval(NodeAppRun, 3)  #dev mode
     set_interval(nodeHeartBeat, 1)
 
     socketio.run(app, debug=False, port=5000, host='0.0.0.0')
