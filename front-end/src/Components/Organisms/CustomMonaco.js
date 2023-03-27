@@ -3,7 +3,7 @@ import Editor from "@monaco-editor/react";
 import CircularProgress from '@mui/material/CircularProgress';
 
 
-export default function CustomMonaco({editorValue,setEditorValue, options}) {
+export default function CustomMonaco({triggerCustomUserCode, editorValue,setEditorValue, options}) {
   const [theme, setTheme] = useState("vs-dark");
   const [language, setLanguage] = useState("python");
   const [handleOptions, setHandleOptions] = useState(null);
@@ -25,7 +25,10 @@ export default function CustomMonaco({editorValue,setEditorValue, options}) {
         language={language}
         loading={<TestLoader />}
         value={editorValue !== undefined ? editorValue : null }
-        onChange={setEditorValue}
+        onChange={(newValue)=>{
+          triggerCustomUserCode()  
+          setEditorValue(newValue)
+        }}
         options={handleOptions}
       />
     </>

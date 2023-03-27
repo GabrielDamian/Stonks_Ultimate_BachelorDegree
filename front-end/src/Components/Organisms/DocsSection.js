@@ -130,7 +130,7 @@ function DocsSection(){
                 <span>Read the docs</span>
             </div>
             <div style={{
-              height: '90%',
+              height: '70%',
               overflowY: 'scroll'
             }}>
               <TreeView
