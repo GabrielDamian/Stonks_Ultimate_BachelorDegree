@@ -2,6 +2,7 @@ import React,{Component} from 'react';
 import {DragDropContext,Draggable,Droppable} from 'react-beautiful-dnd';
 import './DragArea.css';
 import DragItem from './DragItem';
+import DragIcon from '../../Media/Icons/drop.png';
 
 
 
@@ -255,7 +256,18 @@ class DragArea extends Component {
                                 className="drag-area-info-panel-drag"
                                 // style={getListStyle(snapshot.isDraggingOver)}
                                 >
-                                {this.props.codeState.selected.map((item, index) => (
+                                {this.props.codeState.selected.length === 0 ?
+                                <div style={{
+                                    height: '100%',
+                                    width: '100%',
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center'
+                                }}>
+                                    <img src={DragIcon} style={{height:'50px', objectFit: 'contain'}}/>
+                                </div>
+
+                                :this.props.codeState.selected.map((item, index) => (
                                     <Draggable
                                         key={item.id}
                                         draggableId={item.id}
@@ -263,6 +275,7 @@ class DragArea extends Component {
                                         {(provided, snapshot) => (
                                             
                                             <div>
+
                                                 <div
                                                     ref={provided.innerRef}
                                                     {...provided.draggableProps}
@@ -270,9 +283,9 @@ class DragArea extends Component {
                                                     style={getItemStyle(
                                                         snapshot.isDragging,
                                                         provided.draggableProps.style
-                                                    )}
+                                                    )
+                                                }
                                                     >
-                                                        {/* <span style={{color: 'white'}} onClick={}>x</span> */}
                                                     <DragItem 
                                                         handleParameterValueChange={this.handleParameterValueChange}
                                                         data={item} 

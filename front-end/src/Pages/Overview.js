@@ -85,22 +85,39 @@ export default function Overview({tabIndex,setTabs,tabs,userId})
             <div className='dashboard-content'>
                 <TopBar userId={userId}/>
                 <div className='overview-content-data'>
-                    <div className='overview-content-data-selection'>
-                        <div className='content-data-selection-list'>
-                            {
-                                nodes.map((el, index)=>{
-                                    return(<NodeListElem 
-                                            obj={el} 
-                                            handleClickIndex={()=>{setSelected(index)}}
-                                            selected={selected !== undefined ? (selected == index ? true:false):false}/>)
-                                })
-                            }
-                        </div>
-                        <div className='content-data-selection-graph'>
-                            <ChartComponent source={selectedData == undefined ? [] :selectedData.predictions} realData={realData}/>
-                            <OverviewPanel data={selectedData} />
-                        </div>
-                    </div>
+                    {
+                      nodes.length === 0 ?
+                      <div
+                        style={{
+                          backgroundColor: 'var(--dark)',
+                          height:'100%',
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center'
+                        }}                                
+                      >
+                        <p style={{color: 'white', fontSize: '1.5rem'}}>Please create a node first.</p>
+                      </div>
+                      :
+                      <div className='overview-content-data-selection'>
+                      <div className='content-data-selection-list'>
+                          {
+                              
+                              nodes.map((el, index)=>{
+                                  return(<NodeListElem 
+                                          obj={el} 
+                                          handleClickIndex={()=>{setSelected(index)}}
+                                          selected={selected !== undefined ? (selected == index ? true:false):false}/>)
+                              })
+                          }
+                      </div>
+                      <div className='content-data-selection-graph'>
+                          <ChartComponent source={selectedData == undefined ? [] :selectedData.predictions} realData={realData}/>
+                          <OverviewPanel data={selectedData} />
+                      </div>
+                  </div>
+                    }
+                    
                 </div>
             </div>
         </div>

@@ -61,7 +61,7 @@ function Login()
                     //set cookies
                     let token = data.token;
                     cookies.set('jwt',token,{secure: true, sameSite: 'none'})
-                    navigate(`/ide`);
+                    navigate(`/overview`);
                 }
               }
               catch (err) {
@@ -141,10 +141,10 @@ function Login()
                         </div>
                     </div>
 
-                    <div class="login__check">
+                    {/* <div class="login__check">
                         <input type="checkbox" class="login__check-input"/>
                         <label for="" class="login__check-label">Remember me</label>
-                    </div>
+                    </div> */}
                 </div>
 
                 <div>
@@ -154,7 +154,7 @@ function Login()
                         
                     </div>
 
-                    <a href="#" class="login__forgot">Forgot Password?</a>
+                    {/* <a href="#" class="login__forgot">Forgot Password?</a> */}
                     <p className='error-login-signup'>{errors}</p>
                 </div>
 		    </form>

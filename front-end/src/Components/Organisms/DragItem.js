@@ -60,7 +60,7 @@ function DragItem({data, hyperParamsActive,handleParameterValueChange, deleteIco
   }
 
   return (
-    <div  className='drag-item-container' >
+    <div  className='drag-item-container'>
       <List
         sx={{ width: '100%', backgroundColor: '#252728', color: '#b0afb2' }}
         component="nav"

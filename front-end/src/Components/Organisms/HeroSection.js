@@ -117,10 +117,15 @@ export default function HeroSection()
           </div>
           <div className='hero-top-content-item-right'>
             <div className='hero-top-content-item-right-title'>
-              <span>Stonk Ultimate Bachelor Degree Ecosystem</span>
+              <span>Aplicație nor pentru dezvoltarea rapidă a modelelor de analiză bursiere
+              </span>
             </div>
             <div className='hero-top-content-item-right-desc'>
-              <span>Lorem Ipsum is simply dum Ipy'sext ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</span>
+              <p>Universitatea Tehnică „Gheorghe Asachi” din Iași </p>
+              <br/>
+              <p>Facultatea de Automatică și Calculatoare</p>
+              <br/>
+              <p style={{marginTop: '20px'}}>Student: Damian Gabriel-Mihai</p>
             </div>
           </div>
         </div>

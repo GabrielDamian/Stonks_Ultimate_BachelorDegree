@@ -8,6 +8,7 @@ import { ChartComponent } from '../Components/Organisms/ChartComponent';
 import LastPriceWidget from '../Components/Organisms/LastPriceWidget';
 import GraphStats from '../Components/Organisms/GraphStats';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 export const fetchNodeData = async (nodeID, setStateCallback)=>{
     try{
@@ -98,8 +99,12 @@ export let attachRealData = async (nodeDataParam, setStateParam)=>{
 
     setStateParam(finalPairs)
 }
+
 function NodePage({tabIndex,setTabs,tabs,userId})
 {
+    const navigate = useNavigate();
+
+
     const [nodeData, setNodeData] = useState({})
     const [realData, setRealData] = useState(null);
     const [nodeAddress, setNodeAddress] = useState(null);
@@ -146,8 +151,6 @@ function NodePage({tabIndex,setTabs,tabs,userId})
           }
     }
 
-    
-
     useEffect(()=>{
         // extract from query params
         const queryParams = new URLSearchParams(window.location.search)
@@ -155,6 +158,7 @@ function NodePage({tabIndex,setTabs,tabs,userId})
         if(nodeId == undefined || nodeId == "" || nodeId == " ")
         {
             console.error("Node Page: invalid query param for nodeid")
+            navigate('/overview')
         }
         else 
         {
