@@ -47,7 +47,7 @@ const createToken = (id) => {
 };
 
 app.get('/test',(req,res)=>{
-  return res.send('node ok')
+  return res.send('node ok 1')
 })
 
 app.post('/login',async (req,res)=>{
@@ -174,13 +174,15 @@ const SubscribeAction = async ()=>{
     let status_subscribe = false;
     while(!status_subscribe)
     {
+      console.log("try to subs")
       await sleep(1000);
       try{
-        await axios.post(`http://${hostPOV}:3001/subscribe`,{
+        let resp = await axios.post(`http://${hostPOV}:3001/subscribe`,{
           service_id,
           SERVER_ADDRESS,
           resources
         })
+        console.log("resp subbs:", resp.data)
         status_subscribe = true;
       }
       catch(e)

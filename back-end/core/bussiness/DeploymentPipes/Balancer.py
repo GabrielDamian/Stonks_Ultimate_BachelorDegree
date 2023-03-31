@@ -9,6 +9,7 @@ from NodeStructure import NodeCore
 from threading import Thread, Lock
 import json
 
+
 class NodesMap:
     def __init__(self):
         self.dict = {
@@ -31,6 +32,7 @@ class NodesMap:
                 return a
         return None
 
+
 def releasePipe(nodesMapEl):
     # KafkaAdminClient(bootstrap_servers='localhost : 9092').delete_topics(['balancer-releaser'])
 
@@ -49,15 +51,17 @@ def releasePipe(nodesMapEl):
         objectEl = json.loads(bytesDecoded)
         nodesMapEl.releaseNode(objectEl['pipe'])
 
+
 def balancerTask(packetSource):
     localPacket = packetSource.copy()
     localPacket['history'] = localPacket['history'] + "_" + 'balancer'
     return localPacket
 
-def persistNodeEntity(sourcePacket):
-    print("Create Node Entity-> Persist into db:",sourcePacket)
 
-    #Nodes Persitence Service
+def persistNodeEntity(sourcePacket):
+    print("Create Node Entity-> Persist into db:", sourcePacket)
+
+    # Nodes Persitence Service
     url = 'http://localhost:3005/create-node'
 
     bodyPersistNode = {
@@ -66,13 +70,14 @@ def persistNodeEntity(sourcePacket):
         'description': sourcePacket['payload']['description'],
         'market': sourcePacket['payload']['market']
     }
-    print("bodyPersistNode:",bodyPersistNode)
-    
+    print("bodyPersistNode:", bodyPersistNode)
+
     response = requests.post(url, json=bodyPersistNode)
-    
-    #nodeID
+
+    # nodeID
     decodedResponse = response.content.decode()
     return json.loads(decodedResponse)['id']
+
 
 if __name__ == '__main__':
 
@@ -115,7 +120,7 @@ if __name__ == '__main__':
         mongoId = persistNodeEntity(initPacket)
         initPacket['payload']['id'] = mongoId
 
-        print("initPacket:",initPacket)
+        print("initPacket:", initPacket)
 
         node = NodeCore.Pipe_Node(
             name='balancer',

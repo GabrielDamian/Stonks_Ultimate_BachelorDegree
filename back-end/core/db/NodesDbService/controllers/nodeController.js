@@ -21,19 +21,35 @@ module.exports.create_node = async (req, res) => {
 }
 
 module.exports.populate_node = async (req, res) => {
+    console.log("populate_node:");
     // -code
     // -imageId (same as folder path)
     // -containerId
-    const {docId, code, imageId, containerId} = req.body;
+    const {docId, code, imageId, containerId, status} = req.body;
+
+    console.log("docId:", docId)
+    console.log("imageId:", imageId)
+    console.log("containerId:", containerId)
+    console.log("status:", status)
+
+    const checkedObjet ={}
+    // if(docId !== undefined) checkedObjet['docId'] = docId
+    if(code !== undefined) checkedObjet['code'] = code
+    if(imageId !== undefined) checkedObjet['imageId'] = imageId
+    if(containerId !== undefined) checkedObjet['containerId'] = containerId
+    if(status !== undefined) checkedObjet['status'] = status
+
+    console.log("checked object:",checkedObjet)
 
     try{
         const doc = await Node.findByIdAndUpdate(
             docId,
             {
-                code,
-                imageId,
-                containerId,
-                status: 'deploy completed'
+                ...checkedObjet
+                // code,
+                // imageId,
+                // containerId,
+                // status: 'deploy completed'
             })
         res.status(200).json({ 
             containerId

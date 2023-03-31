@@ -104,6 +104,7 @@ const ROUTES = {
 const mapIndexSeparator = "_";
 
 app.post('/subscribe',(req,res)=>{
+    console.log("subscriube route")
 
     const  {service_id,resources,SERVER_ADDRESS} = req.body;
 
@@ -128,6 +129,8 @@ app.post('/subscribe',(req,res)=>{
 
 app.post('/heart-beat',(req,res)=>{
     
+    console.log("heart beat route")
+
     let {service_id} = req.body;
 
     Object.keys(ROUTES).forEach((el)=>{
@@ -138,7 +141,6 @@ app.post('/heart-beat',(req,res)=>{
     })
     return res.status(200).send("ok heart beat")
 })
-
 
 // REDIRECT LOGIC
 app.post('/:destination',async (req,res)=>{

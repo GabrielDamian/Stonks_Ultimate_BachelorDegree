@@ -15,7 +15,7 @@ const presetValues = [
     {
         title: 'Model 1',
         code: `
-        #Code Example: Model 1
+        #Model 1
         model.add(LSTM(units=50, return_sequences=True, input_shape=(x_train.shape[1], 1)))  
         model.add(Dropout(0.2))
         model.add(LSTM(units=50, return_sequences=True))
@@ -28,99 +28,99 @@ const presetValues = [
     {
         title: 'Model 2',
         code: `
-        #Code Example: Model 2
-    	model.add(Bidirectional(LSTM(units=50, return_sequences=True), input_shape=(x_train.shape[1], 1)))
-    	model.add(Dropout(0.2))
-    	model.add(Bidirectional(LSTM(units=50, return_sequences=True)))
-    	model.add(Dropout(0.2))
-    	model.add(Dense(units=1))
+        #Model 2
+        model.add(Bidirectional(LSTM(units=50, return_sequences=True), input_shape=(x_train.shape[1], 1)))
+        model.add(Dropout(0.2))
+        model.add(Bidirectional(LSTM(units=50, return_sequences=True)))
+        model.add(Dropout(0.2))
+        model.add(Dense(units=1))
     `
     },
     {
         title: 'Model 3',
         code: `
-        #Code Example: Model 3
-    	model.add(Conv1D(filters=64, kernel_size=3, activation='relu', input_shape=(x_train.shape[1], 1)))
-    	model.add(MaxPooling1D(pool_size=2))
-    	model.add(LSTM(units=50, return_sequences=True))
-    	model.add(Dropout(0.2))
-    	model.add(Dense(units=1))
+        #Model 3
+        model.add(Conv1D(filters=64, kernel_size=3, activation='relu', input_shape=(x_train.shape[1], 1)))
+        model.add(MaxPooling1D(pool_size=2))
+        model.add(LSTM(units=50, return_sequences=True))
+        model.add(Dropout(0.2))
+        model.add(Dense(units=1))
 
     `
     },
     {
         title: 'Model 4',
         code: `
-        #Code Example: Model 4
+        #Model 4
         model.add(GRU(units=50, return_sequences=True, input_shape=(x_train.shape[1], 1)))
-    	model.add(Dropout(0.2))
-    	model.add(GRU(units=50, return_sequences=True))
-    	model.add(Dropout(0.2))
-    	model.add(Dense(units=1))
+        model.add(Dropout(0.2))
+        model.add(GRU(units=50, return_sequences=True))
+        model.add(Dropout(0.2))
+        model.add(Dense(units=1))
     `
     },
     {
         title: 'Model 5',
         code: `
-        #Code Example: Model 5
+        #Model 5
         model.add(Conv1D(filters=64, kernel_size=3, activation='relu', input_shape=(x_train.shape[1], 1)))
-    	model.add(Conv1D(filters=32, kernel_size=3, activation='relu'))
-    	model.add(MaxPooling1D(pool_size=2))
-    	model.add(LSTM(units=32, return_sequences=True))
-    	model.add(LSTM(units=16, return_sequences=False))
-    	model.add(Dense(units=32, activation='relu'))
-    	model.add(Dense(units=1))
+        model.add(Conv1D(filters=32, kernel_size=3, activation='relu'))
+        model.add(MaxPooling1D(pool_size=2))
+        model.add(LSTM(units=32, return_sequences=True))
+        model.add(LSTM(units=16, return_sequences=False))
+        model.add(Dense(units=32, activation='relu'))
+        model.add(Dense(units=1))
     `
     },
     {
         title: 'Model 6',
         code: `
-        #Code Example: Model 6
+        #Model 6
         model.add(LSTM(units=64, return_sequences=True, input_shape=(x_train.shape[1], 1)))
-    	model.add(LSTM(units=32, return_sequences=True))
-    	model.add(LSTM(units=16, return_sequences=False))
-    	model.add(Dense(units=32, activation='relu'))
-    	model.add(Dense(units=1))
+        model.add(LSTM(units=32, return_sequences=True))
+        model.add(LSTM(units=16, return_sequences=False))
+        model.add(Dense(units=32, activation='relu'))
+        model.add(Dense(units=1))
     `
     },
     {
         title: 'Model 7',
         code: `
-        #Code Example: Model 7
+        #Model 7
         model.add(Bidirectional(LSTM(units=64, return_sequences=True, input_shape=(x_train.shape[1], 1))))
-    	model.add(Bidirectional(LSTM(units=32, return_sequences=True)))
-    	model.add(Bidirectional(LSTM(units=16, return_sequences=False)))
-    	model.add(Dense(units=32, activation='relu'))
-    	model.add(Dense(units=1))
+        model.add(Bidirectional(LSTM(units=32, return_sequences=True)))
+        model.add(Bidirectional(LSTM(units=16, return_sequences=False)))
+        model.add(Dense(units=32, activation='relu'))
+        model.add(Dense(units=1))
     `
     },
     {
         title: 'Model 8',
         code: `
-        #Code Example: Model 8
+        #Model 8
         model.add(Conv1D(filters=32, kernel_size=3, activation='relu', input_shape=(x_train.shape[1], 1)))
-    	model.add(MaxPooling1D(pool_size=2))
-    	model.add(Conv1D(filters=64, kernel_size=3, activation='relu'))
-    	model.add(MaxPooling1D(pool_size=2))
-    	model.add(Conv1D(filters=128, kernel_size=3, activation='relu'))
-    	model.add(LSTM(units=64, return_sequences=True))
-    	model.add(Dropout(0.2))
-    	model.add(LSTM(units=32, return_sequences=True))
-    	model.add(Dropout(0.2))
-    	model.add(Dense(units=1))
+        model.add(MaxPooling1D(pool_size=2))
+        model.add(Conv1D(filters=64, kernel_size=3, activation='relu'))
+        model.add(MaxPooling1D(pool_size=2))
+        model.add(Conv1D(filters=128, kernel_size=3, activation='relu'))
+        model.add(LSTM(units=64, return_sequences=True))
+        model.add(Dropout(0.2))
+        model.add(LSTM(units=32, return_sequences=True))
+        model.add(Dropout(0.2))
+        model.add(Dense(units=1))
     `
     },
     {
         title: 'Model 9',
         code: `
-        #Code Example: Model 9
+        #9
         model.add(LSTM(units=64, return_sequences=True, input_shape=(x_train.shape[1], 1)))
-    	model.add(Dropout(0.2))
-    	model.add(LayerNormalization(epsilon=1e-6))
-    	model.add(LSTM(units=64, return_sequences=True))
-    	model.add(Dropout(0.2))
-    	model.add(LayerNormalization())
-    	model.add(Dense(units=1))
+        model.add(Dropout(0.2))
+        model.add(LayerNormalization(epsilon=1e-6))
+        model.add(LSTM(units=64, return_sequences=True))
+        model.add(Dropout(0.2))
+        model.add(LayerNormalization())
+        model.add(Dense(units=1))
     `
     },
 ]

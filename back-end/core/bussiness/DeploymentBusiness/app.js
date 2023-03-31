@@ -95,14 +95,16 @@ const SubscribeAction = async ()=>{
   let status_subscribe = false;
   while(!status_subscribe)
   {
+    console.log("try subs")
     await sleep(1000);
     try{
-      await axios.post(`http://${hostPOV}:3001/subscribe`,{
+      let responseSubs = await axios.post(`http://${hostPOV}:3001/subscribe`,{
         service_id,
         SERVER_ADDRESS,
         resources
       })
       status_subscribe = true;
+      console.log("respo subs:",responseSubs.data)
     }
     catch(e)
     {

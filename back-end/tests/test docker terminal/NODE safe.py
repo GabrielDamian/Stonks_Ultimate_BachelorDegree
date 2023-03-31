@@ -80,7 +80,7 @@ class NodeModelHandler:
         model = Sequential()
 
 
-        # # working - model 1
+        # model 1
         # model.add(LSTM(units=50, return_sequences=True, input_shape=(x_train.shape[1], 1)))  # units = neurons
         # model.add(Dropout(0.2))
         # model.add(LSTM(units=50, return_sequences=True))
@@ -89,26 +89,26 @@ class NodeModelHandler:
         # model.add(Dropout(0.2))
         # model.add(Dense(units=1))
 
-
-        #working with custom fix for inverse_transform
+        # model 2
         # model.add(Bidirectional(LSTM(units=50, return_sequences=True), input_shape=(x_train.shape[1], 1)))
         # model.add(Dropout(0.2))
         # model.add(Bidirectional(LSTM(units=50, return_sequences=True)))
         # model.add(Dropout(0.2))
         # model.add(Dense(units=1))
 
-        #working
+        #model 3
         # model.add(Conv1D(filters=64, kernel_size=3, activation='relu', input_shape=(x_train.shape[1], 1)))
         # model.add(MaxPooling1D(pool_size=2))
         # model.add(LSTM(units=50, return_sequences=True))
         # model.add(Dropout(0.2))
         # model.add(Dense(units=1))
 
-        # model.add(GRU(units=50, return_sequences=True, input_shape=(x_train.shape[1], 1)))
-        # model.add(Dropout(0.2))
-        # model.add(GRU(units=50, return_sequences=True))
-        # model.add(Dropout(0.2))
-        # model.add(Dense(units=1))
+        #model 4
+        model.add(GRU(units=50, return_sequences=True, input_shape=(x_train.shape[1], 1)))
+        model.add(Dropout(0.2))
+        model.add(GRU(units=50, return_sequences=True))
+        model.add(Dropout(0.2))
+        model.add(Dense(units=1))
 
         # model.add(Conv1D(filters=64, kernel_size=3, activation='relu', input_shape=(x_train.shape[1], 1)))
         # model.add(Conv1D(filters=32, kernel_size=3, activation='relu'))
