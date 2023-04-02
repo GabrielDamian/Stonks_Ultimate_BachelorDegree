@@ -18,6 +18,9 @@ import RedirectIcon from '../Media/Icons/maximize.png';
 import {fetchNodeData} from './NodePage';
 import OverviewPanel from '../Components/Organisms/OverviewPanel';
 import {attachRealData} from './NodePage';
+import SuccessIcon from '../Media/Icons/check.png';
+import FailureIcon from '../Media/Icons/error.png';
+import LoadingIcon from '../Media/loading.gif';
 
 export default function Overview({tabIndex,setTabs,tabs,userId})
 {
@@ -127,6 +130,7 @@ export default function Overview({tabIndex,setTabs,tabs,userId})
 
 function NodeListElem({obj,selected,handleClickIndex})
 {
+
   const [open, setOpen] = React.useState(false);
   const [open2, setOpen2] = React.useState(false);
 
@@ -134,6 +138,67 @@ function NodeListElem({obj,selected,handleClickIndex})
     setOpen2(!open2);
   };
 
+  const [nodeMetadata, setNodemetadata] = useState(undefined);
+  
+  useEffect(()=>{
+    let metadataConcat = obj.status
+    let dataObj = metadataConcat.split(",")
+    
+    let finalParent = {}
+    dataObj.forEach((el)=>{
+      let splitLocal = el.split(":")
+      finalParent[splitLocal[0]] = splitLocal[1]
+    })
+
+    console.log("finalParent:",finalParent)
+    setNodemetadata(finalParent)
+  },[obj] )
+
+  let decideIcon = (statusParam)=>{
+
+    if(statusParam == undefined) return null
+
+    let imgStyleObj = {
+      height: '20px',
+      objectFit: 'contained',
+      marginLeft: '10px'
+    }
+    let parentStyleDiv = {
+        padding: '5px',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center'
+    }
+
+    if(statusParam.trim() == "Success")
+    {
+      return (
+        <div style={parentStyleDiv}>
+        <span>Status: Success</span><img src={SuccessIcon} style={imgStyleObj}/>
+        </div>
+      )
+    }
+      else if (statusParam.trim() === 'Failure')
+      {
+      return (
+        <div style={parentStyleDiv}>
+        <span>Status: Failed</span><img src={FailureIcon} style={imgStyleObj}/>
+        </div>
+      )
+    }
+    else if(statusParam.trim() === 'InProgress')
+    {
+      return (
+        <div style={parentStyleDiv}>
+        <span>Status: Deploy in progress</span><img src={LoadingIcon} style={imgStyleObj}/>
+        </div>
+      )
+    }
+    else 
+    {
+      return 'Unknown'
+    }
+  }
     return(
         <div
           onClick={handleClickIndex}
@@ -146,7 +211,7 @@ function NodeListElem({obj,selected,handleClickIndex})
             sx={{ 
               width: '100%', 
               backgroundColor: 'var(--dark)',
-              border: '1px solid var(--border)'
+              border: '1px solid var(--border)',
             }}
             component="nav"
             aria-labelledby="nested-list-subheader"
@@ -157,7 +222,9 @@ function NodeListElem({obj,selected,handleClickIndex})
                   <img title='To node page' src={RedirectIcon} style={{height: '20px', objectFit: 'contain'}}/>
                 </Link>
                 <p>{obj.buildName}</p>
-                <p>{obj.status}</p>
+                <p>{nodeMetadata !== undefined ? (
+                  decideIcon(nodeMetadata['Status'])
+                ) :null}</p>
               </div>
 
             </ListSubheader>
@@ -182,10 +249,26 @@ function NodeListElem({obj,selected,handleClickIndex})
             <div className='node-list-elem-rows-container'>
               <div className="node-list-elem-row">
                 <div className="node-list-elem-row-name">
-                  <span>ceva</span>
+                  <span>Status:</span>
                 </div>
                 <div className="node-list-elem-row-value">
-                  <span>ceva</span>
+                  <span>{nodeMetadata !== undefined ? nodeMetadata['Status'] : null}</span>
+                </div>
+              </div>
+              <div className="node-list-elem-row">
+                <div className="node-list-elem-row-name">
+                  <span>Message:</span>
+                </div>
+                <div className="node-list-elem-row-value">
+                  <span>{nodeMetadata !== undefined ? nodeMetadata[' Message'] : null} </span>
+                </div>
+              </div>
+              <div className="node-list-elem-row">
+                <div className="node-list-elem-row-name">
+                  <span>Date</span>
+                </div>
+                <div className="node-list-elem-row-value">
+                  <span>{nodeMetadata !== undefined ? nodeMetadata[' Date']: null}</span>
                 </div>
               </div>
             </div>

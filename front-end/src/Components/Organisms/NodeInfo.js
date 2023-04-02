@@ -20,20 +20,37 @@ export default function NodeInfo({nodeData})
     useEffect(()=>{
         if(nodeData !== undefined)
         {
-            setLocalData(({
+            let localCopy = {
                 BuildName: nodeData.buildName,
-                Status: nodeData.status,
                 Description: nodeData.description,
                 Market: nodeData.market,
                 Code: nodeData.code
-            }))
+            }
+            if(nodeData.status !== undefined)
+            {
+                let statusConcat = nodeData.status.split(",")
+                statusConcat.forEach((el)=>{
+                    let pairKeyValue = el.split(":")
+                    localCopy[pairKeyValue[0].trim()] = pairKeyValue[1]
+                })
+
+            }
+            console.log("localCopy:",localCopy)
+
+            setLocalData(localCopy)
             setAverage(extractAverage(nodeData.initTests))
         }
     },[nodeData])
     
     let extractNodeData = (source)=>{
+        let codeObjIndex = undefined;
+
         let temp = []
-        Object.keys(source).forEach((el)=>{
+        Object.keys(source).forEach((el, index)=>{
+            if(el == "Code")
+            {
+                codeObjIndex = index;
+            }
             let obj = {
                 key: el,
                 content: source[el]
@@ -41,9 +58,27 @@ export default function NodeInfo({nodeData})
             temp.push(obj)
         })
 
+
+        console.log("temp:",temp)
+        console.log("codeObjIndex:",codeObjIndex)
+
+        function moveElement(array, fromIndex, toIndex) {
+            const element = array.splice(fromIndex, 1)[0];
+          
+          
+            array.splice(toIndex, 0, element);
+          
+            return array;
+          }
+        if(codeObjIndex !== undefined)
+        {
+            temp = moveElement(temp, codeObjIndex, temp.length)
+        }
+
         return temp
     }   
     const [average, setAverage] = useState('_%');
+    
     const extractAverage = (initTestsParam)=>{
         if(initTestsParam !== undefined)
         {
@@ -76,6 +111,7 @@ export default function NodeInfo({nodeData})
        
         return '_'
     }
+
     return(
         <div className="node-info-left">
             <div className='node-info-container'>
@@ -135,6 +171,21 @@ const TempDisplayNodeItem = ({keyItem,content})=>{
 }
 const CodeEditorNodeDisplay = ({codeSource})=>{
 
+    const extractLayers = (sourceData)=>{
+        if(sourceData !== undefined)
+        {
+            const firstWord = "___ModelSeparatorStart___";
+            const secondWord = "#___ModelSeparatorEnd___";
+            const startPos = sourceData.indexOf(firstWord) + firstWord.length;
+            const endPos = sourceData.indexOf(secondWord);
+            const extractedText = sourceData    .substring(startPos, endPos);
+    
+            return extractedText
+        }
+        else {
+            return sourceData
+        }
+    }
     const style = {
         width: '70vw',
         height: '70vh',
@@ -168,7 +219,7 @@ const CodeEditorNodeDisplay = ({codeSource})=>{
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={style}>
-                    <CustomMonaco  editorValue={codeSource} setEditorValue={()=>{}} options={{readOnly: true}}/>
+                    <CustomMonaco  editorValue={(extractLayers(codeSource))} setEditorValue={()=>{}} options={{readOnly: true}}/>
                 </Box>
             </Modal>
         </div>

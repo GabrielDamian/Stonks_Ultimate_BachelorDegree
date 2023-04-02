@@ -3,6 +3,7 @@ import './DeployArea.css'
 import Checkbox from '@mui/material/Checkbox';
 import CustomButton from '../Atoms/CustomButton';
 import {CssTextField} from '../../utils/utils';
+import { useNavigate } from 'react-router-dom';
 
 const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
@@ -18,6 +19,7 @@ const initMarketState = (marketsSource)=>{
 
 function DeployArea ({editorValue})
 {
+    const navigate = useNavigate();
 
     const [fields, setFields] = useState({
         name: '',
@@ -48,7 +50,8 @@ function DeployArea ({editorValue})
                 else 
                 {
                     const data = await response.json();
-                    setDeployStatus("Deployment successfully, check overview");
+                    navigate('/overview')
+                    // setDeployStatus("Deployment successfully, check overview");
                 }
         }
         catch(err)

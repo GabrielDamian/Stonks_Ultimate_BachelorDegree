@@ -7,7 +7,7 @@ require("dotenv").config();
 module.exports.create_node = async (req, res) => {
 
     const {buildName, owner, description, market} = req.body;
-    let status = 'Deploy in progress'
+    let status = 'Status: InProgress'
     try{
         const node = await Node.create({buildName,owner,status,description,market});
             res.status(201).json({ 

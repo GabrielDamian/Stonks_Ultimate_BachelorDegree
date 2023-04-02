@@ -6,7 +6,7 @@ import time
 import subprocess
 import json
 import requests
-
+from datetime import datetime
 # utils
 
 
@@ -72,8 +72,7 @@ app.config['SECRET_KEY'] = 'secret!'
 app.url_map.strict_slashes = False
 CORS(app, resources={r"/*": {"origins": "*"}})
 socketio = SocketIO(app, cors_allowed_origins="*", async_mode='eventlet')
-#--->> Dev Mode
-# node_id = 'ceva'
+
 node_id = '""" + code_template_node_id + """'\n
 class NodeModelHandler:
     modelControllerPath = './saved_model/my_model/modelControler.txt'
@@ -83,21 +82,24 @@ class NodeModelHandler:
     def checkLocalModel(self):
         print("--> Check Local model")
         existence = exists(self.modelControllerPath)
-        # TODO: check on file content (status 1 or 0)
         return existence
     def createModel(self):
         print("Action: ->>> create model")
+
         #--->> Dev Mode
         # company = 'IBM'
         company = '""" + code_template_replace_company + """'\n
+
         #--->> Dev Mode
         # data = pdr.get_data_yahoo(company, start="2019-10-10", end="2021-10-10")
-        data = pdr.get_data_yahoo(company, start="2015-10-10", end="2021-10-10")
-        print("train model data len:", len(data))
+        data = pdr.get_data_yahoo(
+            company, start="2015-10-10", end="2021-10-10")
+
         # scale all data between [0,1]
         scaler = MinMaxScaler(feature_range=(0, 1))
-        scaled_data = scaler.fit_transform(data['Close'].values.reshape(-1, 1))  # keep only 'close' column
-        print("scaled_data:",scaled_data)
+        scaled_data = scaler.fit_transform(
+            data['Close'].values.reshape(-1, 1))  # keep only 'close' column
+
         # how many days we look into the past to predict the next day
         prediction_days = 60
         # training data
@@ -108,6 +110,7 @@ class NodeModelHandler:
             y_train.append(scaled_data[x, 0])
         x_train, y_train = np.array(x_train), np.array(y_train)
         x_train = np.reshape(x_train, (x_train.shape[0], x_train.shape[1], 1))
+
         # --->> Dev Mode
         # model = Sequential()
         # model.add(LSTM(units=50, return_sequences=True, input_shape=(x_train.shape[1], 1)))  # units = neurons
@@ -117,13 +120,20 @@ class NodeModelHandler:
         # model.add(LSTM(units=50))
         # model.add(Dropout(0.2))
         # model.add(Dense(units=1))
-        
+
+        #___ModelSeparatorStart___
+
         model = Sequential()
         \n""" + code_template_replace_layers + """\n
         model.compile(optimizer='adam', loss='mean_squared_error')
         model.fit(x_train, y_train, epochs=25, batch_size=32)
+
+
+        #___ModelSeparatorEnd___
+
         # save the new created model
         model.save(self.modelPath)
+
         # attach controller
         f = open(self.modelControllerPath, "x")
         f.write('1')
@@ -131,15 +141,14 @@ class NodeModelHandler:
         print("---> Model created and saved succesfully")
         self.collectStats(model)
         return model
+
     def loadModel(self):
-        print("Load model from local files")
+        print("Action: ->>> load model from local files")
         model = load_model(self.modelPath)
-        print("-->check model arhitecture")
         model.summary()
-        print("Model loaded succesfully")
         return model
+
     def initializeModel(self):
-        # load or create a new model
         modelExists = self.checkLocalModel()
         initializedModel = None
         if modelExists == True:
@@ -149,8 +158,8 @@ class NodeModelHandler:
             print("No existing model, create a new one")
             initializedModel = self.createModel()
         return initializedModel
+
     def predictNextDay(self, modelParam):
-        print("predictNextDay:")
         # --->> Dev Mode
         # company = "IBM"
         company = 'AAPL'
@@ -159,31 +168,31 @@ class NodeModelHandler:
         test_end = datetime.datetime.now()
         data = pdr.get_data_yahoo(company, start=test_start, end=test_end)
         scaler = MinMaxScaler(feature_range=(0, 1))
-        scaler.fit_transform(data['Close'].values.reshape(-1, 1))  # keep only 'close' column
+        # keep only 'close' column
+        scaler.fit_transform(data['Close'].values.reshape(-1, 1))
         model_inputs = data['Close'].values
         model_inputs = model_inputs.reshape(-1, 1)
         model_inputs = scaler.transform(model_inputs)
+
         x_test = []
         for x in range(prediction_days, len(model_inputs)):
             x_test.append(model_inputs[x - prediction_days:x, 0])
         x_test = np.array((x_test))
         x_test = np.reshape(x_test, (x_test.shape[0], x_test.shape[1], 1))
+
         predicted_prices = modelParam.predict(x_test)
         print("predicted_prices:",predicted_prices)
         simpleFormat = True
         # True - case 1 (first model)
         # False - case 2 (rest of the model)
+
         try:
             testFormat = predicted_prices[0][0][0]
             # if the item x[0][0][0] exits => there is no simple format
             simpleFormat = False
         except:
             print("Simple format case")
-        # FIX 1: working for first example
-        # predicted_prices = scaler.inverse_transform(predicted_prices)
-        # FIX 2: working for the rest of the examples
-        # predicted_prices = [[a[0][-1]] for a in predicted_prices]
-        # predicted_prices = scaler.inverse_transform(predicted_prices)
+
         if simpleFormat:
             print("case 1")
             predicted_prices = scaler.inverse_transform(predicted_prices)
@@ -194,6 +203,7 @@ class NodeModelHandler:
         offsetItem = [0] * prediction_days
         predictedWithOffset = offsetItem + [a[0] for a in predicted_prices]
         real_data_final = data['Close'].values
+
         for a in range(prediction_days):
             real_data_final = real_data_final[1:]
             predictedWithOffset = predictedWithOffset[1:]
@@ -202,7 +212,8 @@ class NodeModelHandler:
         # plt.show()
         tommorow_price = predictedWithOffset[len(predictedWithOffset) - 1]
         print("TM price:",tommorow_price)
-        return [[tommorow_price]]  # weird format, needs fix
+        return [[tommorow_price]]
+
     def persistInitialStats(self, pairValues):
         url = 'http://172.17.0.1:3006/push-node-training'
         myobj = {
@@ -211,33 +222,36 @@ class NodeModelHandler:
             'values': pairValues[1]
         }
         x = requests.post(url, json=myobj)
+
     def collectStats(self, modelParam):
-        print("collect Stats:")
         company = '""" + code_template_replace_company + """'\n
         # company = "IBM"
         prediction_days = 60
         test_start = datetime.datetime(2015, 1, 1)
         test_end = datetime.datetime(2022, 1, 1)
         data = pdr.get_data_yahoo(company, start=test_start, end=test_end)
+
         # data = pdr.get_data_yahoo(company, start="2015-10-10", end="2020-10-10")
         print("DATA LEN:",len(data))
         scaler = MinMaxScaler(feature_range=(0, 1))
-        scaler.fit_transform(data['Close'].values.reshape(-1, 1))  # keep only 'close' column
+        # keep only 'close' column
+        scaler.fit_transform(data['Close'].values.reshape(-1, 1))
+
         model_inputs = data['Close'].values
         model_inputs = model_inputs.reshape(-1, 1)
         model_inputs = scaler.transform(model_inputs)
+
         x_test = []
         for x in range(prediction_days, len(model_inputs)):
             x_test.append(model_inputs[x - prediction_days:x, 0])
         x_test = np.array((x_test))
         x_test = np.reshape(x_test, (x_test.shape[0], x_test.shape[1], 1))
+
         predicted_prices = modelParam.predict(x_test)
-        # FORMAT FIX
-        print("predicted_prices:", predicted_prices)
         simpleFormat = True
+
         try:
             testFormat = predicted_prices[0][0][0]
-            # if the item x[0][0][0] exits => there is no simple format
             simpleFormat = False
         except:
             print("Simple format case")
@@ -248,26 +262,25 @@ class NodeModelHandler:
             print("case 2")
             predicted_prices = [[a[0][-1]] for a in predicted_prices]
             predicted_prices = scaler.inverse_transform(predicted_prices)
-        #predicted_prices = scaler.inverse_transform(predicted_prices)
-        #predicted_prices = scaler.inverse_transform(predicted_prices)
+
         offsetItem = [0] * prediction_days
         predictedWithOffset = offsetItem + [a[0] for a in predicted_prices]
+
         real_data_final = data['Close'].values
         for a in range(prediction_days):
             real_data_final = real_data_final[1:]
             predictedWithOffset = predictedWithOffset[1:]
-        # real_data_final_np = np.array(real_data_final)
-        # predictedWithOffset_np = np.array(predictedWithOffset)
-        # real_data_final_np_range = scaler.fit_transform(real_data_final_np.reshape(-1, 1))
-        # predictedWithOffset_np_range = scaler.fit_transform(predictedWithOffset_np.reshape(-1, 1))
+
         total_dif = 0
         differences = []
         for index, a in enumerate(real_data_final):
             dif = a - predictedWithOffset[index]
             differences.append(dif)
             total_dif = total_dif + abs(dif)
+
         average_dif_per_day = total_dif / len(real_data_final)
         print("average_dif_per_day:",average_dif_per_day)
+
         def createBarCharStats(sourceArr):
             ranges = []
             lastValue = -10
@@ -289,32 +302,34 @@ class NodeModelHandler:
                 barChartY.append(str(a['min'])+ " "+ str(a['max']))
                 barChartX.append(len(a['items']))
             return barChartY,barChartX
+
         barchartValues = createBarCharStats(differences)
-        print("out fct:",barchartValues)
-        # --->> Dev Mode Only
-        # plt.bar(barchartValues[0], barchartValues[1], color='maroon',width=0.4)
-        # plt.show()
-        #TODO: use node_id to push data into persistence layer // pair(average_dif_per_day, node_id)
         self.persistInitialStats(barchartValues)
+
         return barchartValues
+
 class NodeCore:
     def __init__(self, logManagerOperator, nodeManagerLock) -> None:
         self.logManagerOperator = logManagerOperator
         self.nodeManagerLock = nodeManagerLock
         pass
-    # initTasks is runned once when the container starts
+
+
     def initTasks(self):
-        print("-----> init Tasks")
+        # initTasks is runned once when the container starts
         self.nodeModelHandler = NodeModelHandler()
         model = self.nodeModelHandler.initializeModel()
         self.model = model
+
     # below functions run in setIntervals, managed by .run()
     def predictTomorrow(self):
         tomorrowPrice = self.nodeModelHandler.predictNextDay(self.model)
         self.apiPersistPrediction(str(tomorrowPrice[0][0]))
         self.nodeManagerLock.acquire()
-        self.logManagerOperator.createLog('__tomorrow-price__:' + str(tomorrowPrice[0][0]))
+        self.logManagerOperator.createLog(
+            '__tomorrow-price__:' + str(tomorrowPrice[0][0]))
         self.nodeManagerLock.release()
+
     def apiPersistPrediction(self, valueToPersist):
         url = 'http://172.17.0.1:3006/push-node-stats'
         myobj = {
@@ -324,6 +339,7 @@ class NodeCore:
         x = requests.post(url, json=myobj)
     def run(self):
         self.predictTomorrow()
+
 class LogManager():
     logs = []
     lastConsumed = 0
@@ -338,6 +354,7 @@ class LogManager():
         lastConsumedCopy = self.lastConsumed
         self.lastConsumed = len(self.logs)
         return self.logs[lastConsumedCopy:]
+
 # GLOBALS
 lock = threading.Lock()
 increment = 0
@@ -367,6 +384,7 @@ class Worker(object):
             else:
                 print("No fresh logs, ignore socket push this time")
             eventlet.sleep(logsEmitInterval)
+
 @socketio.on("connect")
 def connected():
     connected_users_len = connected_users.keys()
@@ -422,10 +440,13 @@ def failedSignal(docId, status):
     print(docId)
     print(status)
 
+    now = datetime.now()
+    dt_string = now.strftime("%d/%m/%Y %H-%M-%S")
+
     url = 'http://localhost:3005/populate-node'
     bodyPersistNode = {
         'docId': docId,
-        'status': status
+        'status': 'Status: Failure, Message: ' + status + ', Date: ' + dt_string
     }
 
     response = requests.post(url, json=bodyPersistNode)
@@ -440,6 +461,7 @@ def Stage_1_Task(packetSource):
         # if randomError == True:
         #     raise Exception("Fake error stage 1")
         # END DEV MODE
+        # raise Exception("Fake error stage 1")
 
         global code_template_node
 
@@ -495,7 +517,7 @@ def Stage_1_Task(packetSource):
 
         buildIdToFail = packetSource['payload']['id']
         failedSignal(
-            buildIdToFail, "Deployment Failed. Reason: Can't create app template.")
+            buildIdToFail, "Can't create app template")
         return None
 
 
@@ -536,7 +558,7 @@ def Stage_2_Task(packetSource):
         print("Exception in Stage 2:", e)
         buildIdToFail = packetSource['payload']['id']
         failedSignal(
-            buildIdToFail, "Deployment Failed. Reason: Can't create docker files.")
+            buildIdToFail, "Can't create docker files")
         return None
 
 
@@ -564,7 +586,7 @@ def Stage_3_Task(packetSource):
         print("Exception in Stage 3:", e)
         buildIdToFail = packetSource['payload']['id']
         failedSignal(
-            buildIdToFail, "Deployment Failed. Reason: Can't create a docker container.")
+            buildIdToFail, "Can't create a docker container")
         return None
 
 
@@ -608,7 +630,7 @@ def Stage_4_Task(packetSource):
         print("Exception in Stage 4:", e)
         buildIdToFail = packetSource['payload']['id']
         failedSignal(
-            buildIdToFail, "Deployment Failed. Reason: Can't start the docker container runnign your app.")
+            buildIdToFail, "Can't start the docker container runnign your app")
         return None
 
 
@@ -623,12 +645,15 @@ def Stage_5_Task(packetSource):
         imageId_persist = localPacket['payload']['id']
         containerId_persist = localPacket['payload']['containerId']
 
+        now = datetime.now()
+        dt_string = now.strftime("%d/%m/%Y %H-%M-%S")
+
         bodyPersistNode = {
             'docId': docId_persist,
             'code': code_persist,
             'imageId': imageId_persist,
             'containerId': containerId_persist,
-            'status': 'deploy completed'
+            'status': 'Status: Success, Message: Successfully deployed, Date: ' + dt_string
         }
 
         url = 'http://localhost:3005/populate-node'
@@ -642,7 +667,7 @@ def Stage_5_Task(packetSource):
         print("Exception in Stage 5:", e)
         buildIdToFail = packetSource['payload']['id']
         failedSignal(
-            buildIdToFail, "Deployment Failed. Reason: Can't persist node stats and close pipeline.")
+            buildIdToFail, "Can't persist node stats and close pipeline")
         return None
 
 

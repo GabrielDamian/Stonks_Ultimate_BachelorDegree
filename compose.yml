@@ -1,4 +1,4 @@
-version: '2'
+version: "2"
 services:
   api45_gateway1:
     build: ./back-end/core/bussiness/APIGateway
@@ -17,7 +17,7 @@ services:
       - /usr/app/node_modules
     ports:
       - "3008:3008"
-  
+
   user_business1:
     build: ./back-end/core/bussiness/UserBusiness
     command: node app.js ceva
@@ -36,7 +36,7 @@ services:
     ports:
       - "3003:3003"
 
-  nodes_persistence2:
+  nodes_persistence4:
     build: ./back-end/core/db/NodesDbService
     command: node app.js ceva
     volumes:
@@ -53,4 +53,3 @@ services:
       - /usr/app/node_modules
     ports:
       - "3007:3007"
-    
