@@ -1,0 +1,22 @@
+-------> Model 1:
+
+model.add(LSTM(units=50, return_sequences=True, input_shape=(x_train.shape[1], 1)))  # units = neurons
+model.add(Dropout(0.2))
+model.add(LSTM(units=50, return_sequences=True))
+model.add(Dropout(0.2))
+model.add(LSTM(units=50))
+model.add(Dropout(0.2))
+model.add(Dense(units=1))
+
+model.compile(optimizer='adam', loss='mean_squared_error')
+model.fit(x_train, y_train, epochs=25, batch_size=32)
+
+STATS:
+mae:  [8.48782]
+mse:  [99.9466]
+rmse:  9.99732973686853
+
+
+-------> Model 2:
+
+
