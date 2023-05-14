@@ -195,13 +195,13 @@ if __name__ == '__main__':
 
 
     # model 13
-    # model.add(GRU(units=64, return_sequences=True, input_shape=(x_train.shape[1], 1)))
-    # model.add(Dropout(0.2))
-    # model.add(GRU(units=64, return_sequences=True))
-    # model.add(Dropout(0.2))
-    # model.add(GRU(units=64))
-    # model.add(Dropout(0.2))
-    # model.add(Dense(units=1))
+    model.add(GRU(units=64, return_sequences=True, input_shape=(x_train.shape[1], 1)))
+    model.add(Dropout(0.2))
+    model.add(GRU(units=64, return_sequences=True))
+    model.add(Dropout(0.2))
+    model.add(GRU(units=64))
+    model.add(Dropout(0.2))
+    model.add(Dense(units=1))
 
 
     model.compile(optimizer='adam', loss='mean_squared_error')
