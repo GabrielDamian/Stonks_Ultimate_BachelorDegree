@@ -72,12 +72,30 @@
 .node-info-container-stats-bar-key
 {
     padding: 10px 20px;
-    width: 25%;
+    width: 20%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.node-info-container-stats-bar-key img 
+{
+    height: 30px;
+    object-fit: contain;
 }
 .node-info-container-stats-bar-value
 {
     padding: 10px 20px;
-    width: 75%;
+    width: 25%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.node-info-container-stats-bar-data
+{
+    width: 55%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .node-info-container-stats-bar-barchart
 {

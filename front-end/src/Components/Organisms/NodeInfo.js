@@ -5,11 +5,16 @@ import Modal from '@mui/material/Modal';
 import CustomButton from '../Atoms/CustomButton';
 import Box from '@mui/material/Box';
 
+import Perf_1_icon from '../../Media/Icons/perf_1.png';
+import Perf_2_icon from '../../Media/Icons/perf_2.png';
+import Perf_3_icon from '../../Media/Icons/perf_3.png';
+
 import { BarChart } from './BarChart.tsx';
 
 
 export default function NodeInfo({nodeData})
 {
+    
     const [localData, setLocalData] = useState({
         BuildName: 'x',
         Status: 'x',
@@ -17,9 +22,43 @@ export default function NodeInfo({nodeData})
         Market: 'x',
         Code: 'x'
     })
+    const [average, setAverage] = useState('_%');
+
+    const [modelTests, setModelTests] = useState({
+        'MAE':{
+            icon: Perf_1_icon,
+            value: 'none'
+        },
+        'MSE':{
+            icon: Perf_2_icon,
+            value: 'none'
+        },
+        'RMSE':{
+            icon: Perf_3_icon,
+            value: 'none'
+        },
+    })
+
     useEffect(()=>{
         if(nodeData !== undefined)
-        {
+        {   
+            // extract initial tests
+                if(nodeData.initTest !== undefined)
+                {
+                    setModelTests({
+                        'MAE':{
+                            icon: Perf_1_icon,
+                            value: parseFloat(nodeData.initTest.mae_test).toFixed(3)
+                        },
+                        'MSE':{
+                            icon: Perf_2_icon,
+                            value: parseFloat(nodeData.initTest.mse_test).toFixed(3)
+                        },
+                        'RMSE':{
+                            icon: Perf_3_icon,
+                            value: parseFloat(nodeData.initTest.rmse_test).toFixed(3)
+                            }})
+                }
             let localCopy = {
                 BuildName: nodeData.buildName,
                 Description: nodeData.description,
@@ -35,7 +74,6 @@ export default function NodeInfo({nodeData})
                 })
 
             }
-            console.log("localCopy:",localCopy)
 
             setLocalData(localCopy)
             setAverage(extractAverage(nodeData.initTests))
@@ -59,9 +97,6 @@ export default function NodeInfo({nodeData})
         })
 
 
-        console.log("temp:",temp)
-        console.log("codeObjIndex:",codeObjIndex)
-
         function moveElement(array, fromIndex, toIndex) {
             const element = array.splice(fromIndex, 1)[0];
           
@@ -77,7 +112,6 @@ export default function NodeInfo({nodeData})
 
         return temp
     }   
-    const [average, setAverage] = useState('_%');
     
     const extractAverage = (initTestsParam)=>{
         if(initTestsParam !== undefined)
@@ -130,26 +164,36 @@ export default function NodeInfo({nodeData})
                 <div className='node-info-container-stats-bar-header'>
                     <span>Model Tests</span>
                 </div>
-                <div className='node-info-container-stats-bar-ratio'>
-                    <div className='node-info-container-stats-bar-key'>
-                        <span>Model Ratio: </span>
-                    </div>
-                    <div className='node-info-container-stats-bar-value'>
-                        <span>{average} units</span>
-                    </div>
-                </div>
-                <div 
+                {
+                    Object.keys(modelTests).map((el)=>{
+                        return(
+                            <div className='node-info-container-stats-bar-ratio'>
+                                <div className='node-info-container-stats-bar-key'>
+                                    <img src={modelTests[el].icon} alt="Test icon"/>
+                                </div>
+                                <div className='node-info-container-stats-bar-value'>
+                                    <span> {el}</span>
+                                </div>
+                                <div className='node-info-container-stats-bar-data'>
+                                    <span>{modelTests[el].value}</span>
+                                </div>
+                            </div>
+                        )
+                    })
+                }
+                {/* <div 
                     style={{
                         width: '100%',
                         height: '80%',
                         display:'flex',
                         alignItems: 'center',
-                        justifyContent: 'center'
+                        justifyContent: 'center',
+                        border: '2px solid red'
                     }}>
                     <div className='node-info-container-stats-bar-barchart'>
                         <BarChart pairs={nodeData !== undefined && nodeData.initTests !== undefined ? nodeData.initTests : []}/>
                     </div>
-                    </div>
+                </div> */}
             </div>
         </div>
         

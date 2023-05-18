@@ -153,22 +153,27 @@ app.post("/push-node-stats", async (req, res) => {
 });
 
 app.post("/push-node-training", async (req, res) => {
-  let { node_id, intervals, values } = req.body;
+  let { node_id, mae_test, mse_test, rmse_test } = req.body;
 
-  let pairs = [];
-  intervals.forEach((el, index) => {
-    pairs.push({
-      interval: el,
-      value: values[index],
-    });
-  });
+  console.log("push node trainig:",req.body)
+  
 
+  // let pairs = [];
+  // intervals.forEach((el, index) => {
+  //   pairs.push({
+  //     interval: el,
+  //     value: values[index],
+  //   });
+  // });
+  
   try {
     let push_stats_resp = await axios.post(
       `http://${hostPOV}:3005/push_tests`,
       {
-        data: pairs,
-        node_id: node_id,
+        mae_test,
+        mse_test,
+        rmse_test,
+        node_id
       }
     );
 
@@ -178,6 +183,7 @@ app.post("/push-node-training", async (req, res) => {
     console.log("err:", e);
     return res.status(403).send("Can't push node stats!");
   }
+
 });
 
 app.listen(SERVER_ADDRESS, () => {

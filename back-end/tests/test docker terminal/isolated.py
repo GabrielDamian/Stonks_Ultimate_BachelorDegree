@@ -1,53 +1,3 @@
-import json
-import os
-import random
-import shlex
-import time
-import subprocess
-import json
-import requests
-from datetime import datetime
-# utils
-
-
-def createFile(fileName, content):
-    fp = open(fileName, 'w')
-    fp.write(content)
-    fp.close()
-
-
-dockerFileTemplate = """
-# syntax=docker/dockerfile:1
-FROM tensorflow/tensorflow
-WORKDIR /app
-COPY requirements.txt requirements.txt
-RUN pip3 install -r requirements.txt
-COPY . .
-CMD [ "python3", "./app.py"]
-"""
-
-
-requirementsTemplate = """
-Flask==2.1.2
-Flask-SocketIO==5.2.0
-Flask-Cors==3.0.10
-eventlet==0.33.1
-gevent
-numpy==1.24.0
-pandas==1.5.2
-pandas-datareader==0.9.0
-tensorflow==2.11.0
-scikit-learn==1.2.0
-dnspython==2.2.1
-yfinance
-"""
-
-
-code_template_replace_layers = '<< Replace_code_layers >>'
-code_template_replace_company = '<< Replace_code_company >>'
-code_template_node_id = '<< Replace_node_id >>'
-
-code_template_node = """
 from flask import Flask, request, jsonify
 from flask_socketio import SocketIO, emit
 from flask_cors import CORS
@@ -63,7 +13,6 @@ from keras.layers import Dense, Dropout, LSTM, MultiHeadAttention, LayerNormaliz
 from keras.models import load_model
 from pandas_datareader import data as pdr
 import requests
-import math
 import yfinance as yfin
 #--->> DevMode Only
 #import matplotlib.pyplot as plt
@@ -74,33 +23,7 @@ app.url_map.strict_slashes = False
 CORS(app, resources={r"/*": {"origins": "*"}})
 socketio = SocketIO(app, cors_allowed_origins="*", async_mode='eventlet')
 
-node_id = '""" + code_template_node_id + """'\n
-
-
-def calculate_mae(actual_prices, predicted_prices):
-    n = len(actual_prices)
-    error = 0
-    for i in range(n):
-        error += abs(actual_prices[i] - predicted_prices[i])
-    mae = error / n
-    return mae
-
-def calculate_mse(actual_prices, predicted_prices):
-    n = len(actual_prices)
-    error = 0
-    for i in range(n):
-        error += (actual_prices[i] - predicted_prices[i]) ** 2
-    mse = error / n
-    return mse
-
-def calculate_rmse(actual_prices, predicted_prices):
-    n = len(actual_prices)
-    error = 0
-    for i in range(n):
-        error += (actual_prices[i] - predicted_prices[i]) ** 2
-    mse = error / n
-    rmse = math.sqrt(mse)
-    return rmse
+node_id = '6463eccd8cab18273b9d6589'
 
 def failedSignal(docId, status):
 
@@ -135,7 +58,7 @@ class NodeModelHandler:
 
         #--->> Dev Mode
         # company = 'IBM'
-        company = '""" + code_template_replace_company + """'\n
+        company = 'AAPL'
 
         #--->> Dev Mode
         # data = pdr.get_data_yahoo(company, start="2019-10-10", end="2021-10-10")
@@ -171,7 +94,12 @@ class NodeModelHandler:
         #___ModelSeparatorStart___
 
         model = Sequential()
-        \n""" + code_template_replace_layers + """\n
+
+        model.add(LSTM(units=32, activation='tanh'))
+        model.add(Dense(units=60, activation=None))
+        model.add(LSTM(units=32, activation='tanh'))
+        model.add(Dropout(rate=0.2))
+
         model.compile(optimizer='adam', loss='mean_squared_error')
         model.fit(x_train, y_train, epochs=25, batch_size=32)
 
@@ -261,18 +189,17 @@ class NodeModelHandler:
         print("TM price:",tommorow_price)
         return [[tommorow_price]]
 
-    def persistInitialStats(self, mae_test, mse_test, rmse_test):
+    def persistInitialStats(self, pairValues):
         url = 'http://172.17.0.1:3006/push-node-training'
         myobj = {
             'node_id': node_id,
-            'mae_test': mae_test,
-            'mse_test': mse_test,
-            'rmse_test': rmse_test
+            'intervals': pairValues[0],
+            'values': pairValues[1]
         }
         x = requests.post(url, json=myobj)
 
     def collectStats(self, modelParam):
-        company = '""" + code_template_replace_company + """'\n
+        company = 'AAPL'
         # company = "IBM"
         prediction_days = 60
         test_start = datetime.datetime(2015, 1, 1)
@@ -321,19 +248,7 @@ class NodeModelHandler:
 
         total_dif = 0
         differences = []
-        
-        print("lens:", len(real_data_final), len(predictedWithOffset))
-        
-        mae_test = calculate_mae(real_data_final, predictedWithOffset)
-        mse_test = calculate_mse(real_data_final, predictedWithOffset)
-        rmse_test = calculate_rmse(real_data_final, predictedWithOffset)
-        
-        print("mae:",mae_test)
-        print("mse:",mse_test)
-        print("rmse:",rmse_test)
-
         for index, a in enumerate(real_data_final):
-            print("/n elements:", a, predictedWithOffset[index])    
             dif = a - predictedWithOffset[index]
             differences.append(dif)
             total_dif = total_dif + abs(dif)
@@ -364,7 +279,7 @@ class NodeModelHandler:
             return barChartY,barChartX
 
         barchartValues = createBarCharStats(differences)
-        self.persistInitialStats(mae_test, mse_test, rmse_test)
+        self.persistInitialStats(barchartValues)
 
         return barchartValues
 
@@ -493,12 +408,14 @@ def set_interval(func, sec):
 
 def NodeAppRun():
     print("Create new prediction")
-    try:
-        nodeCore.run()
-    except Exception as e:
-        print("Exception, can't create prediction")
-        failedSignal(
-            node_id, 'Status: Crash, Message: Can t create prediction')
+    nodeCore.run()
+
+    # try:
+    #     nodeCore.run()
+    # except Exception as e:
+    #     print("Exception, can't create prediction")
+    #     failedSignal(
+    #         node_id, 'Status: Crash, Message: Can t create prediction')
     # nodeCore.run()
 
 def nodeHeartBeat():
@@ -513,258 +430,5 @@ if __name__ == '__main__':
     set_interval(NodeAppRun, 43200)
     #set_interval(NodeAppRun, 10)
     # set_interval(NodeAppRun, nodeCoreInterval)
-    set_interval(nodeHeartBeat, 1)
-    socketio.run(app, debug=False, port=5000, host='0.0.0.0')
-"""
-
-
-def failedSignal(docId, status):
-
-    print("Failed signal:")
-    print(docId)
-    print(status)
-
-    now = datetime.now()
-    dt_string = now.strftime("%d/%m/%Y %H-%M-%S")
-
-    url = 'http://localhost:3005/populate-node'
-    bodyPersistNode = {
-        'docId': docId,
-        'status': 'Status: Failure, Message: ' + status + ', Date: ' + dt_string
-    }
-
-    response = requests.post(url, json=bodyPersistNode)
-    decodedResponse = response.content.decode()
-    print("decodedResponse failed signal:", decodedResponse)
-
-
-def Stage_1_Task(packetSource):
-    try:
-        # DEV MODE ONLY
-        # randomError = random.choice([True, False])
-        # if randomError == True:
-        #     raise Exception("Fake error stage 1")
-        # END DEV MODE
-        # raise Exception("Fake error stage 1")
-
-        global code_template_node
-
-        print("paket source init:", packetSource)
-
-        marketPayload = packetSource['payload']['market']
-        print("Extracted market:", marketPayload)
-
-        # decorate front-end code
-        localPacket = packetSource.copy()
-        localPacket['history'] = localPacket['history'] + "_" + 'stage_1'
-
-        frontEndCode = localPacket['payload']['code']
-        nodeId = localPacket['payload']['id']
-
-        print("node id extracted:", nodeId)
-
-        print("Extract market:", packetSource['payload'])
-        print("Front end code:", frontEndCode)
-
-        # replace company symbol
-        # extractedCompany = '"IBM"'
-        code_template_code_copy = code_template_node[:]  # make a copy
-        print("copy here:", code_template_code_copy)
-
-        print("find test company:", code_template_code_copy.find(
-            code_template_replace_company))
-
-        # Populate node_id
-        # TO DO: extract from payload
-        # fake_node_id = "63af35ba73282a4138d7f44e"
-        code_template_code_copy = code_template_code_copy.replace(
-            code_template_node_id, nodeId)
-
-        # Populate market
-        code_template_code_copy = code_template_code_copy.replace(
-            code_template_replace_company, marketPayload)
-
-        # Populate tensor flow layers
-        code_template_code_copy = code_template_code_copy.replace(
-            code_template_replace_layers, frontEndCode)
-
-        code_template_code_copy += "\n#decorate code_" + \
-            localPacket['payload']['id'] + " ->>>\n"
-        # localPacket['payload']['code'] += "\n#decorate code_"+ localPacket['payload']['id'] +" ->>>\n"
-        localPacket['payload']['code'] = code_template_code_copy
-
-        print("final code:", code_template_code_copy)
-        return localPacket
-
-    except Exception as e:
-        print("Exception in Stage 1:", e)
-
-        buildIdToFail = packetSource['payload']['id']
-        failedSignal(
-            buildIdToFail, "Can't create app template")
-        return None
-
-
-def Stage_2_Task(packetSource):
-    try:
-
-        # create docker file
-        localPacket = packetSource.copy()
-        localPacket['history'] = localPacket['history'] + "_" + 'stage_2'
-
-        print("Start createDockerFile")
-        cwd = os.getcwd()
-        print("cwd:", cwd)
-        buildName = packetSource['payload']['id']
-        newPath = cwd + "/images/" + buildName
-        print("newPath:", newPath)
-
-        print("creating folder for dockerfile")
-        if not os.path.exists(newPath):
-            os.makedirs(newPath)
-
-        # Create index.py
-        createFile(newPath + "/" + "app.py", localPacket['payload']['code'])
-
-        # Create requirements.txt
-        createFile(newPath + "/" + "dockerfile", dockerFileTemplate)
-
-        # Create dockerfile
-        createFile(newPath + "/" + "requirements.txt", requirementsTemplate)
-        localPacket['payload']['dockerPath'] = newPath
-        localPacket['payload']['buildName'] = buildName
-
-        print("\nstage 2 localPacket")
-        print(localPacket)
-        return localPacket
-
-    except Exception as e:
-        print("Exception in Stage 2:", e)
-        buildIdToFail = packetSource['payload']['id']
-        failedSignal(
-            buildIdToFail, "Can't create docker files")
-        return None
-
-
-def Stage_3_Task(packetSource):
-
-    try:
-        # create container based on prev stage image
-        localPacket = packetSource.copy()
-        localPacket['history'] = localPacket['history'] + "_" + 'stage_3'
-        buildName = localPacket['payload']['buildName']
-        dockerPath = localPacket['payload']['dockerPath']
-
-        print("Stage 3 payload:", localPacket)
-        # print("final docker command:", ["docker", "build", "--no-cache", "--tag", f"{buildName}", dockerPath])
-        # !!!!!! NO CACHE IS A MUST !!!!!!!!
-        # test = subprocess.Popen(["docker", "build", "--no-cache", "--tag", f"{buildName}", dockerPath], stdout=subprocess.PIPE)
-        test = subprocess.Popen(
-            ["docker", "build", "--tag", f"{buildName}", dockerPath], stdout=subprocess.PIPE)
-        output = test.communicate()[0]
-        print("out:", output)
-        print("\n\n\nReturn from task 3")
-        return localPacket
-
-    except Exception as e:
-        print("Exception in Stage 3:", e)
-        buildIdToFail = packetSource['payload']['id']
-        failedSignal(
-            buildIdToFail, "Can't create a docker container")
-        return None
-
-
-def Stage_4_Task(packetSource):
-    try:
-        print("Stage 4:")
-        # create docker container
-        localPacket = packetSource.copy()
-        localPacket['history'] = localPacket['history'] + "_" + 'stage_4'
-        buildName = localPacket['payload']['buildName']
-
-        # imageRunOutput = subprocess.Popen(["docker", "run", "-d",'--network=host',buildName], stdout=subprocess.PIPE)
-        imageRunOutput = subprocess.Popen(
-            ["docker", "run", "-d", buildName], stdout=subprocess.PIPE)
-        print("imageRunOutput:", imageRunOutput)
-
-        output = imageRunOutput.communicate()[0]
-        print("output:", output)
-
-        decodedOutput = output.decode().rstrip()  # remove '\n'
-        print("decodedOutput:", decodedOutput)
-
-        imageInspect = subprocess.Popen(
-            ["docker", "inspect", decodedOutput], stdout=subprocess.PIPE)
-        imageInspectOut = imageInspect.communicate()[0]
-        objParsed = json.loads(imageInspectOut.decode())
-        print("obj parsed:", objParsed)
-
-        containerId = objParsed[0]['Config']['Hostname']
-        localPacket['payload']['containerId'] = containerId
-        exitCode = objParsed[0]['State']['ExitCode']
-
-        print("\n\n\n Exit code:", exitCode)
-        print(type(exitCode))
-        if exitCode == 1:
-            raise Exception("Can t run container code")
-
-        # start container
-        startContainer = subprocess.Popen(
-            ["docker", "start", containerId], stdout=subprocess.PIPE)
-        resultStartContainer = startContainer.communicate()[0]
-        print("Result start container:", resultStartContainer)
-
-        return localPacket
-
-    except Exception as e:
-        print("Exception in Stage 4:", e)
-        buildIdToFail = packetSource['payload']['id']
-        failedSignal(
-            buildIdToFail, "Can't start the docker container runnign your app")
-        return None
-
-
-def Stage_5_Task(packetSource):
-
-    try:
-        localPacket = packetSource.copy()
-        localPacket['history'] = localPacket['history'] + "_" + 'stage_5'
-
-        docId_persist = localPacket['payload']['buildName']
-        code_persist = localPacket['payload']['code']
-        imageId_persist = localPacket['payload']['id']
-        containerId_persist = localPacket['payload']['containerId']
-
-        now = datetime.now()
-        dt_string = now.strftime("%d/%m/%Y %H-%M-%S")
-
-        bodyPersistNode = {
-            'docId': docId_persist,
-            'code': code_persist,
-            'imageId': imageId_persist,
-            'containerId': containerId_persist,
-            'status': 'Status: Success, Message: Successfully deployed, Date: ' + dt_string
-        }
-
-        url = 'http://localhost:3005/populate-node'
-        response = requests.post(url, json=bodyPersistNode)
-        decodedResponse = response.content.decode()
-        print("decodedResp:", decodedResponse)
-
-        return localPacket
-
-    except Exception as e:
-        print("Exception in Stage 5:", e)
-        buildIdToFail = packetSource['payload']['id']
-        failedSignal(
-            buildIdToFail, "Can't persist node stats and close pipeline")
-        return None
-
-
-tasksCore = {
-    'stage_1': Stage_1_Task,
-    'stage_2': Stage_2_Task,
-    'stage_3': Stage_3_Task,
-    'stage_4': Stage_4_Task,
-    'stage_5': Stage_5_Task
-}
+    # set_interval(nodeHeartBeat, 1)
+    # socketio.run(app, debug=False, port=5000, host='0.0.0.0')

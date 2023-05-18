@@ -27,9 +27,9 @@ function DeployArea ({editorValue})
     })
     const [markets, setMarkets] = useState(initMarketState(marketsTemp))
 
-    const [deployStatus, setDeployStatus] = useState('Status');
+    const [deployStatus, setDeployStatus] = useState("Status: Creating model schema");
     const [fieldsError, setFieldsError] = useState('');
-
+    
     const deployCodeRequest = async (packedData)=>{
         try{
             let response =await fetch('http://localhost:3001/deploy-code', { 
@@ -50,8 +50,10 @@ function DeployArea ({editorValue})
                 else 
                 {
                     const data = await response.json();
-                    navigate('/overview')
-                    // setDeployStatus("Deployment successfully, check overview");
+                    setDeployStatus("Status: Deployment successfully, redirecting to overview..");
+                    setTimeout(()=>{
+                        navigate('/overview')
+                    },3000)
                 }
         }
         catch(err)

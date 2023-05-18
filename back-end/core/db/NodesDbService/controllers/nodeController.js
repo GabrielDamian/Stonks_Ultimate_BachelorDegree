@@ -106,7 +106,6 @@ module.exports.get_node = async (req, res) => {
         return res.status(400).send("Can't find doc id")
     }
 
-    return res.status(200).send(JSON.stringify({ceva:'ceva'}))
 }
 
 module.exports.push_stats = async (req,res)=>{
@@ -134,23 +133,28 @@ module.exports.push_stats = async (req,res)=>{
 }
 
 
-module.exports.push_tests = async (req,res)=>{
+module.exports.push_tests = async (req, res) => {
+    console.log("push tests")
+
+    let { mae_test, mse_test, rmse_test, node_id } = req.body;
     
-    let {data, node_id} = req.body;
+    console.log("data test code:",req.body);
+    
+    try {
+      const doc = await Node.findOne({ _id: node_id });
+     
+      doc.initTest = {
+        mae_test,
+        mse_test,
+        rmse_test
+      };
+  
+      await doc.save();
+      return res.status(200).json({ 
+        node_id 
+    });
 
-    const doc = await Node.findOne({ _id: node_id })
-
-    try{
-        data.forEach((el)=>{
-            doc.initTests.push(el)
-        })
-        await doc.save()
-        res.status(200).json({ 
-            node_id
-        });
+    } catch (err) {
+      return res.status(400).send({ error: "Can't update node stats!" });
     }
-    catch(err)
-    {
-        res.status(400).send({test: "Can't update node stats!"})
-    }
-}
+  };

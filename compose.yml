@@ -1,53 +1,53 @@
 version: "2"
 services:
-  api45_gateway1:
+  api45_gateway4:
     build: ./back-end/core/bussiness/APIGateway
-    command: node app.js ceva
+    command: node app.js apigateapp
     volumes:
       - .:/usr/app/
       - /usr/app/node_modules
     ports:
       - "3001:3001"
 
-  layers_busines1:
+  layers_busines4:
     build: ./back-end/core/bussiness/LayersBusiness
-    command: node app.js ceva
+    command: node app.js layersapp
     volumes:
       - .:/usr/app/
       - /usr/app/node_modules
     ports:
       - "3008:3008"
 
-  user_business1:
+  user_business4:
     build: ./back-end/core/bussiness/UserBusiness
-    command: node app.js ceva
+    command: node app.js userpapp
     volumes:
       - .:/usr/app/
       - /usr/app/node_modules
     ports:
       - "3002:3002"
 
-  user_persistence1:
+  user_persistence4:
     build: ./back-end/core/db/UsersDbService
-    command: node app.js ceva
+    command: node app.js userdbapp
     volumes:
       - .:/usr/app/
       - /usr/app/node_modules
     ports:
       - "3003:3003"
 
-  nodes_persistence4:
+  nodes_persistence7:
     build: ./back-end/core/db/NodesDbService
-    command: node app.js ceva
+    command: node app.js nodedbsapp
     volumes:
       - .:/usr/app/
       - /usr/app/node_modules
     ports:
       - "3005:3005"
 
-  layers_persistence1:
+  layers_persistence4:
     build: ./back-end/core/db/LayersDbService
-    command: node app.js ceva
+    command: node app.js layersdbapp
     volumes:
       - .:/usr/app/
       - /usr/app/node_modules

@@ -34,10 +34,11 @@ const nodeSchema = new mongoose.Schema({
         timestamp: String, 
         value: Number, 
     }],
-    initTests:[{
-        interval: String,
-        value: String
-    }]
+    initTest: {
+        mae_test: String,
+        mse_test: String,
+        rmse_test: String
+    }
 });
 
 const User = mongoose.model('node', nodeSchema);

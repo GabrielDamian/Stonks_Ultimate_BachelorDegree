@@ -106,6 +106,7 @@ function NodePage({tabIndex,setTabs,tabs,userId})
 
 
     const [nodeData, setNodeData] = useState({})
+
     const [realData, setRealData] = useState(null);
     const [nodeAddress, setNodeAddress] = useState(null);
     
@@ -157,7 +158,6 @@ function NodePage({tabIndex,setTabs,tabs,userId})
         const nodeId = queryParams.get("nodeid")
         if(nodeId == undefined || nodeId == "" || nodeId == " ")
         {
-            console.error("Node Page: invalid query param for nodeid")
             navigate('/overview')
         }
         else 
@@ -167,19 +167,62 @@ function NodePage({tabIndex,setTabs,tabs,userId})
         }
     },[])
 
+    const DecideWidgets = (nodeDataParam)=>{
+        if(nodeDataParam == undefined || nodeDataParam.status == undefined) return [false, '']
+        let status = nodeDataParam.status.split(',')[0].split(':')
+
+        if(status[1].trim() == 'InProgress')
+        {
+            return [false, 'Docker deploying']
+        }
+        else if(status[1].trim() == 'Success') 
+        {
+            if(nodeDataParam.predictions.length == 0)
+            {
+                return [false, 'Node is training']
+            }
+            else 
+            {
+                return [true, '']
+            }
+        }
+        else if(status[1].trim() == 'Failure')
+        {
+            return [false, 'Docker failed']
+        }
+        else if(status[1].trim() == 'Crash')
+        {
+            return [false, 'Node app crashed']
+        }
+        else 
+        {
+            return [false, 'final']
+        }
+    }
+
     return(
         <div className='node-page-container'>
             <LeftMenu userId={userId} tabIndex={tabIndex} setTabs={setTabs} tabs={tabs}/>
             <div className='node-page-content'>
                 <TopBar userId={userId}/>
                 <div className='node-page-content-data'>
-                   <NodeInfo nodeData={nodeData}/>
-                   <div className='node-page-content-data-stats'>
-                        <ChartComponent source={nodeData.predictions} realData={realData}/>
-                        <GraphStats realData={realData} />
-                        <LastPriceWidget value={nodeData.predictions}/>
-                        <LiveNodeConnector nodeAddress={nodeAddress}/>
-                   </div>
+                    <NodeInfo nodeData={nodeData} showStats={DecideWidgets(nodeData)[0]}/>
+                    {
+                        DecideWidgets(nodeData)[0] == false ? 
+                        <div style={{
+                            border: '1px solid red',
+                            width:'40%'
+                        }}>
+                            <h2>{DecideWidgets(nodeData)[0]}---{DecideWidgets(nodeData)[1]}</h2>
+                        </div>
+                        :
+                        <div className='node-page-content-data-stats'>
+                            <ChartComponent source={nodeData.predictions} realData={realData}/>
+                            <GraphStats realData={realData} />
+                            <LastPriceWidget value={nodeData.predictions}/>
+                            <LiveNodeConnector nodeAddress={nodeAddress}/>
+                        </div>
+                    }
                 </div>
             </div>
         </div>
