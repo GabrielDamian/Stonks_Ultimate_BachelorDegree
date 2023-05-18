@@ -1,15 +1,13 @@
 import React, {useState, useEffect } from 'react';
-import CustomMonaco from './CustomMonaco';
 import './NodeInfo.css';
-import Modal from '@mui/material/Modal';
-import CustomButton from '../Atoms/CustomButton';
-import Box from '@mui/material/Box';
+
+
 
 import Perf_1_icon from '../../Media/Icons/perf_1.png';
 import Perf_2_icon from '../../Media/Icons/perf_2.png';
 import Perf_3_icon from '../../Media/Icons/perf_3.png';
 
-import { BarChart } from './BarChart.tsx';
+import TempDisplayNodeItem from '../Atoms/TempDisplayNodeItem';
 
 
 export default function NodeInfo({nodeData})
@@ -200,72 +198,4 @@ export default function NodeInfo({nodeData})
     )
 }
 
-const TempDisplayNodeItem = ({keyItem,content})=>{
-    return (
-            keyItem === 'Code'? <CodeEditorNodeDisplay codeSource={content}/>:
-            <div className='node-info-temp-item'>
-                <div className='node-info-temp-item-key'>
-                <span>{keyItem}:</span>
-                </div>
-                <div className='node-info-temp-item-content'>
-                    <span>{content}</span>
-                </div>
-            </div>
-    )
-}
-const CodeEditorNodeDisplay = ({codeSource})=>{
 
-    const extractLayers = (sourceData)=>{
-        if(sourceData !== undefined)
-        {
-            const firstWord = "___ModelSeparatorStart___";
-            const secondWord = "#___ModelSeparatorEnd___";
-            const startPos = sourceData.indexOf(firstWord) + firstWord.length;
-            const endPos = sourceData.indexOf(secondWord);
-            const extractedText = sourceData    .substring(startPos, endPos);
-    
-            return extractedText
-        }
-        else {
-            return sourceData
-        }
-    }
-    const style = {
-        width: '70vw',
-        height: '70vh',
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        bgcolor: 'background.paper',
-        border: '2px solid #000',
-        boxShadow: 24,
-        p: 4,
-        margin:0,
-        padding:0
-      };
-
-    const [open, setOpen] = React.useState(false);
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
-
-    return(
-        <div 
-            style={{
-                padding: '10px',
-            }}
-            className='node-info-temp-item-code'>
-            <CustomButton onClick={handleOpen} text="Code"/>
-            <Modal
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-            >
-                <Box sx={style}>
-                    <CustomMonaco  editorValue={(extractLayers(codeSource))} setEditorValue={()=>{}} options={{readOnly: true}}/>
-                </Box>
-            </Modal>
-        </div>
-    )
-}

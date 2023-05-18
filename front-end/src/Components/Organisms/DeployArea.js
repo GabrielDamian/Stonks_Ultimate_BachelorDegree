@@ -17,7 +17,7 @@ const initMarketState = (marketsSource)=>{
 }
 
 
-function DeployArea ({editorValue})
+export default function DeployArea ({editorValue})
 {
     const navigate = useNavigate();
 
@@ -177,5 +177,5 @@ function DeployArea ({editorValue})
         </div>
     )
 }
-export default DeployArea;
+
 

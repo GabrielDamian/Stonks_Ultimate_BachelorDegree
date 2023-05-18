@@ -1,7 +1,6 @@
 import React, { useState, useEffect} from "react";
 import Editor from "@monaco-editor/react";
-import CircularProgress from '@mui/material/CircularProgress';
-
+import TestLoader from "../Atoms/TestLoader";
 
 export default function CustomMonaco({triggerCustomUserCode, editorValue,setEditorValue, options}) {
   const [theme, setTheme] = useState("vs-dark");
@@ -23,7 +22,7 @@ export default function CustomMonaco({triggerCustomUserCode, editorValue,setEdit
         width="100%"
         theme={theme}
         language={language}
-        loading={<TestLoader />}
+        loading={<TestLoader/> }
         value={editorValue !== undefined ? editorValue : null }
         onChange={(newValue)=>{
           triggerCustomUserCode()  
@@ -35,19 +34,4 @@ export default function CustomMonaco({triggerCustomUserCode, editorValue,setEdit
   );
 }
 
-const TestLoader = ()=>{
-  return(
-    <div style={{
-      height:'100%',
-      width: '100%',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: '#131517'
-    }}>
-      <CircularProgress sx={{
-        color: '#bcfe2f'
-      }} />
-    </div>
-  )
-}
+

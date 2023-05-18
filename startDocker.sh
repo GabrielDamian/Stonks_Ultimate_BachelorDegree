@@ -10,7 +10,7 @@ gnome-terminal --geometry=260x25-0+0 \
 --tab -t "Nodes Business" -e "bash -c '$NodesBusiness'" \
 --tab -t "Docker Compose" -e "bash -c 'docker-compose up'"
 
-bash ./startPipes.sh
+# bash ./startPipes.sh
 
 
 

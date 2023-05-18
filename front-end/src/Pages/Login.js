@@ -6,7 +6,7 @@ import {Link} from 'react-router-dom';
 import LogoIcon from '../Media/logo.png';
 import './Style/Login.css';
 
-function Login()
+export default function Login()
 {
     const cookies = new Cookies();
 
@@ -164,4 +164,3 @@ function Login()
         </div>
     )
 } 
-export default Login;

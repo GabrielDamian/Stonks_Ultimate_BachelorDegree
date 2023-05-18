@@ -43,12 +43,6 @@ const getItemStyle = (isDragging, draggableStyle) => ({
     ...draggableStyle
 });
 
-const getListStyle = isDraggingOver => ({
-    background: isDraggingOver ? 'lightblue' : 'lightgrey',
-    padding: grid,
-    width: 250
-});
-
 
 class DragArea extends Component {
     constructor(props) {

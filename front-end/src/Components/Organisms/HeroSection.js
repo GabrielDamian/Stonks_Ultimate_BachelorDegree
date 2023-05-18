@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { useCallback } from "react";
 import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";
+
 export default function HeroSection()
 {
 

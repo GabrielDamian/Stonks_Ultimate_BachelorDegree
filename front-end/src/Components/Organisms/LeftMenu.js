@@ -1,8 +1,8 @@
 import React,{useState, useEffect} from 'react';
 import './LeftMenu.css';
-import { useNavigate } from 'react-router-dom';
 import LogoIcon from '../../Media/logo.png';
 import {collectUserData} from '../../API/apiCore';
+import TabItem from '../Atoms/TabItem';
 
 export default function LeftMenu({userId, tabIndex,tabs}){
 
@@ -43,14 +43,3 @@ export default function LeftMenu({userId, tabIndex,tabs}){
   )
 }
 
-const TabItem = ({text, link, selected, icon})=>{
-  const navigate = useNavigate();
-  return(
-    <div className={`left-bar-items-el ${selected == true ? 'left-bar-items-el-active ':'left-bar-items-el-inactive '}`} onClick={()=>navigate(link)}>
-      <div className="left-bar-items-el-inner">
-        <img src={selected == true ? icon[0] : icon[1]}/>
-        <span >{text}</span>
-      </div>
-    </div>
-  )
-}

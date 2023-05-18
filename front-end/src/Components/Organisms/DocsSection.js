@@ -24,7 +24,7 @@ const style = {
 };
 
 
-function DocsSection(){
+export default function DocsSection(){
     const [open, setOpen] = React.useState(false);
 
     const handleOpen = (newFrame) => {
@@ -146,5 +146,3 @@ function DocsSection(){
         </>
     )
 }
-
-export default DocsSection;
