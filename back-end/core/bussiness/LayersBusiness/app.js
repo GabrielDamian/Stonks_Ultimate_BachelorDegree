@@ -36,12 +36,10 @@ app.use(cors({
   ]}))
 
 app.post('/create-layer', async(req,res)=>{
-
+  try{
     let layerData = req.body.layerData
     let parameters = req.body.parameters
-
     let token = req.cookies.jwt
-  
     let reps_token_check = await axios.post(
       `http://${hostPOV}:3002/check-token`,
       {token}
@@ -68,29 +66,44 @@ app.post('/create-layer', async(req,res)=>{
     {
       return res.status(403).send("You don't have rights to create new layer!")
     }
+  }
+  catch(err)
+  {
+    next(err);
+  }
+    
 })
 app.get('/fetch-layers',async (req,res)=>{
-
-  let token = req.cookies.jwt
-
-  let reps_token_check = await axios.post(
-    `http://${hostPOV}:3002/check-token`,
-    {token}
-  )
-
   try{
-    let get_layers_response = await axios.get(
-      `http://${hostPOV}:3007/get-layers`,
-    )
-    return res.status(200).send({...get_layers_response.data})
-  }
-  catch(e)
-  {
-    return res.status(500).send("can't get layers")
-  }
+    let token = req.cookies.jwt
 
+    let reps_token_check = await axios.post(
+      `http://${hostPOV}:3002/check-token`,
+      {token}
+    )
+  
+    try{
+      let get_layers_response = await axios.get(
+        `http://${hostPOV}:3007/get-layers`,
+      )
+      return res.status(200).send({...get_layers_response.data})
+    }
+    catch(e)
+    {
+      return res.status(500).send("can't get layers")
+    }
+  }
+  catch(err)
+  {
+    next(err);
+  }
 })
 
+// global error handler
+app.use((err, req, res, next) => {
+  console.error(err.stack)
+  res.status(500).send('Something broke!')
+})
 
 app.listen(SERVER_ADDRESS,()=>{
     console.log(`Layers Business Service at port ${SERVER_ADDRESS}`)

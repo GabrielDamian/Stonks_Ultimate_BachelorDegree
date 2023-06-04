@@ -37,17 +37,17 @@ export default function NodeItem ({data}){
             <Popover
                 id="mouse-over-popover"
                 sx={{
-                pointerEvents: 'none',
+                    pointerEvents: 'none',
                 }}
                 open={open}
                 anchorEl={anchorEl}
                 anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
+                    vertical: 'bottom',
+                    horizontal: 'left',
                 }}
                 transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
+                    vertical: 'top',
+                    horizontal: 'left',
                 }}
                 onClose={handlePopoverClose}
                 disableRestoreFocus

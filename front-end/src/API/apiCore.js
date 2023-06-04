@@ -14,9 +14,14 @@ export const collectUserData = async (userIdParam,fields,setStateParam)=>{
             if(response.ok)
             {
                 const data = await response.json();
+                console.log("Data11:",data )
                 let extractFields = {}
                 fields.forEach((field)=>{
                     extractFields[field] = data[field]
+                    if(field == 'noNodes')
+                    {
+                        extractFields['noNodes'] = data.nodes.length
+                    }
                 })
                 setStateParam({...extractFields})
             }

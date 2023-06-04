@@ -134,12 +134,7 @@ module.exports.push_stats = async (req,res)=>{
 
 
 module.exports.push_tests = async (req, res) => {
-    console.log("push tests")
-
     let { mae_test, mse_test, rmse_test, node_id } = req.body;
-    
-    console.log("data test code:",req.body);
-    
     try {
       const doc = await Node.findOne({ _id: node_id });
      

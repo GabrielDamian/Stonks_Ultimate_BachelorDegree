@@ -27,13 +27,14 @@
     height: 100%;
     width: 30%;
     display: flex;
+    justify-content: flex-end;
 }
 .top-bar-content-header-right-left
 {
     height: 100%;
-    width: 70%;
+    width: 80%;
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
     align-items: center;
     padding: 10px;
 }
@@ -42,13 +43,14 @@
     color: white;
     font-size: 1.1rem;
 }
-
-
-
+.top-bar-content-header-right-left span:hover 
+{
+    cursor: pointer;
+}
 .top-bar-content-header-right-right
 {
     height: 100%;
-    width: 30%;
+    width: 20%;
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
@@ -59,4 +61,15 @@
 {
     height: 20px;
     object-fit: contain;
+}
+.top-bar-content-header-right-right img:hover 
+{
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+
+.top-bar-content-header-popover 
+{
+    padding: 10px;
 }

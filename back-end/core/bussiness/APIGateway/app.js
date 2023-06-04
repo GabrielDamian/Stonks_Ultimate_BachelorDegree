@@ -144,116 +144,127 @@ app.post('/heart-beat',(req,res)=>{
 
 // REDIRECT LOGIC
 app.post('/:destination',async (req,res)=>{
-
-    let url = req.originalUrl.slice(1)
-    let method = req.method;
-
-    let mapIndex = url + mapIndexSeparator + method; 
-    if(ROUTES[mapIndex])
-    {
-        
-        if(ROUTES[mapIndex].needsAuth == true)
+    try{
+        let url = req.originalUrl.slice(1)
+        let method = req.method;
+    
+        let mapIndex = url + mapIndexSeparator + method; 
+        if(ROUTES[mapIndex])
         {
-            let token = req.cookies.jwt;
-            if(!token)
+            
+            if(ROUTES[mapIndex].needsAuth == true)
             {
-                return res.status(401).send("Please provide a token!")
+                let token = req.cookies.jwt;
+                if(!token)
+                {
+                    return res.status(401).send("Please provide a token!")
+                }
+                try{
+                    let reps_token_check = await axios.post(
+                        `http://${hostPOV}:3002/check-token`,
+                        {token}
+                    )
+                }
+                catch(e)
+                {
+                    console.log("err:")
+                    return res.status(403).send("Wrong token!")
+                }
+               
             }
             try{
-                let reps_token_check = await axios.post(
-                    `http://${hostPOV}:3002/check-token`,
-                    {token}
-                )
+                Proxy(ROUTES[mapIndex].service, req, res)
+                .then((el)=>{
+                    return el
+                })
+                .catch((err)=>{
+                    return res.status(err.response.status).send(JSON.stringify(err.response.data))
+                })
             }
             catch(e)
             {
-                console.log("err:")
-                return res.status(403).send("Wrong token!")
+                console.log("err:",e)
             }
-           
         }
-        try{
-            Proxy(ROUTES[mapIndex].service, req, res)
-            .then((el)=>{
-                return el
-            })
-            .catch((err)=>{
-                return res.status(err.response.status).send(JSON.stringify(err.response.data))
-            })
-        }
-        catch(e)
+        else 
         {
-            console.log("err:",e)
+            console.log("Route not found:", 404)
+            res.status(404).send("404")
         }
     }
-    else 
+    catch(err)
     {
-        console.log("Route not found:", 404)
-        res.status(404).send("404")
+        res.status(500).send('Something broke!')
     }
 })
 app.get('/:destination',async (req,res)=>{
-
-    //check if link contains query params
-    let testSplitQueryParams = req.originalUrl.slice(1).split("?")
-    let url = testSplitQueryParams[0]
-    let queryParamsPayload = "/?"
-    if(testSplitQueryParams.length>1)
-    {
-        queryParamsPayload += testSplitQueryParams[1]
-    }
-    if(url[url.length-1] == '/')
-    {
-        url = url.slice(0,-1)
-    }
-    
-    let method = req.method;
-
-    let mapIndex = url + mapIndexSeparator + method; 
-    if(ROUTES[mapIndex])
-    {
-        if(ROUTES[mapIndex].needsAuth == true)
+    try{
+        //check if link contains query params
+        let testSplitQueryParams = req.originalUrl.slice(1).split("?")
+        let url = testSplitQueryParams[0]
+        let queryParamsPayload = "/?"
+        if(testSplitQueryParams.length>1)
         {
-            let token = req.cookies.jwt;
-            if(!token)
+            queryParamsPayload += testSplitQueryParams[1]
+        }
+        if(url[url.length-1] == '/')
+        {
+            url = url.slice(0,-1)
+        }
+
+        let method = req.method;
+
+        let mapIndex = url + mapIndexSeparator + method; 
+        if(ROUTES[mapIndex])
+        {
+            if(ROUTES[mapIndex].needsAuth == true)
             {
-                return res.status(401).send("Please provide a token!")
+                let token = req.cookies.jwt;
+                if(!token)
+                {
+                    return res.status(401).send("Please provide a token!")
+                }
+                try{
+                    let reps_token_check = await axios.post(
+                        `http://${hostPOV}:3002/check-token`,
+                        {token}
+                    )
+                }
+                catch(e)
+                {
+                    console.log("403")
+                    return res.status(403).send("Wrong token!")
+                }
+            
             }
             try{
-                let reps_token_check = await axios.post(
-                    `http://${hostPOV}:3002/check-token`,
-                    {token}
-                )
+                let attachQueryPayload = ROUTES[mapIndex].service + queryParamsPayload
+
+                Proxy(attachQueryPayload, req, res)
+                .then((el)=>{
+                    return el
+                })
+                .catch((err)=>{
+                    console.log("err:",err)
+                    return res.status(err.response.status).send(JSON.stringify(err.response.data))
+                })
             }
             catch(e)
             {
-                console.log("403")
-                return res.status(403).send("Wrong token!")
+                console.log("err:",e)
             }
-           
         }
-        try{
-            let attachQueryPayload = ROUTES[mapIndex].service + queryParamsPayload
-
-            Proxy(attachQueryPayload, req, res)
-            .then((el)=>{
-                return el
-            })
-            .catch((err)=>{
-                console.log("err:",err)
-                return res.status(err.response.status).send(JSON.stringify(err.response.data))
-            })
-        }
-        catch(e)
+        else 
         {
-            console.log("err:",e)
+            console.log("Err 404")
+            res.status(404).send("404")
         }
     }
-    else 
+    catch(err)
     {
-        console.log("Err 404")
-        res.status(404).send("404")
+        res.status(500).send('Something broke!')
     }
+    
 })
 
 //HEART BEAT LOGIC 

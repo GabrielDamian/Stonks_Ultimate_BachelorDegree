@@ -40,38 +40,50 @@ app.use(cors({
 
 
 app.post('/deploy-code',async (req,res)=>{
-
-  let {code,name,description,market} = req.body;
-  let token = req.cookies.jwt
-
-  let reps_token_check = await axios.post(
-    `http://${hostPOV}:3002/check-token`,
-    {token}
-  )
-  let ownerId = reps_token_check.data.id;
-
-  let frontEndPayload = {
-    buildName: name,
-    code: code,
-    description: description,
-    market: market,
-    owner: ownerId
+  try{
+    let {code,name,description,market} = req.body;
+    let token = req.cookies.jwt
+  
+    let reps_token_check = await axios.post(
+      `http://${hostPOV}:3002/check-token`,
+      {token}
+    )
+    let ownerId = reps_token_check.data.id;
+  
+    let frontEndPayload = {
+      buildName: name,
+      code: code,
+      description: description,
+      market: market,
+      owner: ownerId
+    }
+    
+    await producer.connect()
+    await producer.send({
+      topic: 'to-balancer',
+      messages: [
+        { value:  JSON.stringify(frontEndPayload)},
+      ],
+    })
+  
+    await producer.disconnect()
+    return res.status(200).send({test:'ceva'}) 
+  }
+  catch(err)
+  {
+    next(err);
   }
   
-  await producer.connect()
-  await producer.send({
-    topic: 'to-balancer',
-    messages: [
-      { value:  JSON.stringify(frontEndPayload)},
-    ],
-  })
-
-  await producer.disconnect()
-  return res.status(200).send({test:'ceva'}) 
 })
 
 app.get('/test',(req,res)=>{
   return res.send('deployment business node ok')
+})
+
+// global error handler
+app.use((err, req, res, next) => {
+  console.error(err.stack)
+  res.status(500).send('Something broke!')
 })
 
 app.listen(SERVER_ADDRESS,()=>{

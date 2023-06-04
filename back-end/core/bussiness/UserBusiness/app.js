@@ -1,6 +1,5 @@
 // USER BUSINESS
 
-
 // DOCKER SETUP
 let hostPOV = 'localhost'
 const SERVER_ADDRESS = 3002
@@ -13,7 +12,7 @@ if(process.argv[2] !== undefined)
 }
 console.log("HOST POV:", hostPOV)
 
-
+console.log("CEVA")
 const express = require('express');
 const cookieParser = require('cookie-parser');
 var cors = require('cors');
@@ -50,94 +49,112 @@ app.get('/test',(req,res)=>{
   return res.send('node ok 1')
 })
 
-app.post('/login',async (req,res)=>{
-  let {email,password} = req.body;
+app.post('/login',async (req,res, next)=>{
 
-  let user_id = undefined;
   try{
-    let resp = await axios.post(`http://${hostPOV}:3003/check-user`,{email,password})
-    user_id = resp.data.user;
+    let {email,password} = req.body;
+    let user_id = undefined;
+    try{
+      let resp = await axios.post(`http://${hostPOV}:3003/check-user`,{email,password})
+      user_id = resp.data.user;
+    }
+    catch(err)
+    {
+      console.log("err:",err)
+      return res.status(err.response.status).send(JSON.stringify(err.response.data))
+    }
+    let token = createToken(user_id)
+    return res.status(200).send(JSON.stringify({token}))
   }
   catch(err)
   {
-    console.log("err:",err)
-    return res.status(err.response.status).send(JSON.stringify(err.response.data))
+    next(err);
   }
-
-  let token = createToken(user_id)
-  return res.status(200).send(JSON.stringify({token}))
 })
 
-app.post('/signup',async(req,res)=>{
-  
-  let {email,password, username} = req.body;
-
-  let user_id = undefined;
+app.post('/signup',async(req,res, next)=>{
   try{
-    let resp = await axios.post(`http://${hostPOV}:3003/create-user`,{email,password,username})
-    user_id = resp.data.user;
+    let {email,password, username} = req.body;
+    let user_id = undefined;
+    try{
+      let resp = await axios.post(`http://${hostPOV}:3003/create-user`,{email,password,username})
+      user_id = resp.data.user;
+    }
+    catch(err)
+    {
+      console.log("err:",err)
+      return res.status(err.response.status).send(JSON.stringify(err.response.data))
+    }
+    let token = createToken(user_id)
+    return res.status(200).send(JSON.stringify({token}))
   }
   catch(err)
   {
-    console.log("err:",err)
-    return res.status(err.response.status).send(JSON.stringify(err.response.data))
+    next(err);
   }
-
-  let token = createToken(user_id)
-  return res.status(200).send(JSON.stringify({token}))
-
 })
 
 //used in apy gateway
 app.post('/check-token',async(req,res)=>{
-  console.log("check-token")
-
-  let {token} = req.body;
-
-  if(token)
-  {
-    jwt.verify(token, process.env.SECRET_TOKEN,async (err,decodedToken)=>{
-      if(err)
-      {
-        return res.status(403).send("Wrong token!");
-      }
-      else 
-      {
-        //user user id from token to find user role
-        let userRole = await axios.post(`http://${hostPOV}:3003/collect-user-data`,{id:decodedToken.id})
-
-        let user_rank = {
-          id:decodedToken.id,
-          role: userRole.data.role
+  try{
+    let {token} = req.body;
+    if(token)
+    {
+      jwt.verify(token, process.env.SECRET_TOKEN,async (err,decodedToken)=>{
+        if(err)
+        {
+          return res.status(403).send("Wrong token!");
         }
-
-        return res.status(200).send(JSON.stringify({...user_rank}));
-      }
-    })
+        else 
+        {
+          //user user id from token to find user role
+          let userRole = await axios.post(`http://${hostPOV}:3003/collect-user-data`,{id:decodedToken.id})
+          let user_rank = {
+            id:decodedToken.id,
+            role: userRole.data.role
+          }
+  
+          return res.status(200).send(JSON.stringify({...user_rank}));
+        }
+      })
+    }
+    else 
+    {
+      return res.status(401).send("Token is missing!");
+    }
   }
-  else 
+  catch(err)
   {
-    return res.status(401).send("Token is missing!");
+    next(err);
   }
 });
 
 app.post('/collect-user-data', async(req,res)=>{
+  try{
+    let userId = req.body.id;
+    //user user id from token to find user role
+    let userInfo = await axios.post(`http://${hostPOV}:3003/collect-user-data`,{id:userId})
   
-  let userId = req.body.id;
+    let userNodes = await axios.post(`http://${hostPOV}:3005/get-user-nodes`,{owner:userId})
+    userInfo.data['nodes'] = [...userNodes.data.nodes]
+  
+    let data = {}
+    let fields = ['email','_id','role','username','nodes']
+    fields.forEach((field)=>{
+      data[field] = userInfo.data[field]
+    })
+    return res.status(200).send(JSON.stringify({...data}));
+  }
+  catch(err)
+  {
+    next(err);
+  }
+})
 
-  //user user id from token to find user role
-  let userInfo = await axios.post(`http://${hostPOV}:3003/collect-user-data`,{id:userId})
-
-  let userNodes = await axios.post(`http://${hostPOV}:3005/get-user-nodes`,{owner:userId})
-  userInfo.data['nodes'] = [...userNodes.data.nodes]
-
-  let data = {}
-  let fields = ['email','_id','role','username','nodes']
-  fields.forEach((field)=>{
-    data[field] = userInfo.data[field]
-  })
-
-  return res.status(200).send(JSON.stringify({...data}));
+// global error handler
+app.use((err, req, res, next) => {
+  console.error(err.stack)
+  res.status(500).send('Something broke!')
 })
 
 app.listen(SERVER_ADDRESS,()=>{
