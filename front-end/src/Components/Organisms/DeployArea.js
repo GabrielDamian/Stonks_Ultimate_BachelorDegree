@@ -50,6 +50,7 @@ export default function DeployArea ({editorValue})
                 else 
                 {
                     const data = await response.json();
+                    console.log("DATa respo:",data)
                     setDeployStatus("Status: Deployment successfully, redirecting to overview..");
                     setTimeout(()=>{
                         navigate('/overview')

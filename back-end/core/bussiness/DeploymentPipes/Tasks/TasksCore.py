@@ -209,7 +209,10 @@ class NodeModelHandler:
     def predictNextDay(self, modelParam):
         # --->> Dev Mode
         # company = "IBM"
-        company = 'AAPL'
+        # company = 'AAPL'
+
+        company = '""" + code_template_replace_company + """'\n
+
         prediction_days = 60
         test_start = datetime.datetime(2015, 1, 1)
         test_end = datetime.datetime.now()
