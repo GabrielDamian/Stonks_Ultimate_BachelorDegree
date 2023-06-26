@@ -136,17 +136,17 @@ const SubscribeAction = async ()=>{
   const resources = {
     'create-layer_POST':{
       needsAuth: true,
-      roles: [],
+      roles: ['admin'],
       route: 'create-layer'
   },
   'fetch-layers_GET':{
       needsAuth: true,
-      roles: [],
+      roles: ['user','admin'],
       route: 'fetch-layers'
   },
   'delete-layer_POST':{
     needsAuth: true,
-    roles: [],
+    roles: ['admin'],
     route: 'delete-layer'
   },
   

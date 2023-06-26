@@ -99,7 +99,7 @@ const SubscribeAction = async ()=>{
   const resources = {
     'deploy-code_POST':{
       needsAuth: true,
-      roles: [],
+      roles: ['user','admin'],
       route: 'deploy-code'
   },
 

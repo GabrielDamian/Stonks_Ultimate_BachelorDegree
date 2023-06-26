@@ -82,7 +82,7 @@ app.post('/:destination',async (req,res)=>{
         let mapIndex = url + mapIndexSeparator + method; 
         if(ROUTES[mapIndex])
         {
-            
+            console.log("verifica ruta:",ROUTES[mapIndex])
             if(ROUTES[mapIndex].needsAuth == true)
             {
                 let token = req.cookies.jwt;
@@ -90,16 +90,31 @@ app.post('/:destination',async (req,res)=>{
                 {
                     return res.status(401).send("Please provide a token!")
                 }
+                
+                let currentUserRole = undefined; 
                 try{
-                    let reps_token_check = await axios.post(
+                    let checkTokenResp = await axios.post(
                         `http://${hostPOV}:3002/check-token`,
                         {token}
                     )
+                    console.log("check token resp:", checkTokenResp.data);
+                    currentUserRole = checkTokenResp.data.role;
                 }
                 catch(e)
                 {
                     console.log("err:")
                     return res.status(403).send("Wrong token!")
+                }
+                try{
+                    if(!ROUTES[mapIndex].roles.includes(currentUserRole))
+                    {
+                        console.log("WRONG ROLE!!!!!!!!:", ROUTES[mapIndex].roles, checkTokenResp.data.role)
+                        return res.status(403).send("You can't perform this action!")
+                    }
+                }
+                catch(err)
+                {
+                    console.log("Can't ffind suer role:", err)
                 }
                
             }
@@ -215,9 +230,9 @@ setInterval(()=>{
     CleanServices()
 },1000)
 
-setInterval(()=>{
-    console.log("-----check:",ROUTES);
-},2000)
+// setInterval(()=>{
+//     console.log("-----check:",ROUTES);
+// },2000)
 
 // START SERVER
 app.listen(3001,()=>{

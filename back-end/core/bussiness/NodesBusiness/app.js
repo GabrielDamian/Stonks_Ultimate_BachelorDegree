@@ -268,32 +268,32 @@ const SubscribeAction = async () => {
   const resources = {
     "fetch-nodes_GET": {
       needsAuth: true,
-      roles: [],
+      roles: ['user','admin'],
       route: "fetch-nodes",
     },
     "fetch-node_GET": {
       needsAuth: true,
-      roles: [],
+      roles: ['user','admin'],
       route: "fetch-node",
     },
     "establish-node-connection_POST": {
       needsAuth: true,
-      roles: [],
+      roles: ['user','admin'],
       route: "establish-node-connection",
     },
     "push-node-stats_POST": {
       needsAuth: true,
-      roles: [],
+      roles: ['user','admin'],
       route: "push-node-stats",
     },
     "push-node-training_POST": {
       needsAuth: true,
-      roles: [],
+      roles: ['user','admin'],
       route: "push-node-training",
     },
     "delete-node_POST":{
       needsAuth: true,
-      roles: [],
+      roles: ['user','admin'],
       route: "delete-node",
     }
   };

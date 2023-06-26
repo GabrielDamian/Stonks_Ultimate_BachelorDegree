@@ -202,28 +202,28 @@ const SubscribeAction = async ()=>{
         route: 'signup'
     },
     'check-token_POST':{
-        needsAuth: true,
+        needsAuth: false,
         roles:[],
         route: 'check-token'
     },
     'collect-user-data_POST':{
         needsAuth: true,
-        roles: [],
+        roles: ['user','admin'],
         route: 'collect-user-data'
     },
     'all-users_GET':{
       needsAuth: true,
-      roles: [],
+      roles: ['admin'],
       route: 'all-users'
     },
     'update-fields_POST':{
       needsAuth: true,
-      roles: [],
+      roles: ['admin'],
       route: 'update-fields'
     },
     'delete_POST':{
       needsAuth: true,
-      roles: [],
+      roles: ['admin'],
       route: 'delete'
     }
   }
