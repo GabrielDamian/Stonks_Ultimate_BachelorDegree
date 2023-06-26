@@ -38,6 +38,7 @@ mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true, useCr
 
 // routes
 app.use(authRoutes);
+
 // global error handler
 app.use((err, req, res, next) => {
   console.error(err.stack)

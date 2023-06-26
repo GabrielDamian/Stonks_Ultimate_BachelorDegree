@@ -15,7 +15,6 @@ class NodesMap:
     def __init__(self, nodeMapParam):
         self.dict = nodeMapParam
         self.lock = Lock()
-        print("TEST:", self.dict)
 
     def lockNode(self, id):
         with self.lock:
@@ -63,7 +62,7 @@ def persistNodeEntity(sourcePacket):
     print("Create Node Entity-> Persist into db:", sourcePacket)
 
     # Nodes Persitence Service
-    url = 'http://localhost:3005/create-node'
+    url = 'http://localhost:3005/node'
 
     bodyPersistNode = {
         'buildName': sourcePacket['payload']['buildName'],

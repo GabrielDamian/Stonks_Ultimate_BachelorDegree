@@ -29,76 +29,7 @@ app.use(cors({
 ]}))
 
 const ROUTES = {
-    //user business layer
-    // 'login_POST':{
-    //     needsAuth: false,
-    //     roles: [],
-    //     service: `http://${hostPOV}:3002/login`
-        
-    // },
-    // 'signup_POST':{
-    //     needsAuth: false,
-    //     roles: [],
-    //     service: `http://${hostPOV}:3002/signup`
-    // },
-    // 'check-token_POST':{
-    //     needsAuth: true,
-    //     roles:[],
-    //     service: `http://${hostPOV}:3002/check-token`
-    // },
-    // 'collect-user-data_POST':{
-    //     needsAuth: true,
-    //     roles: [],
-    //     service: `http://${hostPOV}:3002/collect-user-data`
-    // },
-    //deployment business layer
-
-    // 'deploy-code_POST':{
-    //     needsAuth: true,
-    //     roles:[],
-    //     service: `http://${hostPOV}:3004/deploy-code`
-    // },
-
-    //nodes
-    // 'fetch-nodes_GET':{
-    //     needsAuth: true,
-    //     roles:[],
-    //     service: `http://${hostPOV}:3006/fetch-nodes`
-    // },
-    // 'fetch-node_GET':{
-    //     needsAuth: true,
-    //     roles:[],
-    //     service: `http://${hostPOV}:3006/fetch-node`
-    // },
-    // 'establish-node-connection_POST':{
-    //     needsAuth: true,
-    //     roles:[],
-    //     service: `http://${hostPOV}:3006/establish-node-connection`
-    // },
-    // // TODO: the next 2 routes are not used thourgh the gateway, fix them
-    // 'push-node-stats_POST':{
-    //     needsAuth: true,
-    //     roles:[],
-    //     service: `http://${hostPOV}:3006/push-node-stats`
-    // },
-    // 'push-node-training_POST':{
-    //     needsAuth: true,
-    //     roles:[],
-    //     service: `http://${hostPOV}:3006/push-node-training`
-    // },
-
-
-    //layers
-    // 'create-layer_POST':{
-    //     needsAuth: true,
-    //     roles:[],
-    //     service: `http://${hostPOV}:3008/create-layer`
-    // },
-    //  'fetch-layers_GET':{
-    //     needsAuth: true,
-    //     roles:[],
-    //     service: `http://${hostPOV}:3008/fetch-layers`
-    // },
+    
 
 }
 const mapIndexSeparator = "_";

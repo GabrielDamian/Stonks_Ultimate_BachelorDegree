@@ -49,7 +49,7 @@ app.post('/create-layer', async(req,res)=>{
     {
       try{
         let create_layers_response = await axios.post(
-          `http://${hostPOV}:3007/create-layer`,
+          `http://${hostPOV}:3007/layer`,
           {
             layerData,
             parameters
@@ -84,7 +84,7 @@ app.get('/fetch-layers',async (req,res)=>{
   
     try{
       let get_layers_response = await axios.get(
-        `http://${hostPOV}:3007/get-layers`,
+        `http://${hostPOV}:3007/layer`,
       )
       return res.status(200).send({...get_layers_response.data})
     }
@@ -104,12 +104,7 @@ app.post('/delete-layer', async(req,res)=>{
   try{
     let {layerId} = req.body;
     console.log("layerId:",layerId)
-    let deleteResp = await axios.post(
-      `http://${hostPOV}:3007/delete-layer`,
-      {
-        layerId
-      }
-    ) 
+    await axios.delete(`http://${hostPOV}:3007/layer/${layerId}`,) 
 
 
 

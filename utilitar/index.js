@@ -7,7 +7,7 @@ async function startDockerContainers(action) {
         
 
         
-        const response = await axios.get('http://localhost:3005/all-nodes');
+        const response = await axios.get('http://localhost:3005/node');
         const { data } = response;
         console.log("Data:",data)
         

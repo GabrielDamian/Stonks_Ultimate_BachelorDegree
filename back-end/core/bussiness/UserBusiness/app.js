@@ -5,20 +5,16 @@ let hostPOV = 'localhost'
 const SERVER_ADDRESS = 3002
 const service_id = "User Business"
 
-console.log(process.argv[2])
 if(process.argv[2] !== undefined)
 {
     hostPOV = '172.17.0.1'
 }
-console.log("HOST POV:", hostPOV)
 
 const express = require('express');
 const cookieParser = require('cookie-parser');
 var cors = require('cors');
-const  { Proxy } = require('axios-express-proxy');
 const axios = require('axios')
 const jwt = require('jsonwebtoken');
-const { response } = require('express');
 require("dotenv").config();
 const app = express();
 app.use(express.json());
@@ -44,56 +40,41 @@ const createToken = (id) => {
   });
 };
 
-app.get('/test',(req,res)=>{
-  return res.send('node ok 1')
-})
 
-app.post('/login',async (req,res, next)=>{
-
+app.post('/login',async (req,res)=>{
   try{
     let {email,password} = req.body;
     let user_id = undefined;
-    try{
-      let resp = await axios.post(`http://${hostPOV}:3003/check-user`,{email,password})
-      user_id = resp.data.user;
-    }
-    catch(err)
-    {
-      console.log("err:",err)
-      return res.status(err.response.status).send(JSON.stringify(err.response.data))
-    }
+
+    let resp = await axios.post(`http://${hostPOV}:3003/login`,{email,password})
+    user_id = resp.data.user;
+
+
     let token = createToken(user_id)
-    return res.status(200).send(JSON.stringify({token}))
+    return res.status(201).send(JSON.stringify({token}))
   }
   catch(err)
   {
-    next(err);
+    return res.status(500).send('Error at login!')
   }
 })
 
-app.post('/signup',async(req,res, next)=>{
+app.post('/signup',async(req,res)=>{
   try{
     let {email,password, username} = req.body;
     let user_id = undefined;
-    try{
-      let resp = await axios.post(`http://${hostPOV}:3003/create-user`,{email,password,username})
-      user_id = resp.data.user;
-    }
-    catch(err)
-    {
-      console.log("err:",err)
-      return res.status(err.response.status).send(JSON.stringify(err.response.data))
-    }
+    let resp = await axios.post(`http://${hostPOV}:3003/user`,{email,password,username})
+    user_id = resp.data.user;
+
     let token = createToken(user_id)
     return res.status(200).send(JSON.stringify({token}))
   }
   catch(err)
   {
-    next(err);
+    return res.status(500).send('Error at signup!')
   }
 })
 
-//used in apy gateway
 app.post('/check-token',async(req,res)=>{
   try{
     let {token} = req.body;
@@ -107,12 +88,12 @@ app.post('/check-token',async(req,res)=>{
         else 
         {
           //user user id from token to find user role
-          let userRole = await axios.post(`http://${hostPOV}:3003/collect-user-data`,{id:decodedToken.id})
+          // let userRole = await axios.post(`http://${hostPOV}:3003/collect-user-data`,{id:decodedToken.id})
+          let userRole = await axios.get(`http://${hostPOV}:3003/user/${decodedToken.id}`)
           let user_rank = {
             id:decodedToken.id,
             role: userRole.data.role
           }
-  
           return res.status(200).send(JSON.stringify({...user_rank}));
         }
       })
@@ -124,15 +105,16 @@ app.post('/check-token',async(req,res)=>{
   }
   catch(err)
   {
-    next(err);
+    return res.status(500).send('Error while validating token!')
   }
 });
 
 app.post('/collect-user-data', async(req,res)=>{
+  //complete date (user - owned nodes)
   try{
     let userId = req.body.id;
     //user user id from token to find user role
-    let userInfo = await axios.post(`http://${hostPOV}:3003/collect-user-data`,{id:userId})
+    let userInfo = await axios.get(`http://${hostPOV}:3003/user/${userId}`)
   
     let userNodes = await axios.post(`http://${hostPOV}:3005/get-user-nodes`,{owner:userId})
     userInfo.data['nodes'] = [...userNodes.data.nodes]
@@ -146,74 +128,57 @@ app.post('/collect-user-data', async(req,res)=>{
   }
   catch(err)
   {
-    next(err);
+    return res.status(500).send('Error while collecting user data!')
   }
 })
 
 app.get('/all-users', async(req,res)=>{
   try{
-    let allUsers = await axios.get(`http://${hostPOV}:3003/all-users`)
-    console.log("allUsers1:",allUsers.data)
+    // let allUsers = await axios.get(`http://${hostPOV}:3003/all-users`)
+    let allUsers = await axios.get(`http://${hostPOV}:3003/user`)
     return res.status(200).send(JSON.stringify([...allUsers.data]));
   }
   catch(err)
   {
-    next(err);
+    return res.status(500).send('Error while feetching users!')
   }
 })
 
 app.post('/update-fields', async(req,res)=>{
-
-  console.log("update fields business:", req.body);
-
   let userId = undefined;
   try{
     let  availableFields = ['role','email','username'] 
     Object.keys(req.body).forEach((field)=>{
-      console.log("magic:", !availableFields.includes(field) && field == 'userId')
-      console.log("between:", field )
       if(!availableFields.includes(field))
       {
         if(field != 'userId')
         {
-          throw new Error(`Can't update field ${field}`)
+          return res.status(400).send(`Wrong format,updating field ${field} is forbidden`)
         }
       }
     })
     userId = req.body.userId
-    if(userId == undefined) return res.status(400).send("Can't update fields whitout a userId")
+    if(userId == undefined) return res.status(400).send("Wrong format, can't update fields whitout a userId")
 
-    let dbUpdateResp = await axios.post(`http://${hostPOV}:3003/update-fields`,{...req.body})
-    console.log("dbUpdateResp:",dbUpdateResp)
+    let dbUpdateResp = await axios.post(`http://${hostPOV}:3003/update`,{...req.body})
     return res.status(200).send(JSON.stringify({_id: dbUpdateResp._id}))
   }
   catch(err)
   {
-    console.log("err:",err)
-    return res.status(400).send("Nu se pot updata field-urile utilizator!")
+    return res.status(500).send("Error while updating user fields!")
   }
 })
 
 app.post('/delete',async(req,res)=>{
   try{
-    
     let {userId} = req.body;
-    console.log("delete user id:", userId);
-    let dbDeleteResp = await axios.post(`http://${hostPOV}:3003/delete`,{userId})
-    console.log("before return")
+    await axios.delete(`http://${hostPOV}:3003/delete/${userId}`)
     return res.status(200).send({userId})
-
   }
   catch(err)
   {
-    console.log("Can't delete user:")
-    return res.status(400).send("Can't delete user!")
+    return res.status(500).send("Error while deleting user!")
   }
-})
-// global error handler
-app.use((err, req, res, next) => {
-  console.error(err.stack)
-  res.status(500).send('Something broke!')
 })
 
 app.listen(SERVER_ADDRESS,()=>{

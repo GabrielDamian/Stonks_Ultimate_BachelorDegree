@@ -52,13 +52,12 @@ app.get("/fetch-nodes", async (req, res) => {
       let extractedResponse = { ...resp_user_nodes.data };
       return res.status(200).send(JSON.stringify({ ...extractedResponse }));
     } catch (e) {
-      console.log("err:", e);
       return res.status(403).send("Can't get user nodes!");
     }
   }
   catch(err)
   {
-    next(err);
+    return res.status(500).send(`Can't fetch nodes`)
   }
   
 });
@@ -76,7 +75,7 @@ app.get("/fetch-node", async (req, res) => {
   
     let nodeBdResp = null;
     try {
-      let nodeBd = await axios.get(`http://${hostPOV}:3005/get-node/${nodeId}`);
+      let nodeBd = await axios.get(`http://${hostPOV}:3005/node/${nodeId}`);
       nodeBdResp = nodeBd.data;
     } catch (err) {
       return res.status(404).send("Can't find node");
@@ -90,7 +89,7 @@ app.get("/fetch-node", async (req, res) => {
   }
   catch(err)
   {
-    next(err);
+    return res.status(500).send(`Can't fetch node`)
   }
   
 });
@@ -107,7 +106,7 @@ app.post("/establish-node-connection", async (req, res) => {
   
     let nodeBdResp = null;
     try {
-      let nodeBd = await axios.get(`http://${hostPOV}:3005/get-node/${nodeId}`);
+      let nodeBd = await axios.get(`http://${hostPOV}:3005/node/${nodeId}`);
       nodeBdResp = nodeBd.data;
     } catch (err) {
       return res.status(404).send("Can't find node");
@@ -144,7 +143,7 @@ app.post("/establish-node-connection", async (req, res) => {
   }
   catch(err)
   {
-    next(err);
+    return res.status(500).send(`Can't establish node connection!`)
   }
   
 });
@@ -171,7 +170,7 @@ app.post("/push-node-stats", async (req, res) => {
   }
   catch(err)
   {
-    next(err);
+    return res.status(500).send(`Can't update node stats!`)
   }
   
 });
@@ -179,14 +178,6 @@ app.post("/push-node-stats", async (req, res) => {
 app.post("/push-node-training", async (req, res) => {
   try{
     let { node_id, mae_test, mse_test, rmse_test } = req.body;
-
-    // let pairs = [];
-    // intervals.forEach((el, index) => {
-    //   pairs.push({
-    //     interval: el,
-    //     value: values[index],
-    //   });
-    // });
     
     try {
       let push_stats_resp = await axios.post(
@@ -208,20 +199,17 @@ app.post("/push-node-training", async (req, res) => {
   }
   catch(err)
   {
-    next(err);
+    return res.status(500).send(`Can't update node training results!`)
   }
   
 
 });
 
 app.post('/delete-node', async(req,res)=>{
-  console.log("delete node")
   try{
     let nodeId = req.body.nodeId;
     let token = req.cookies.jwt;
     
-    console.log("n:",nodeId, token);
-
     let reps_token_check = await axios.post(
       `http://${hostPOV}:3002/check-token`,
       { token }
@@ -230,7 +218,7 @@ app.post('/delete-node', async(req,res)=>{
   
     let nodeBdResp = null;
     try {
-      let nodeBd = await axios.get(`http://${hostPOV}:3005/get-node/${nodeId}`);
+      let nodeBd = await axios.get(`http://${hostPOV}:3005/node/${nodeId}`);
       nodeBdResp = nodeBd.data;
     } catch (err) {
       return res.status(404).send("Can't identify node to delete!");
@@ -238,46 +226,34 @@ app.post('/delete-node', async(req,res)=>{
   
     if (nodeBdResp !== null && nodeBdResp.owner == ownerId) {
       try{
-          let deleteResponse = await axios.post(`http://${hostPOV}:3005/delete`, {nodeId});
-          console.log("Delete response:",deleteResponse);
+          let deleteResponse = await axios.delete(`http://${hostPOV}:3005/node/${nodeId}`,);
       }
       catch(err)
       {
         return res.status(404).send("Can't delete node from db!");
       }
       
-      console.log("test:",nodeBdResp.data)
       let containerId = nodeBdResp.containerId;
-      console.log("containerId:", containerId);
 
-      exec(`docker rm ${containerId}`, (error, stdout, stderr) => {
+      exec(`docker rm -f ${containerId}`, (error, stdout, stderr) => {
         if (error) {
           console.error(`Eroare la ștergerea containerului: ${error.message}`);
-          return res.status(500).json({ error: 'A apărut o eroare la ștergerea containerului.' });
+          return res.status(500).json(`Can't delete node`);
         }
         if (stderr) {
           console.error(`Eroare la ștergerea containerului: ${stderr}`);
-          return res.status(500).json({ error: 'A apărut o eroare la ștergerea containerului.' });
+          return res.status(500).json(`Can't delete node`);
         }
-        // Returnăm un răspuns de succes dacă containerul a fost șters cu succes
-        return res.json({ message: 'Containerul a fost șters cu succes.' });
+        return res.json({ message: 'Node deleted!' });
       });
-
-
     } else {
       return res.status(403).send("You can't delete this node");
     }
   }
   catch(err)
   {
-    return res.status(500).send('Something broke!')
+    return res.status(500).send(`Can't delete node!`)
   }
-})
-
-// global error handler
-app.use((err, req, res, next) => {
-  console.error(err.stack)
-  res.status(500).send('Something broke!')
 })
 
 app.listen(SERVER_ADDRESS, () => {

@@ -63,9 +63,9 @@ export default function DeleteBlock({tabIndex,setTabs,tabs,userId})
                     <div className='delete-block-content-data-blocks'>
                         <h3>Delete blocks:</h3>
                     {
-                        layers.map((el)=>{
+                        layers !== undefined ? layers.map((el)=>{
                             return(<DeleteBlockItem {...el}/>)
-                        })
+                        }) : null
                     }
                     </div>
                     <div className='delete-block-content-data-users'>
