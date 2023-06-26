@@ -39,6 +39,8 @@ export const fetchNodeData = async (nodeID, setStateCallback)=>{
       }
 }
 export let attachRealData = async (nodeDataParam, setStateParam)=>{
+
+    console.log("attachRealData:",nodeDataParam.predictions)
     let market = nodeDataParam.market;
     let predictions = nodeDataParam.predictions
 
@@ -48,6 +50,7 @@ export let attachRealData = async (nodeDataParam, setStateParam)=>{
         'ETH-USD': 'binance-eth',
         'BTC-USD': 'binance-bitcoin'
     }
+    console.log("translator:",translator[market])
     let realValuesLink = `https://api.coingecko.com/api/v3/coins/${translator[market]}/market_chart?vs_currency=usd&days=300&interval=1d`
     let realValues = undefined;
     try{
@@ -57,6 +60,7 @@ export let attachRealData = async (nodeDataParam, setStateParam)=>{
     {
         return 
     }
+    console.log("realValues:",realValues)
 
     let flatRealValues = realValues.data.prices
     let flatPredictedValues = predictions.map((el)=>{
@@ -97,16 +101,18 @@ export let attachRealData = async (nodeDataParam, setStateParam)=>{
         }
     })
 
+    console.log("finalPairs:",finalPairs)
+    // finalPairs[finalPairs.length-1]['realValue'] = undefined
+
+
+    console.log("finalPairs:",finalPairs)
     setStateParam(finalPairs)
 }
 
 function NodePage({tabIndex,setTabs,tabs,userId})
 {
     const navigate = useNavigate();
-
-
     const [nodeData, setNodeData] = useState({})
-
     const [realData, setRealData] = useState(null);
     const [nodeAddress, setNodeAddress] = useState(null);
     
@@ -210,10 +216,18 @@ function NodePage({tabIndex,setTabs,tabs,userId})
                     {
                         DecideWidgets(nodeData)[0] == false ? 
                         <div style={{
-                            border: '1px solid red',
-                            width:'40%'
+                            width:'40%',
+                            padingTop: '20px',
                         }}>
-                            <h2>{DecideWidgets(nodeData)[0]}---{DecideWidgets(nodeData)[1]}</h2>
+                            <h2
+                                style={{
+                                    border: '1px solid #525252',
+                                    padding: '10px 20px',
+                                    borderRadius: '10px',
+                                    width: 'auto',
+                                    textAlign: 'center'
+                                }}
+                            >Status: {DecideWidgets(nodeData)[1]}</h2>
                         </div>
                         :
                         <div className='node-page-content-data-stats'>

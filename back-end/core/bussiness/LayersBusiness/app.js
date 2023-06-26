@@ -99,6 +99,30 @@ app.get('/fetch-layers',async (req,res)=>{
   }
 })
 
+app.post('/delete-layer', async(req,res)=>{
+  console.log("Entry delete layer")
+  try{
+    let {layerId} = req.body;
+    console.log("layerId:",layerId)
+    let deleteResp = await axios.post(
+      `http://${hostPOV}:3007/delete-layer`,
+      {
+        layerId
+      }
+    ) 
+
+
+
+    console.log("before return")
+    return res.status(200).send({_id: layerId})
+  }
+  catch(err)
+  {
+    console.log("err:",err)
+    return res.status(400).send("Nu se poate sterge layer12!")
+  }
+})
+
 // global error handler
 app.use((err, req, res, next) => {
   console.error(err.stack)
@@ -124,7 +148,13 @@ const SubscribeAction = async ()=>{
       needsAuth: true,
       roles: [],
       route: 'fetch-layers'
-  }
+  },
+  'delete-layer_POST':{
+    needsAuth: true,
+    roles: [],
+    route: 'delete-layer'
+  },
+  
   }
   let status_subscribe = false;
   while(!status_subscribe)

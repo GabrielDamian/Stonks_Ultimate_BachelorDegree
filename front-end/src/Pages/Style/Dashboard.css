@@ -14,7 +14,6 @@
 .dashboard-content-data
 {
     height: 90%;
-    border: 1px solid blue;
     display: flex;
     flex-wrap: wrap;
 }

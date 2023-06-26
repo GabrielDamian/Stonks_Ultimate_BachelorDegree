@@ -9,7 +9,7 @@ import {TranslateBlockStructureInPythonCode} from '../utils/utils.js';
 import {CssTextField} from '../utils/utils';
 import DeleteIcon from '../Media/Icons/remove.png';
 import CustomButton from '../Components/Atoms/CustomButton';
-
+import { useNavigate} from 'react-router-dom';
 
 const CurrentParamValues = ({values, removeValue})=>{
     
@@ -68,6 +68,8 @@ const ParametersContainer = ({parameters,deleteParameter})=>{
 }
 function AddBlock({tabIndex,setTabs,tabs,userId})
 {
+    const navigate = useNavigate();
+
     const [layerData, setLayerData] = useState({
         name: '',
         keyword:'',
@@ -205,10 +207,14 @@ function AddBlock({tabIndex,setTabs,tabs,userId})
                 if(!response.ok)
                 {
                     console.error("AddBlock:", response)
+                    alert("Can't add new layer!")
                 }
                 else 
                 {
                     const data = await response.json();
+                    console.log("succes:", data)
+                    navigate('/drag')
+
                 }
         }
         catch(err)

@@ -30,8 +30,12 @@ import ProfileIcon from './Media/Icons/menu/user.png';
 import NodeIconLight from './Media/Icons/menu/nodes-light.png';
 import NodeIcon from './Media/Icons/menu/nodes.png';
 
+import AdminIcon from './Media/Icons/menu/admin.png';
+import AdminIconLight from './Media/Icons/menu/admin-light.png';
+
 
 import ProtectedRoute from './Pages/PrivateWrapper/ProtectedRoute';
+import DeleteBlock from './Pages/Delete Block';
 function App() {
   
   let tabs = [
@@ -57,6 +61,12 @@ function App() {
       text: 'Add Block',
       link: '/add-block',
       icon: [AddIcon,AddIconLight],
+      roles: ['admin']
+    },
+    {
+      text: 'Admin Area',
+      link: '/admin-area',
+      icon: [AdminIcon, AdminIconLight],
       roles: ['admin']
     },
     {
@@ -103,16 +113,24 @@ function App() {
               <AddBlock tabIndex={3} tabs={tabs} />
             </ProtectedRoute>
           }/>
+
+          <Route exact path="/admin-area" element={
+            <ProtectedRoute>
+              {/* <AddBlock tabIndex={3} tabs={tabs} /> */}
+              <DeleteBlock tabIndex={4} tabs={tabs}/>
+            </ProtectedRoute>
+          }/>
+
          
           <Route exact path="/my-profile" element={
             <ProtectedRoute>
-              <MyProfile tabIndex={4} tabs={tabs} />
+              <MyProfile tabIndex={5} tabs={tabs} />
             </ProtectedRoute>
           }/>
 
           <Route exact path="/node-page" element={
             <ProtectedRoute>
-              <NodePage tabIndex={5} tabs={tabs}/>
+              <NodePage tabIndex={6} tabs={tabs}/>
             </ProtectedRoute>
           }/>
 

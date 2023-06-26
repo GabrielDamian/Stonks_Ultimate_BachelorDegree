@@ -77,7 +77,6 @@ module.exports.check_user_post = async (req, res) => {
 
 }
 
-
 module.exports.collect_user_data = async(req,res)=>{
   const { id } = req.body;
   try{
@@ -88,8 +87,6 @@ module.exports.collect_user_data = async(req,res)=>{
       }
       else
       {
-        Object.keys(doc).forEach((key)=>{
-        })
         return res.status(200).send(JSON.stringify({...doc._doc}))
       }
     })
@@ -99,6 +96,75 @@ module.exports.collect_user_data = async(req,res)=>{
   catch(err)
   {
     console.log("err find by id")
+    res.status(400).send("Can't find id")
   }
 
+}
+
+module.exports.all_users = async(req,res)=>{
+
+  console.log("all users aentry")
+  
+  try{
+    User.find({},(err,doc)=>{
+      if(err)
+      {
+        console.log("case 1")
+        return res.status(401).send("Invalid token")
+      }
+      else
+      {
+        console.log("case 2:", doc)
+        return res.status(200).send(JSON.stringify([...doc]))
+      }
+    })
+  }
+  catch(err)
+  {
+    return res.status(400).send("Can't find any user")
+  }
+}
+
+module.exports.update_fields = async(req,res)=>{
+  
+  console.log("update fields:", req.body);
+  
+  try{
+    let userId = req.body.userId;
+    let fieldsToUpdate = {...req.body}
+    delete fieldsToUpdate.userId
+
+    console.log("fieldsToUpdate final:",fieldsToUpdate)
+    console.log("userID:", userId)
+    let updateResponse = await User.findOneAndUpdate(
+      {
+        _id: userId
+      },
+      {
+        ...fieldsToUpdate
+      },
+      {new: true, useFindAndModify: false}
+      )
+      console.log("updateResponse:",updateResponse)
+      return res.status(200).send("Fields updated succesfully!")
+  }
+  catch(err)
+  {
+    return res.status(400).send("Can't update user fields")
+  }
+}
+
+module.exports.delete = async(req,res)=>{
+  try{
+    let {userId} = req.body;
+    console.log("user to delete:", userId)
+    let deleteResp = await User.findOneAndDelete({_id: userId})
+    console.log("delete resp:")
+    return res.status(200).send("User deleted!")
+  }
+  catch(err)
+  {
+    console.log("can't delete user:", err)
+    return res.status(400).send("Can't delete user")
+  }
 }

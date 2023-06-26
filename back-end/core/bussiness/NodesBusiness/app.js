@@ -214,6 +214,66 @@ app.post("/push-node-training", async (req, res) => {
 
 });
 
+app.post('/delete-node', async(req,res)=>{
+  console.log("delete node")
+  try{
+    let nodeId = req.body.nodeId;
+    let token = req.cookies.jwt;
+    
+    console.log("n:",nodeId, token);
+
+    let reps_token_check = await axios.post(
+      `http://${hostPOV}:3002/check-token`,
+      { token }
+    );
+    let ownerId = reps_token_check.data.id;
+  
+    let nodeBdResp = null;
+    try {
+      let nodeBd = await axios.get(`http://${hostPOV}:3005/get-node/${nodeId}`);
+      nodeBdResp = nodeBd.data;
+    } catch (err) {
+      return res.status(404).send("Can't identify node to delete!");
+    }
+  
+    if (nodeBdResp !== null && nodeBdResp.owner == ownerId) {
+      try{
+          let deleteResponse = await axios.post(`http://${hostPOV}:3005/delete`, {nodeId});
+          console.log("Delete response:",deleteResponse);
+      }
+      catch(err)
+      {
+        return res.status(404).send("Can't delete node from db!");
+      }
+      
+      console.log("test:",nodeBdResp.data)
+      let containerId = nodeBdResp.containerId;
+      console.log("containerId:", containerId);
+
+      exec(`docker rm ${containerId}`, (error, stdout, stderr) => {
+        if (error) {
+          console.error(`Eroare la ștergerea containerului: ${error.message}`);
+          return res.status(500).json({ error: 'A apărut o eroare la ștergerea containerului.' });
+        }
+        if (stderr) {
+          console.error(`Eroare la ștergerea containerului: ${stderr}`);
+          return res.status(500).json({ error: 'A apărut o eroare la ștergerea containerului.' });
+        }
+        // Returnăm un răspuns de succes dacă containerul a fost șters cu succes
+        return res.json({ message: 'Containerul a fost șters cu succes.' });
+      });
+
+
+    } else {
+      return res.status(403).send("You can't delete this node");
+    }
+  }
+  catch(err)
+  {
+    return res.status(500).send('Something broke!')
+  }
+})
+
 // global error handler
 app.use((err, req, res, next) => {
   console.error(err.stack)
@@ -255,6 +315,11 @@ const SubscribeAction = async () => {
       roles: [],
       route: "push-node-training",
     },
+    "delete-node_POST":{
+      needsAuth: true,
+      roles: [],
+      route: "delete-node",
+    }
   };
   let status_subscribe = false;
   while (!status_subscribe) {

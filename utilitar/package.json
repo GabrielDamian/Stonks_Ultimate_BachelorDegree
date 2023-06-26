@@ -1,14 +1,15 @@
 {
-  "name": "node_docker",
+  "name": "utilitar",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.18.2"
+    "axios": "^1.4.0",
+    "child_process": "^1.0.2"
   }
 }

@@ -109,16 +109,20 @@ module.exports.get_node = async (req, res) => {
 }
 
 module.exports.push_stats = async (req,res)=>{
-    
+    console.log("Push node stats:", req.body);
     let {new_prediction, node_id} = req.body;
+    console.log("push stats db:",new_prediction)
 
     const doc = await Node.findOne({ _id: node_id })
+    
+    const currentTimeStamp = new Date();
+    const tomorrowTimeStamp = new Date(currentTimeStamp.getTime() + 24 * 60 * 60 * 1000);
 
     let complete_stats_element = {
-        timestamp: new Date().getTime().toString(), 
+        timestamp: tomorrowTimeStamp.getTime().toString(), 
         value: Number(new_prediction), 
     }
-
+    console.log("complete_stats_element:",complete_stats_element)
     try{
         doc.predictions.push(complete_stats_element)
         await doc.save()
@@ -128,10 +132,10 @@ module.exports.push_stats = async (req,res)=>{
     }
     catch(err)
     {
+        console.log("eroare la push stats:", err)
         res.status(400).send({test: "Can't update node stats!"})
     }
 }
-
 
 module.exports.push_tests = async (req, res) => {
     let { mae_test, mse_test, rmse_test, node_id } = req.body;
@@ -152,4 +156,41 @@ module.exports.push_tests = async (req, res) => {
     } catch (err) {
       return res.status(400).send({ error: "Can't update node stats!" });
     }
-  };
+};
+
+module.exports.delete = async(req,res)=>{
+    try{
+        let {nodeId} = req.body;
+        console.log("To delete:", nodeId);
+
+        let deleteResponse = await Node.findOneAndDelete({_id: nodeId});
+        console.log("Delete response:",deleteResponse)
+        return res.status(200).send({_id: nodeId})
+    }
+    catch(err)
+    {
+      return res.status(400).send({ error: "Can't delete node!" });
+    }
+}
+
+module.exports.all_nodes = async (req,res)=>{
+    try{
+        const doc = await Node.find({})
+        
+        let extractNodesData = []
+        doc.forEach((el)=>{
+            extractNodesData.push({
+                id:el._id,
+                containerId: el.containerId,
+            })
+        })
+
+        res.status(200).json({ 
+            nodes: extractNodesData
+        });
+    }
+    catch(e)
+    {
+        res.status(400).send({test: "Can't update node!"})
+    }
+}

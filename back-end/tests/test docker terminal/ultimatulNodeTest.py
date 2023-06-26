@@ -9,13 +9,16 @@ import pandas as pd
 import datetime
 from sklearn.preprocessing import MinMaxScaler
 from keras.models import Sequential
-from keras.layers import Dense, Dropout, LSTM, MultiHeadAttention, LayerNormalization, Conv1D, MaxPooling1D, Bidirectional, GRU
+from keras.layers import Dense, Dropout, LSTM, MultiHeadAttention, LayerNormalization, Conv1D, MaxPooling1D, \
+    Bidirectional, GRU
 from keras.models import load_model
 from pandas_datareader import data as pdr
 import requests
+import math
 import yfinance as yfin
-#--->> DevMode Only
-#import matplotlib.pyplot as plt
+
+# --->> DevMode Only
+# import matplotlib.pyplot as plt
 yfin.pdr_override()
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
@@ -23,10 +26,38 @@ app.url_map.strict_slashes = False
 CORS(app, resources={r"/*": {"origins": "*"}})
 socketio = SocketIO(app, cors_allowed_origins="*", async_mode='eventlet')
 
-node_id = '6463eccd8cab18273b9d6589'
+node_id = '647d14fed9a720845dfee794'
+
+
+def calculate_mae(actual_prices, predicted_prices):
+    n = len(actual_prices)
+    error = 0
+    for i in range(n):
+        error += abs(actual_prices[i] - predicted_prices[i])
+    mae = error / n
+    return mae
+
+
+def calculate_mse(actual_prices, predicted_prices):
+    n = len(actual_prices)
+    error = 0
+    for i in range(n):
+        error += (actual_prices[i] - predicted_prices[i]) ** 2
+    mse = error / n
+    return mse
+
+
+def calculate_rmse(actual_prices, predicted_prices):
+    n = len(actual_prices)
+    error = 0
+    for i in range(n):
+        error += (actual_prices[i] - predicted_prices[i]) ** 2
+    mse = error / n
+    rmse = math.sqrt(mse)
+    return rmse
+
 
 def failedSignal(docId, status):
-
     print("Failed signal:")
     print(docId)
     print(status)
@@ -44,23 +75,27 @@ def failedSignal(docId, status):
     decodedResponse = response.content.decode()
     print("decodedResponse failed signal:", decodedResponse)
 
+
 class NodeModelHandler:
     modelControllerPath = './saved_model/my_model/modelControler.txt'
     modelPath = './saved_model/my_model'
+
     def __init__(self):
         pass
+
     def checkLocalModel(self):
         print("--> Check Local model")
         existence = exists(self.modelControllerPath)
         return existence
+
     def createModel(self):
         print("Action: ->>> create model")
 
-        #--->> Dev Mode
-        # company = 'IBM'
-        company = 'AAPL'
+        # --->> Dev Mode
+        company = 'IBM'
+        # company = '""" + code_template_replace_company + """'\n
 
-        #--->> Dev Mode
+        # --->> Dev Mode
         # data = pdr.get_data_yahoo(company, start="2019-10-10", end="2021-10-10")
         data = pdr.get_data_yahoo(
             company, start="2015-10-10", end="2021-10-10")
@@ -82,29 +117,24 @@ class NodeModelHandler:
         x_train = np.reshape(x_train, (x_train.shape[0], x_train.shape[1], 1))
 
         # --->> Dev Mode
-        # model = Sequential()
-        # model.add(LSTM(units=50, return_sequences=True, input_shape=(x_train.shape[1], 1)))  # units = neurons
-        # model.add(Dropout(0.2))
-        # model.add(LSTM(units=50, return_sequences=True))
-        # model.add(Dropout(0.2))
-        # model.add(LSTM(units=50))
-        # model.add(Dropout(0.2))
-        # model.add(Dense(units=1))
-
-        #___ModelSeparatorStart___
-
         model = Sequential()
+        model.add(LSTM(units=50, return_sequences=True, input_shape=(x_train.shape[1], 1)))  # units = neurons
+        model.add(Dropout(0.2))
+        model.add(LSTM(units=50, return_sequences=True))
+        model.add(Dropout(0.2))
+        model.add(LSTM(units=50))
+        model.add(Dropout(0.2))
+        model.add(Dense(units=1))
 
-        model.add(LSTM(units=32, activation='tanh'))
-        model.add(Dense(units=60, activation=None))
-        model.add(LSTM(units=32, activation='tanh'))
-        model.add(Dropout(rate=0.2))
+        # ___ModelSeparatorStart___
 
+        # model = Sequential()
+        # \n
+        # """ + code_template_replace_layers + """\n
         model.compile(optimizer='adam', loss='mean_squared_error')
         model.fit(x_train, y_train, epochs=25, batch_size=32)
 
-
-        #___ModelSeparatorEnd___
+        # ___ModelSeparatorEnd___
 
         # save the new created model
         model.save(self.modelPath)
@@ -136,8 +166,11 @@ class NodeModelHandler:
 
     def predictNextDay(self, modelParam):
         # --->> Dev Mode
-        # company = "IBM"
-        company = 'AAPL'
+        company = "IBM"
+        # company = 'AAPL'
+
+        # company = '""" + code_template_replace_company + """'\n
+
         prediction_days = 60
         test_start = datetime.datetime(2015, 1, 1)
         test_end = datetime.datetime.now()
@@ -156,7 +189,7 @@ class NodeModelHandler:
         x_test = np.reshape(x_test, (x_test.shape[0], x_test.shape[1], 1))
 
         predicted_prices = modelParam.predict(x_test)
-        print("predicted_prices:",predicted_prices)
+        print("predicted_prices:", predicted_prices)
         simpleFormat = True
         # True - case 1 (first model)
         # False - case 2 (rest of the model)
@@ -186,28 +219,29 @@ class NodeModelHandler:
         # plt.plot(predictedWithOffset,color="red")
         # plt.show()
         tommorow_price = predictedWithOffset[len(predictedWithOffset) - 1]
-        print("TM price:",tommorow_price)
+        print("TM price:", tommorow_price)
         return [[tommorow_price]]
 
-    def persistInitialStats(self, pairValues):
+    def persistInitialStats(self, mae_test, mse_test, rmse_test):
         url = 'http://172.17.0.1:3006/push-node-training'
         myobj = {
             'node_id': node_id,
-            'intervals': pairValues[0],
-            'values': pairValues[1]
+            'mae_test': mae_test,
+            'mse_test': mse_test,
+            'rmse_test': rmse_test
         }
         x = requests.post(url, json=myobj)
 
     def collectStats(self, modelParam):
-        company = 'AAPL'
-        # company = "IBM"
+        # company = '""" + code_template_replace_company + """'\n
+        company = "IBM"
         prediction_days = 60
         test_start = datetime.datetime(2015, 1, 1)
         test_end = datetime.datetime(2022, 1, 1)
         data = pdr.get_data_yahoo(company, start=test_start, end=test_end)
 
         # data = pdr.get_data_yahoo(company, start="2015-10-10", end="2020-10-10")
-        print("DATA LEN:",len(data))
+        print("DATA LEN:", len(data))
         scaler = MinMaxScaler(feature_range=(0, 1))
         # keep only 'close' column
         scaler.fit_transform(data['Close'].values.reshape(-1, 1))
@@ -248,18 +282,30 @@ class NodeModelHandler:
 
         total_dif = 0
         differences = []
+
+        print("lens:", len(real_data_final), len(predictedWithOffset))
+
+        mae_test = calculate_mae(real_data_final, predictedWithOffset)
+        mse_test = calculate_mse(real_data_final, predictedWithOffset)
+        rmse_test = calculate_rmse(real_data_final, predictedWithOffset)
+
+        print("mae:", mae_test)
+        print("mse:", mse_test)
+        print("rmse:", rmse_test)
+
         for index, a in enumerate(real_data_final):
+            # print("/n elements:", a, predictedWithOffset[index])
             dif = a - predictedWithOffset[index]
             differences.append(dif)
             total_dif = total_dif + abs(dif)
 
         average_dif_per_day = total_dif / len(real_data_final)
-        print("average_dif_per_day:",average_dif_per_day)
+        print("average_dif_per_day:", average_dif_per_day)
 
         def createBarCharStats(sourceArr):
             ranges = []
             lastValue = -10
-            for a in range(-9,11,1):
+            for a in range(-9, 11, 1):
                 objItem = {
                     'min': lastValue,
                     'max': a,
@@ -268,27 +314,27 @@ class NodeModelHandler:
                 ranges.append(objItem)
                 lastValue = a
             for a in sourceArr:
-                for index_b,b in enumerate(ranges):
+                for index_b, b in enumerate(ranges):
                     if a > b['min'] and a < b['max']:
                         ranges[index_b]['items'].append(a)
             barChartY = []
             barChartX = []
             for a in ranges:
-                barChartY.append(str(a['min'])+ " "+ str(a['max']))
+                barChartY.append(str(a['min']) + " " + str(a['max']))
                 barChartX.append(len(a['items']))
-            return barChartY,barChartX
+            return barChartY, barChartX
 
         barchartValues = createBarCharStats(differences)
-        self.persistInitialStats(barchartValues)
+        self.persistInitialStats(mae_test, mse_test, rmse_test)
 
         return barchartValues
+
 
 class NodeCore:
     def __init__(self, logManagerOperator, nodeManagerLock) -> None:
         self.logManagerOperator = logManagerOperator
         self.nodeManagerLock = nodeManagerLock
         pass
-
 
     def initTasks(self):
         # initTasks is runned once when the container starts
@@ -298,6 +344,7 @@ class NodeCore:
 
     # below functions run in setIntervals, managed by .run()
     def predictTomorrow(self):
+        print("predict tomorrow enter fct")
         tomorrowPrice = self.nodeModelHandler.predictNextDay(self.model)
         self.apiPersistPrediction(str(tomorrowPrice[0][0]))
         self.nodeManagerLock.acquire()
@@ -306,29 +353,39 @@ class NodeCore:
         self.nodeManagerLock.release()
 
     def apiPersistPrediction(self, valueToPersist):
+        print("apiPerdisprediction:", valueToPersist)
         url = 'http://172.17.0.1:3006/push-node-stats'
         myobj = {
             'node_id': node_id,
             'new_prediction': valueToPersist
         }
+        print("my obj to persist:",myobj)
         x = requests.post(url, json=myobj)
+        print("request resp:",x)
+
     def run(self):
+        print("nodeCore.run here")
         self.predictTomorrow()
+
 
 class LogManager():
     logs = []
     lastConsumed = 0
+
     def __init__(self) -> None:
         pass
+
     def createLog(self, content):
         e = datetime.datetime.now()
         separator = "__//__"
         finalContent = str(e) + separator + content
         self.logs.append(finalContent)
+
     def consumeLogs(self):
         lastConsumedCopy = self.lastConsumed
         self.lastConsumed = len(self.logs)
         return self.logs[lastConsumedCopy:]
+
 
 # GLOBALS
 lock = threading.Lock()
@@ -340,7 +397,7 @@ logsLock = threading.Lock()
 logManager = LogManager()
 nodeCore = NodeCore(logManager, logsLock)
 
-#nodeCore.initTasks()
+# nodeCore.initTasks()
 
 try:
     nodeCore.initTasks()
@@ -348,11 +405,14 @@ except Exception as e:
     print("Exception, can't create prediction")
     failedSignal(node_id, 'Status: Crash, Message: Can t ini tasks')
 
+
 class Worker(object):
     max = 10
     unit_of_work = 0
+
     def __init__(self, ):
         pass
+
     def do_work(self):
         while len(connected_users.keys()) > 0:
             logsLock.acquire()
@@ -367,6 +427,7 @@ class Worker(object):
             else:
                 print("No fresh logs, ignore socket push this time")
             eventlet.sleep(logsEmitInterval)
+
 
 @socketio.on("connect")
 def connected():
@@ -383,6 +444,8 @@ def connected():
         connected_users[request.sid] = socketio
         lock.release()
     emit("connect", "test payload")
+
+
 @socketio.on("disconnect")
 def disconnected():
     print("user disconnected:", request.sid)
@@ -390,17 +453,23 @@ def disconnected():
     del connected_users[request.sid]
     lock.release()
     emit("disconnect", f"user {request.sid} disconnected", broadcast=True)
+
+
 @app.route('/')
 def index():
     print("test ////")
     return 'Web App with Python Flask!'
+
+
 def set_interval(func, sec):
     def func_wrapper():
         set_interval(func, sec)
         func()
+
     t = threading.Timer(sec, func_wrapper)
     t.start()
     return t
+
 
 # def NodeAppRun():
 #     print("Create new prediction")
@@ -408,27 +477,23 @@ def set_interval(func, sec):
 
 def NodeAppRun():
     print("Create new prediction")
-    nodeCore.run()
+    try:
+        nodeCore.run()
+    except Exception as e:
+        print("Exception, can't create prediction")
+        failedSignal(
+            node_id, 'Status: Crash, Message: Can t create prediction')
 
-    # try:
-    #     nodeCore.run()
-    # except Exception as e:
-    #     print("Exception, can't create prediction")
-    #     failedSignal(
-    #         node_id, 'Status: Crash, Message: Can t create prediction')
-    # nodeCore.run()
 
 def nodeHeartBeat():
     print("Node Heart Beat")
     logManager.createLog('__Alive__')
 
 
-
-
 if __name__ == '__main__':
     NodeAppRun()
-    set_interval(NodeAppRun, 43200)
-    #set_interval(NodeAppRun, 10)
+    # set_interval(NodeAppRun, 43200)
+    # set_interval(NodeAppRun, 10)
     # set_interval(NodeAppRun, nodeCoreInterval)
     # set_interval(nodeHeartBeat, 1)
-    # socketio.run(app, debug=False, port=5000, host='0.0.0.0')
+    socketio.run(app, debug=False, port=5000, host='0.0.0.0')

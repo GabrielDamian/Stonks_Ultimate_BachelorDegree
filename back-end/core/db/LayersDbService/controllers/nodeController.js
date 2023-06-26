@@ -65,3 +65,19 @@ module.exports.get_layers = async(req,res)=>{
         res.status(400).send({test: "Can't fetch layers"})
     }
 }
+
+module.exports.delete_layer = async(req,res)=>{
+    console.log("entry delete layer db")
+    try{
+        let {layerId} = req.body;
+        console.log("delete with id:", layerId);
+        let deleteResponse = await Layer.findOneAndDelete({_id: layerId});
+        console.log("delete response:", deleteResponse)
+        return res.status(200).send({_id: layerId})
+    }
+    catch(err)
+    {
+        console.log("err:",err)
+        return res.status(400).send("Can't delete layer")
+    }
+}

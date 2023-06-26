@@ -8,13 +8,11 @@
 .add-market-content
 {
     width: 85%;
-    border:1px solid green;
     height:100vh;
 }
 .add-market-content-header
 {
     height: 10%;
-    border: 1px solid red;
     font-family: Arial, Helvetica, sans-serif;  
     display: flex;
     align-items: center;
@@ -24,18 +22,15 @@
 .add-market-content-data
 {
     height: 90%;
-    border: 1px solid blue;
 }
 .add-market-content-data-old
 {
     height: 50vh;
     width: 100%;
-    border: 3px solid yellow;
 }
 .add-market-content-data-old-header
 {
     height: 15%;
-    border: 1px solid blue;
     display: flex;
     align-items: center;
     padding-left: 15px;
@@ -45,12 +40,10 @@
 .add-market-content-data-old-content
 {
     height: 85%;
-    border: 1px solid red;
 }
 .add-market-content-data-old-content-selector
 {
     height: 30%;
-    border: 1px solid blue;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -58,12 +51,10 @@
 .add-market-content-data-old-content-editor
 {
     height: 70%;
-    border: 1px solid magenta;
 }
 .add-market-content-data-old-content-editor-fields
 {
     height: 70%;
-    border: 1px solid red;
     display: flex;
     align-items: center;
     justify-content: space-around;
@@ -71,7 +62,6 @@
 .add-market-content-data-old-content-editor-action
 {
     height: 30%;
-    border: 1px solid blue;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -79,12 +69,10 @@
 .add-market-content-data-new
 {
     height: 60vh;
-    border: 1px solid blue;
 }
 .add-market-content-data-new-fields
 {
     height: 70%;
-    border: 1px solid red;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -93,7 +81,6 @@
 .add-market-content-data-new-action
 {
     height: 30%;
-    border: 1px solid green;
     display: flex;
     justify-content: center;
     align-items: center;

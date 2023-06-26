@@ -10,11 +10,7 @@ import Popover from '@mui/material/Popover';
 export default function TopBar({userId}){
     const navigate = useNavigate();
 
-
     const [userData, setUserData] = useState('');
-    useEffect(()=>{
-        console.log("state updatE:",userData)
-    },[userData])
     
     useEffect(()=>{
         if(userId !== null && userId !== undefined)

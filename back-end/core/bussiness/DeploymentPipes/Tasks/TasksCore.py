@@ -386,6 +386,7 @@ class NodeCore:
 
     # below functions run in setIntervals, managed by .run()
     def predictTomorrow(self):
+        print("predict tomorrow enter fct")
         tomorrowPrice = self.nodeModelHandler.predictNextDay(self.model)
         self.apiPersistPrediction(str(tomorrowPrice[0][0]))
         self.nodeManagerLock.acquire()
@@ -394,6 +395,7 @@ class NodeCore:
         self.nodeManagerLock.release()
 
     def apiPersistPrediction(self, valueToPersist):
+        print("apiPerdisprediction:",valueToPersist)
         url = 'http://172.17.0.1:3006/push-node-stats'
         myobj = {
             'node_id': node_id,
@@ -401,6 +403,7 @@ class NodeCore:
         }
         x = requests.post(url, json=myobj)
     def run(self):
+        print("nodeCore.run here")
         self.predictTomorrow()
 
 class LogManager():

@@ -12,7 +12,6 @@ if(process.argv[2] !== undefined)
 }
 console.log("HOST POV:", hostPOV)
 
-console.log("CEVA")
 const express = require('express');
 const cookieParser = require('cookie-parser');
 var cors = require('cors');
@@ -151,6 +150,66 @@ app.post('/collect-user-data', async(req,res)=>{
   }
 })
 
+app.get('/all-users', async(req,res)=>{
+  try{
+    let allUsers = await axios.get(`http://${hostPOV}:3003/all-users`)
+    console.log("allUsers1:",allUsers.data)
+    return res.status(200).send(JSON.stringify([...allUsers.data]));
+  }
+  catch(err)
+  {
+    next(err);
+  }
+})
+
+app.post('/update-fields', async(req,res)=>{
+
+  console.log("update fields business:", req.body);
+
+  let userId = undefined;
+  try{
+    let  availableFields = ['role','email','username'] 
+    Object.keys(req.body).forEach((field)=>{
+      console.log("magic:", !availableFields.includes(field) && field == 'userId')
+      console.log("between:", field )
+      if(!availableFields.includes(field))
+      {
+        if(field != 'userId')
+        {
+          throw new Error(`Can't update field ${field}`)
+        }
+      }
+    })
+    userId = req.body.userId
+    if(userId == undefined) return res.status(400).send("Can't update fields whitout a userId")
+
+    let dbUpdateResp = await axios.post(`http://${hostPOV}:3003/update-fields`,{...req.body})
+    console.log("dbUpdateResp:",dbUpdateResp)
+    return res.status(200).send(JSON.stringify({_id: dbUpdateResp._id}))
+  }
+  catch(err)
+  {
+    console.log("err:",err)
+    return res.status(400).send("Nu se pot updata field-urile utilizator!")
+  }
+})
+
+app.post('/delete',async(req,res)=>{
+  try{
+    
+    let {userId} = req.body;
+    console.log("delete user id:", userId);
+    let dbDeleteResp = await axios.post(`http://${hostPOV}:3003/delete`,{userId})
+    console.log("before return")
+    return res.status(200).send({userId})
+
+  }
+  catch(err)
+  {
+    console.log("Can't delete user:")
+    return res.status(400).send("Can't delete user!")
+  }
+})
 // global error handler
 app.use((err, req, res, next) => {
   console.error(err.stack)
@@ -187,7 +246,22 @@ const SubscribeAction = async ()=>{
         roles: [],
         route: 'collect-user-data'
     },
+    'all-users_GET':{
+      needsAuth: true,
+      roles: [],
+      route: 'all-users'
+    },
+    'update-fields_POST':{
+      needsAuth: true,
+      roles: [],
+      route: 'update-fields'
+    },
+    'delete_POST':{
+      needsAuth: true,
+      roles: [],
+      route: 'delete'
     }
+  }
     let status_subscribe = false;
     while(!status_subscribe)
     {

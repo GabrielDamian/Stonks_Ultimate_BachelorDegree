@@ -6,7 +6,7 @@
 
 .node-info-container
 {
-    height: 40%;
+    height: auto;
     width: 100%;
     overflow-y: scroll;
     border: 2px solid var(--border);
@@ -15,7 +15,7 @@
 }
 .node-info-container-header
 {
-    padding: 10px 20px;
+    padding: 20px;
     border-bottom: 1px solid var(--border);
 }
 .node-info-container-content
@@ -49,18 +49,18 @@
 }
 .node-info-container-stats-bar
 {
-    height: 60%;
+    height: auto;
     border: 1px solid var(--border);
     border-radius: 10px;
     margin-top: 20px;
 }
 .node-info-container-stats-bar-header
 {
-    height: 10%;
+    padding: 20px;
+    border: 2px solid yellow;
     border: 1px solid var(--border);
     display: flex;
     align-items: center;
-    padding: 0px 20px;
 }
 .node-info-container-stats-bar-ratio
 {
@@ -104,4 +104,30 @@
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.node-info-delete-btn
+{
+    height: auto;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-top: 20px;
+    padding: 30px;
+}
+.node-info-delete-btn button 
+{
+    padding: 10px 25px;
+    outline: none;
+    border: none;
+    border-radius: 10px;
+    background-color: red;
+    color: white;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    transform: scale(1);
+}
+.node-info-delete-btn button:hover 
+{
+    transform: scale(1.1);
+    cursor: pointer;
 }

@@ -45,8 +45,8 @@ function LiveNodeConnector({nodeAddress}) {
       </div>
       <div className="node-live-connector-container-content">
         <p>Container Address: {nodeAddress}</p>
-        <p>Last heart beat: {logs.timestamp !== undefined ? logs.timestamp : 'loading'}</p>
-        <p>Live Status: {logs.status !== undefined ? logs.status : 'loading'}</p>
+        <p>Last heart beat: {logs.timestamp !== undefined ? logs.timestamp : 'Container stopped or deleted'}</p>
+        <p>Live Status: {logs.status !== undefined ? logs.status : 'Container stopped or deleted'}</p>
       </div>
     </div>
   );

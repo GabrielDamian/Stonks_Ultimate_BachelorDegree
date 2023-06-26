@@ -56,6 +56,7 @@ function Signup()
                 {
                     let token = data.token;
                     cookies.set('jwt',token,{secure: true, sameSite: 'none'})
+                    alert("Succees signup, redirecting to login!")
                     navigate(`/login`);
                 }
               }

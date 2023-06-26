@@ -65,13 +65,11 @@
 .ide-deploy-content
 {
     height: 70%;
-    border: 1px solid green;
     display: flex;
 }
 .ide-deploy-field
 {
     width:40%;
-    border:1px solid red;
     display: flex;
     align-items: center;
     justify-content: flex-start;
@@ -80,7 +78,6 @@
 .ide-deploy-action
 {
     width:20%;
-    border:1px solid green;
     display: flex;
     align-items: center;
     justify-content: center;

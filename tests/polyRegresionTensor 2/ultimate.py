@@ -24,6 +24,7 @@ app.url_map.strict_slashes = False
 CORS(app, resources={r"/*": {"origins": "*"}})
 socketio = SocketIO(app, cors_allowed_origins="*", async_mode='eventlet')
 
+
 class NodeModelHandler:
     modelControllerPath = './saved_model/my_model/modelControler.txt'
     modelPath = './saved_model/my_model'
@@ -54,7 +55,8 @@ class NodeModelHandler:
 
         # ----->Prepare data
         scaler = MinMaxScaler(feature_range=(0, 1))
-        scaled_data = scaler.fit_transform(data['Close'].values.reshape(-1, 1))  # keep only 'close' column
+        scaled_data = scaler.fit_transform(
+            data['Close'].values.reshape(-1, 1))  # keep only 'close' column
 
         prediction_days = 60
 
@@ -69,7 +71,8 @@ class NodeModelHandler:
         x_train = np.reshape(x_train, (x_train.shape[0], x_train.shape[1], 1))
 
         model = Sequential()
-        model.add(LSTM(units=50, return_sequences=True, input_shape=(x_train.shape[1], 1)))  # units = neurons
+        model.add(LSTM(units=50, return_sequences=True, input_shape=(
+            x_train.shape[1], 1)))  # units = neurons
         model.add(Dropout(0.2))
         model.add(LSTM(units=50, return_sequences=True))
         model.add(Dropout(0.2))
@@ -115,18 +118,22 @@ class NodeModelHandler:
 
     def predictNextDay(self, modelParam):
         company = "IBM"
-        data = pdr.get_data_yahoo(company, start="2018-10-10", end="2020-10-10")
+        data = pdr.get_data_yahoo(
+            company, start="2018-10-10", end="2020-10-10")
 
         scaler = MinMaxScaler(feature_range=(0, 1))
-        scaled_data = scaler.fit_transform(data['Close'].values.reshape(-1, 1))  # keep only 'close' column
+        scaled_data = scaler.fit_transform(
+            data['Close'].values.reshape(-1, 1))  # keep only 'close' column
         prediction_days = 60
 
-        test_data = pdr.get_data_yahoo("TSLA", start="2020-10-10", end="2021-10-10")
+        test_data = pdr.get_data_yahoo(
+            "TSLA", start="2020-10-10", end="2021-10-10")
         actual_prices = test_data['Close'].values
 
         total_dataset = pd.concat((data['Close'], test_data['Close']), axis=0)
 
-        model_inputs = total_dataset[len(total_dataset) - len(test_data) - prediction_days:].values
+        model_inputs = total_dataset[len(
+            total_dataset) - len(test_data) - prediction_days:].values
         model_inputs = model_inputs.reshape(-1, 1)
         model_inputs = scaler.transform(model_inputs)
 
@@ -150,9 +157,11 @@ class NodeModelHandler:
         # plt.show()
 
         # Predict next day
-        real_data = [model_inputs[len(model_inputs) + 1 - prediction_days:len(model_inputs + 1), 0]]
+        real_data = [
+            model_inputs[len(model_inputs) + 1 - prediction_days:len(model_inputs + 1), 0]]
         real_data = np.array(real_data)
-        real_data = np.reshape(real_data, (real_data.shape[0], real_data.shape[1], 1))
+        real_data = np.reshape(
+            real_data, (real_data.shape[0], real_data.shape[1], 1))
 
         prediction = modelParam.predict(real_data)
         prediction = scaler.inverse_transform(prediction)
@@ -179,10 +188,11 @@ class NodeCore:
 
         print("fetch market data recurent")
         tomorrowPrice = self.nodeModelHandler.predictNextDay(self.model)
-        print("tomorrowPrice:",tomorrowPrice)
+        print("tomorrowPrice:", tomorrowPrice)
 
         self.nodeManagerLock.acquire()
-        self.logManagerOperator.createLog('tomorrow price:' + str(tomorrowPrice))
+        self.logManagerOperator.createLog(
+            'tomorrow price:' + str(tomorrowPrice))
         self.nodeManagerLock.release()
 
         # TODO: check is model != None (initialized properly)
@@ -331,4 +341,3 @@ def NodeAppRun():
 if __name__ == '__main__':
     set_interval(NodeAppRun, nodeCoreInterval)
     socketio.run(app, debug=False, port=5000, host='0.0.0.0')
-

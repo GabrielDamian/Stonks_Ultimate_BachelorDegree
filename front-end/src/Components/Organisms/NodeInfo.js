@@ -1,6 +1,6 @@
 import React, {useState, useEffect } from 'react';
 import './NodeInfo.css';
-
+import { useNavigate } from 'react-router-dom';
 
 
 import Perf_1_icon from '../../Media/Icons/perf_1.png';
@@ -12,6 +12,7 @@ import TempDisplayNodeItem from '../Atoms/TempDisplayNodeItem';
 
 export default function NodeInfo({nodeData})
 {
+    const navigate = useNavigate();
     
     const [localData, setLocalData] = useState({
         BuildName: 'x',
@@ -144,6 +145,45 @@ export default function NodeInfo({nodeData})
         return '_'
     }
 
+
+    const handleDeleteAction = async ()=>{
+        const queryParams = new URLSearchParams(window.location.search)
+        const nodeId = queryParams.get("nodeid")
+        console.log("node id to delete:",nodeId)
+        if (window.confirm("Are you sure you want to delete this node?") == true) {
+            try{
+                    fetch('http://localhost:3001/delete-node', { 
+                        method: 'POST', 
+                        body: JSON.stringify({
+                            nodeId: nodeId,
+                        }),
+                        headers: {
+                        'Content-Type': 'application/json',
+                        Accept: 'application/json',
+                        'Access-Control-Allow-Credentials':true
+                        },
+                        withCredentials: true,
+                        credentials: 'include'
+                    })
+                    .then(res => res.json())
+                    .then(res => {
+                        console.log("delete resp:", res)
+                        alert("Delete ok!");
+                        navigate('/overview')
+                    })
+                    .catch((err)=>{
+                        alert("Nu se poate sterge node!")
+                    })
+              }
+              catch(err)
+              {
+                console.error("Overview:", err)
+              }
+
+        } else {
+            alert("Deletion canceled!")
+        }
+    }
     return(
         <div className="node-info-left">
             <div className='node-info-container'>
@@ -192,6 +232,9 @@ export default function NodeInfo({nodeData})
                         <BarChart pairs={nodeData !== undefined && nodeData.initTests !== undefined ? nodeData.initTests : []}/>
                     </div>
                 </div> */}
+            </div>
+            <div className='node-info-delete-btn'>
+                <button title="Delete Node" onClick={handleDeleteAction}>Delete</button>
             </div>
         </div>
         
