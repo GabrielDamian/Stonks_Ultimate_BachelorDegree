@@ -28,6 +28,7 @@ export default function LeftMenu({userId, tabIndex,tabs}){
           <div className='left-bar-items'>
             {
               tabs.map((el, index)=>{
+                if(el.text == 'Node Page') return null
                 if(el.roles.includes(userRole.role))
                 {
                   return <TabItem text={el.text} link={el.link} selected={decideSelected(el,index)} icon={el.icon}/>

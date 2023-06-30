@@ -15,6 +15,7 @@ import RedirectIcon from '../../Media/Icons/maximize.png';
 import SuccessIcon from '../../Media/Icons/check.png';
 import FailureIcon from '../../Media/Icons/error.png';
 import LoadingIcon from '../../Media/loading.gif';
+import CrashIcon from '../../Media/Icons/broken.png';
 
 export default function NodeListElem({obj,selected,handleClickIndex})
 {
@@ -79,6 +80,14 @@ export default function NodeListElem({obj,selected,handleClickIndex})
       return (
         <div style={parentStyleDiv}>
         <span>Status: Deploy in progress</span><img src={LoadingIcon} style={imgStyleObj}/>
+        </div>
+      )
+    }
+    else if(statusParam.trim() === 'Crash')
+    {
+      return (
+        <div style={parentStyleDiv}>
+        <span>Status: App crashed</span><img src={CrashIcon} style={imgStyleObj}/>
         </div>
       )
     }

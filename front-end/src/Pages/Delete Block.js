@@ -98,11 +98,9 @@ const SelectCustomStyle = {
     '.MuiSvgIcon-root ': {
       fill: "white !important",
     }
-  }
+}
 const DeleteBlockItem = (layer)=>{
     
-    console.log("layer DATA:",layer)
-
     const handleButtonClick = async ()=>{
         let text = `You are about to delete ${layer.layerName} block. Are you sure ?`;
         if (window.confirm(text) == true) {

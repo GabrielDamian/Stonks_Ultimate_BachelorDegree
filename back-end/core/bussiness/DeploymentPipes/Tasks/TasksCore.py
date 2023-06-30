@@ -7,6 +7,7 @@ import subprocess
 import json
 import requests
 from datetime import datetime
+import ast
 # utils
 
 
@@ -111,7 +112,7 @@ def failedSignal(docId, status):
     now = datetime.datetime.now()
     dt_string = now.strftime("%d/%m/%Y %H-%M-%S")
 
-    url = 'http://localhost:3005/populate-node'
+    url = 'http://172.17.0.1:3005/populate-node'
     bodyPersistNode = {
         'docId': docId,
         'status': status + ', Date: ' + dt_string
@@ -600,6 +601,12 @@ def Stage_1_Task(packetSource):
         localPacket['payload']['code'] = code_template_code_copy
 
         print("final code:", code_template_code_copy)
+
+        # Code check
+        print("Verifica cod")
+        ast.parse(code_template_code_copy)
+        print("Cod verificat cu succes")
+
         return localPacket
 
     except Exception as e:

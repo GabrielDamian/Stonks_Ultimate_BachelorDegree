@@ -8,6 +8,8 @@ import Perf_2_icon from '../../Media/Icons/perf_2.png';
 import Perf_3_icon from '../../Media/Icons/perf_3.png';
 
 import TempDisplayNodeItem from '../Atoms/TempDisplayNodeItem';
+import CodeEditorNodeDisplay, { extractLayers } from '../Atoms/CodeEditorNodeDisplay';
+import CopyIcon from '../../Media/Icons/copy.png';
 
 
 export default function NodeInfo({nodeData})
@@ -184,6 +186,20 @@ export default function NodeInfo({nodeData})
             alert("Deletion canceled!")
         }
     }
+
+    const copyCodeHandle = ()=>{
+        
+        let text = nodeData.code !== undefined ? extractLayers(nodeData.code) : 'Eroare la copierea in clipboard.'
+        console.log("TEST:",text)
+
+        navigator.clipboard.writeText(text)
+        .then(() => {
+          alert("Codul modelului copiat in clipboard");
+        })
+        .catch((error) => {
+          console.error("Eroare la copierea în clipboard:", error);
+        });
+    }
     return(
         <div className="node-info-left">
             <div className='node-info-container'>
@@ -193,7 +209,21 @@ export default function NodeInfo({nodeData})
                 <div className='node-info-container-content'>
                 {
                     extractNodeData(localData).map((el)=>{
-                        return <TempDisplayNodeItem keyItem={el.key} content={el.content}/>
+                        console.log("EL:",el)
+                        if(el.key !== 'Code')
+                        {
+                            return <TempDisplayNodeItem keyItem={el.key} content={el.content}/>
+                        }
+                        else 
+                        {
+                            // return <p>Code</ p>
+                            return <div className='node-info-copy-btn '>
+                                        <CodeEditorNodeDisplay codeSource={el.content}/>
+                                        <button className='node-info-copy-action' onClick={copyCodeHandle}>
+                                            <img src={CopyIcon} alt="copy" title="Copy Code"/>
+                                        </button>
+                                    </div>
+                        }
                     })
                 }
                 </div>

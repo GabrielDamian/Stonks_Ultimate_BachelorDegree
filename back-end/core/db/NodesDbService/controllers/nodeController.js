@@ -21,6 +21,9 @@ module.exports.create_node = async (req, res) => {
 }
 
 module.exports.populate_node = async (req, res) => {
+
+    console.log("populate node entry:", req.body);
+    
     const {docId, code, imageId, containerId, status} = req.body;
 
     const checkedObjet ={}

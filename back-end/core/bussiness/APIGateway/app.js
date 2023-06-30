@@ -230,9 +230,9 @@ setInterval(()=>{
     CleanServices()
 },1000)
 
-// setInterval(()=>{
-//     console.log("-----check:",ROUTES);
-// },2000)
+setInterval(()=>{
+    console.log("-----check:",ROUTES);
+},2000)
 
 // START SERVER
 app.listen(3001,()=>{

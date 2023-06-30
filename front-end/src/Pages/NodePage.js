@@ -112,7 +112,9 @@ export let attachRealData = async (nodeDataParam, setStateParam)=>{
 function NodePage({tabIndex,setTabs,tabs,userId})
 {
     const navigate = useNavigate();
-    const [nodeData, setNodeData] = useState({})
+    const [nodeData, setNodeData] = useState({});
+    
+    
     const [realData, setRealData] = useState(null);
     const [nodeAddress, setNodeAddress] = useState(null);
     
@@ -212,7 +214,10 @@ function NodePage({tabIndex,setTabs,tabs,userId})
             <div className='node-page-content'>
                 <TopBar userId={userId}/>
                 <div className='node-page-content-data'>
-                    <NodeInfo nodeData={nodeData} showStats={DecideWidgets(nodeData)[0]}/>
+                    <NodeInfo 
+                        nodeData={nodeData} 
+                        showStats={DecideWidgets(nodeData)[0]}
+                        />
                     {
                         DecideWidgets(nodeData)[0] == false ? 
                         <div style={{

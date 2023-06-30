@@ -46,6 +46,7 @@ export default function Login()
                 });
 
                 const data = await res.json();
+                console.log("data:",data)
                 if (data.errors) {
                     let extractErrors = ""
                     Object.keys(data.errors).forEach((key)=>{

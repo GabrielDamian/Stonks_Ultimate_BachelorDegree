@@ -1,7 +1,7 @@
 python3 ./start_shell.py
 
 # Porneste containerele create de utilizatori
-# node ./utilitar/index.js start
+node ./utilitar/index.js start
 
 echo "Wait for Kafka to initialize (20s)"
 # sleep 20

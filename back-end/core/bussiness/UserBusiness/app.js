@@ -55,15 +55,18 @@ app.post('/login',async (req,res)=>{
   }
   catch(err)
   {
-    return res.status(500).send('Error at login!')
+    return res.status(500).send({...err.response.data})
   }
 })
 
 app.post('/signup',async(req,res)=>{
+  console.log("signup enty")
   try{
     let {email,password, username} = req.body;
     let user_id = undefined;
+    console.log("before req")
     let resp = await axios.post(`http://${hostPOV}:3003/user`,{email,password,username})
+    console.log("resp in db:", resp.data);
     user_id = resp.data.user;
 
     let token = createToken(user_id)
@@ -71,7 +74,8 @@ app.post('/signup',async(req,res)=>{
   }
   catch(err)
   {
-    return res.status(500).send('Error at signup!')
+    console.log("err111:", )
+    return res.status(500).send({...err.response.data})
   }
 })
 

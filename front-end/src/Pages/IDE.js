@@ -137,28 +137,29 @@ export default function IDE({tabIndex,setTabs,tabs,userId})
     const triggerCustomUserCode = ()=>{
         setPresetSelected(0)
     }
+    
     return (
         <div className='ide-container'>
             <LeftMenu userId={userId} tabIndex={tabIndex} setTabs={setTabs} tabs={tabs}/>
             <div className='dashboard-content'>
                 <TopBar userId={userId}/>
                 <div className='ide-content'>
-                <div className='ide-core'>
-                    <div className='ide-core-docs'>
-                        <PresetIDEValues 
-                            presetSelected={presetSelected} 
-                            presetValues={presetValues} 
-                            triggerSetSelected={triggerSetSelected}/>
-                        <DocsSection/>
+                    <div className='ide-core'>
+                        <div className='ide-core-docs'>
+                            <PresetIDEValues 
+                                presetSelected={presetSelected} 
+                                presetValues={presetValues} 
+                                triggerSetSelected={triggerSetSelected}/>
+                            <DocsSection/>
+                        </div>
+                        <div className='ide-core-editor'>
+                            <CustomMonaco
+                                triggerCustomUserCode={triggerCustomUserCode}
+                                editorValue={editorValue}
+                                setEditorValue={setEditorValue}
+                            />
+                        </div>
                     </div>
-                    <div className='ide-core-editor'>
-                        <CustomMonaco
-                            triggerCustomUserCode={triggerCustomUserCode}
-                            editorValue={editorValue}
-                            setEditorValue={setEditorValue}
-                        />
-                    </div>
-                </div>
                 <div className='ide-deploy'>
                     <DeployArea editorValue={editorValue}/>
                 </div>

@@ -131,3 +131,31 @@
     transform: scale(1.1);
     cursor: pointer;
 }
+
+.node-info-copy-btn 
+{
+    display: flex;
+    align-items: center;
+}
+.node-info-copy-action
+{
+    height: 40px;
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    margin-left: 10px;
+}
+.node-info-copy-action img 
+{
+    height: 30px;
+    object-fit: contain;
+    transform: scale(1);
+    transition: all 0.3s ease;
+}
+.node-info-copy-action img:hover 
+{
+    transform: scale(1.1);
+    cursor: pointer;
+}

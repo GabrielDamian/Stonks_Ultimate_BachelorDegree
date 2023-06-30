@@ -4,22 +4,24 @@ import Modal from '@mui/material/Modal';
 import CustomButton from '../Atoms/CustomButton';
 import Box from '@mui/material/Box';
 import CustomMonaco from '../Organisms/CustomMonaco';
-export default function CodeEditorNodeDisplay ({codeSource}){
-    const extractLayers = (sourceData)=>{
-        if(sourceData !== undefined)
-        {
-            const firstWord = "___ModelSeparatorStart___";
-            const secondWord = "#___ModelSeparatorEnd___";
-            const startPos = sourceData.indexOf(firstWord) + firstWord.length;
-            const endPos = sourceData.indexOf(secondWord);
-            const extractedText = sourceData    .substring(startPos, endPos);
-    
-            return extractedText
-        }
-        else {
-            return sourceData
-        }
+
+export const extractLayers = (sourceData)=>{
+    if(sourceData !== undefined)
+    {
+        const firstWord = "___ModelSeparatorStart___";
+        const secondWord = "#___ModelSeparatorEnd___";
+        const startPos = sourceData.indexOf(firstWord) + firstWord.length;
+        const endPos = sourceData.indexOf(secondWord);
+        const extractedText = sourceData    .substring(startPos, endPos);
+
+        return extractedText
     }
+    else {
+        return sourceData
+    }
+}
+export default function CodeEditorNodeDisplay ({codeSource}){
+    
     const style = {
         width: '70vw',
         height: '70vh',

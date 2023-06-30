@@ -39,8 +39,11 @@ function Signup()
                 });
 
                 const data = await res.json();
+                console.log("DATA:",data)
+
                 if(data.errors)
                 {
+                    console.log("Signup with error:", data.errors);
                     let extractErrors = ""
                     Object.keys(data.errors).forEach((key)=>{
                         if(data.errors[key] !== '')
@@ -48,9 +51,7 @@ function Signup()
                             extractErrors += data.errors[key] + " // "
                         }
                     })
-
                     setErrors(extractErrors)
-
                 }
                 else 
                 {

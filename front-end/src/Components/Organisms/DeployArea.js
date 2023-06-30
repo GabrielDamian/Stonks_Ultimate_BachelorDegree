@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import React,{useEffect, useState} from 'react';
 import './DeployArea.css'
 import Checkbox from '@mui/material/Checkbox';
 import CustomButton from '../Atoms/CustomButton';
@@ -26,7 +26,7 @@ export default function DeployArea ({editorValue})
         description: '',
     })
     const [markets, setMarkets] = useState(initMarketState(marketsTemp))
-
+    
     const [deployStatus, setDeployStatus] = useState("Status: Creating model schema");
     const [fieldsError, setFieldsError] = useState('');
     
@@ -76,7 +76,15 @@ export default function DeployArea ({editorValue})
         setFieldsError('');
         setMarkets((prev)=>{
             let prevCopy = {...prev}
-            prevCopy[who] = !prev[who]
+            let needsToBe = !prev[who]
+
+            Object.keys((prevCopy)).forEach((oldKey)=>{
+                console.log("old key:", oldKey)
+                prevCopy[oldKey] = false;
+            })
+            prevCopy[who] = needsToBe
+
+            console.log("prevCopy:",prevCopy)
             return prevCopy
         })
     }
@@ -155,7 +163,7 @@ export default function DeployArea ({editorValue})
                                         },
                                     }}
 
-                                    checked={markets.el}
+                                    checked={markets[el]}
                                     onChange={(e)=>{
                                         handleCheckBoxChange(el)
                                     }}

@@ -26,7 +26,7 @@ app.url_map.strict_slashes = False
 CORS(app, resources={r"/*": {"origins": "*"}})
 socketio = SocketIO(app, cors_allowed_origins="*", async_mode='eventlet')
 
-node_id = '647d14fed9a720845dfee794'
+node_id = '649c0783a0bd4f4aefc63388'
 
 
 def calculate_mae(actual_prices, predicted_prices):
@@ -118,13 +118,9 @@ class NodeModelHandler:
 
         # --->> Dev Mode
         model = Sequential()
-        model.add(LSTM(units=50, return_sequences=True, input_shape=(x_train.shape[1], 1)))  # units = neurons
-        model.add(Dropout(0.2))
-        model.add(LSTM(units=50, return_sequences=True))
-        model.add(Dropout(0.2))
-        model.add(LSTM(units=50))
-        model.add(Dropout(0.2))
-        model.add(Dense(units=1))
+
+        model.add(Conv1D(filters=64, kernel_size=3, activation='relu'))
+        model.add(Conv1D(filters=64, kernel_size=3, activation='relu'))
 
         # ___ModelSeparatorStart___
 

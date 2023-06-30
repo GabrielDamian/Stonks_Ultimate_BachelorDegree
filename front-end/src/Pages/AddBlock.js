@@ -461,6 +461,7 @@ function AddBlock({tabIndex,setTabs,tabs,userId})
                             <CustomMonaco
                                 editorValue={pyCode}
                                 setEditorValue={()=>{}}
+                                options={{readOnly: true}}
                             />
                         </div>
                         <div className='content-data-center-row' style={{
