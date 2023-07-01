@@ -2,6 +2,19 @@ import { io } from "socket.io-client";
 import { useEffect, useState } from "react";
 import './LiveConnector.css';
 
+function extrageDataCompleta(data) {
+  try{
+    const indexSecunde = data.indexOf(":") + 6;
+    const dataCompleta = data.slice(0, indexSecunde);
+
+    return dataCompleta;
+  }
+  catch(err)
+  {
+    return " "
+  }
+}
+
 function LiveNodeConnector({nodeAddress}) {
 
   const [logs, setLogs] = useState([]);
@@ -44,8 +57,8 @@ function LiveNodeConnector({nodeAddress}) {
         <span>Node Status:</span>
       </div>
       <div className="node-live-connector-container-content">
-        <p>Container Address: {nodeAddress}</p>
-        <p>Last heart beat: {logs.timestamp !== undefined ? logs.timestamp : 'Container stopped or deleted'}</p>
+        {/* <p>Container Address: {nodeAddress}</p> */}
+        <p>Last heart beat: {logs.timestamp !== undefined ? extrageDataCompleta(logs.timestamp) : 'Container stopped or deleted'}</p>
         <p>Live Status: {logs.status !== undefined ? logs.status : 'Container stopped or deleted'}</p>
       </div>
     </div>

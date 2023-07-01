@@ -510,7 +510,7 @@ def NodeAppRun():
 
 def nodeHeartBeat():
     print("Node Heart Beat")
-    logManager.createLog('__Alive__')
+    logManager.createLog('Alive')
 
 
 

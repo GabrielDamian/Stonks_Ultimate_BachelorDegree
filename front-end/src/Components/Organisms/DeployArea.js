@@ -88,8 +88,25 @@ export default function DeployArea ({editorValue})
             return prevCopy
         })
     }
+    const checkWeirdValueField = (input, myName)=>{
+        if(input.length < 3) {
+            return false
+        }
+    }
 
     const handleDeployAction = ()=>{
+
+        let ripCheck = false;
+        Object.keys(fields).forEach((el)=>{
+            if(checkWeirdValueField(fields[el], el) == false){
+                ripCheck = true
+            }
+        })
+        if(ripCheck == true){
+            alert("Fields should have at least 5 chars")
+            return
+        }
+
         let marketsSelected = []
         Object.keys(markets).forEach((el)=>{
             if(markets[el] == true)
@@ -155,21 +172,20 @@ export default function DeployArea ({editorValue})
                     Object.keys(markets).map((el)=>{
                         return(
                             <div className='ide-deploy-field-row'>
-                                <Checkbox 
-                                    sx={{
-                                        color: '#b0afb2',
-                                        '&.Mui-checked': {
-                                        color: '#bcfe2f',
-                                        },
-                                    }}
-
+                                 <input 
+                                    id={el}
+                                    type="radio" 
+                                    value={el}  
                                     checked={markets[el]}
                                     onChange={(e)=>{
                                         handleCheckBoxChange(el)
                                     }}
-                                    {...label}
-                                 />
-                                <span>{el}</span>
+                                />
+                                <span
+                                    style={{
+                                        borderBottom: markets[el] == true ? '2px solid var(--lime)':'2px solid transparent'
+                                    }}
+                                >{el}</span>
                             </div>
                         )
                     })

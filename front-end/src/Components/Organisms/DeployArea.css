@@ -44,8 +44,21 @@
 .ide-deploy-field-row span 
 {
     font-size: 1.3rem;
+    transition: all 0.3s ease;
 }
 #outlined-basic
 {
     color:white;
+}
+.ide-deploy-field-row input 
+{
+    margin-right: 10px;
+    transition: all 0.3s ease;
+    transform: scale(1);
+}
+.ide-deploy-field-row input:hover 
+{
+    cursor: pointer;
+    transform: scale(1.5);
+
 }
