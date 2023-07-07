@@ -1,6 +1,6 @@
 version: "2"
 services:
-  api45_gateway6:
+  api45_gateway7:
     build: ./back-end/core/bussiness/APIGateway
     command: node app.js apigateapp
     volumes:
@@ -9,7 +9,7 @@ services:
     ports:
       - "3001:3001"
 
-  layers_busines6:
+  layers_busines7:
     build: ./back-end/core/bussiness/LayersBusiness
     command: node app.js layersapp
     volumes:
@@ -18,7 +18,7 @@ services:
     ports:
       - "3008:3008"
 
-  user_business6:
+  user_business7:
     build: ./back-end/core/bussiness/UserBusiness
     command: node app.js userpapp
     volumes:
@@ -27,7 +27,7 @@ services:
     ports:
       - "3002:3002"
 
-  user_persistence6:
+  user_persistence7:
     build: ./back-end/core/db/UsersDbService
     command: node app.js userdbapp
     volumes:
@@ -36,7 +36,7 @@ services:
     ports:
       - "3003:3003"
 
-  nodes_persistence9:
+  nodes_persistence10:
     build: ./back-end/core/db/NodesDbService
     command: node app.js nodedbsapp
     volumes:
@@ -45,7 +45,7 @@ services:
     ports:
       - "3005:3005"
 
-  layers_persistence6:
+  layers_persistence7:
     build: ./back-end/core/db/LayersDbService
     command: node app.js layersdbapp
     volumes:

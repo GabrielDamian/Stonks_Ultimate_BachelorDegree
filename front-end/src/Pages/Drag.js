@@ -7,12 +7,16 @@ import TopBar from '../Components/Organisms/TopBar';
 
 
 const magicTranslatorToPython = (source)=>{
+
+    console.log("source magic translator:", source)
     
     let finalCode = ""
     let selected = source.selected;
 
     selected.forEach((layer)=>{
         let layer_row = `        model.add(${layer.layerKeyword}(`
+
+        
         layer.parameters.forEach((parameter)=>{
             
             let formatParametersCalc = (paramsFormat)=>{
@@ -62,6 +66,7 @@ const magicTranslatorToPython = (source)=>{
         finalCode += layer_row
     })
 
+    console.log("magic translator:",finalCode )
     return  finalCode
 }
 

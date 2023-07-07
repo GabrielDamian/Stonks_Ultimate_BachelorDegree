@@ -65,7 +65,10 @@ module.exports.user_data = async(req,res)=>{
   const id = req.params.id;
   try{
     User.findById(id,(err,doc)=>{
-      if(err)
+
+      console.log("Doc test:", doc)
+      
+      if(err || doc == null)
       {
         return res.status(401).send("Invalid token")
       }

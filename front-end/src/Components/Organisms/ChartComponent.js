@@ -125,10 +125,34 @@ function ChartComponentElem({source,realData}){
 }
 
 export function ChartComponent({source,realData}){
+  
+  useEffect(()=>{
+    let justOneValue = true;
+    if(source.length > 0)
+    {
+      let firstVal = source[0].value
+      source.forEach((el)=>{
+        if(el.value !== firstVal)
+        {
+          justOneValue = false
+        }
+      })
+    }
+    if(justOneValue == true)
+    {
+      setInnerState([[],[]])
+    }
+    else 
+    {
+      setInnerState([source, realData])
+    }
+  },[source, realData])
+
+  const [innerState, setInnerState] = useState([[],[]])
 
   return (
     <div className="custom-char-component-container">
-        <ChartComponentElem source={source} realData={realData}/>
+        <ChartComponentElem source={innerState[0]} realData={innerState[1]}/>
     </div>
   )
 }

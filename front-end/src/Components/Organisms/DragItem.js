@@ -15,8 +15,12 @@ import MenuItem from '@mui/material/MenuItem';
 import DocumentsIcon from '../../Media/Icons/document.png';
 import DeleteIcon from '../../Media/Icons/remove.png';
 
-function DragItem({data, hyperParamsActive,handleParameterValueChange, deleteIcon, deleteCallback})
+function DragItem({layerIndex, data, hyperParamsActive,handleParameterValueChange, deleteIcon, deleteCallback})
 {
+  useEffect(()=>{
+    console.log("layerIndex:",layerIndex)
+  },[layerIndex])
+
   const [interState, setInternState] = useState({
     layerName: '',
     layerKeyword: '',
@@ -56,7 +60,7 @@ function DragItem({data, hyperParamsActive,handleParameterValueChange, deleteIco
     return values
   }
   const handleParameterValueChangeLocal = (e)=>{
-    handleParameterValueChange(e.target.name, e.target.value);
+    handleParameterValueChange(e.target.name, e.target.value, layerIndex);
   }
 
   return (

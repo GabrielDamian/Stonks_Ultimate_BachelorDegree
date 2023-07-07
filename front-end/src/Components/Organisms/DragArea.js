@@ -55,41 +55,64 @@ class DragArea extends Component {
     };
 
 
-    handleParameterValueChange = (paramId, newValue) =>{
-        this.props.setCodeState((prev)=>{
+    handleParameterValueChange = (paramId, newValue, layerId) =>{
 
+        console.log("handleParameterValueChange:", paramId, newValue, layerId);
+
+        this.props.setCodeState((prev)=>{
             
             let selectedLocal = [...prev.selected]
 
-            let selectedLocalUpdated = []
+            // let selectedLocalUpdated = []
 
-            selectedLocal.forEach((el_layer)=>{
-
-                let copy_el_layer = {...el_layer}
-                //el - each parameter
+            // selectedLocal.forEach((el_layer,currentLayerIndex )=>{
                 
-                let localParameters = [...el_layer.parameters];
-
-                let localParametersUpdated = []
+            //     let copy_el_layer = {...el_layer}
+            //     //el - each parameter
                 
-                localParameters.forEach((el_param)=>{
+            //     let localParameters = [...el_layer.parameters];
 
-                    let copy_el_param = {...el_param}
+            //     let localParametersUpdated = []
+                
+            //     localParameters.forEach((el_param)=>{
 
-                    if(el_param._id == paramId)
-                    {
-                        copy_el_param.selectedValue = newValue
-                    }
+            //         let copy_el_param = {...el_param}
 
-                    localParametersUpdated.push(copy_el_param)
-                })
-                copy_el_layer.parameters = [...localParametersUpdated]
+            //         if(el_param._id == paramId)
+            //         {
+            //             copy_el_param.selectedValue = newValue
+            //         }
+
+            //         localParametersUpdated.push(copy_el_param)
+            //     })
+            //     copy_el_layer.parameters = [...localParametersUpdated]
               
-                selectedLocalUpdated.push(copy_el_layer)
+            //     selectedLocalUpdated.push(copy_el_layer)
+            // })
+
+            let selectedIndexExtract = selectedLocal[layerId] //extrace layer
+
+            let updatedParameters = []; //defineste noi parametrii pentru acest layer
+            selectedIndexExtract.parameters.forEach((parameterEl)=>{
+                console.log("for:", parameterEl._id,layerId)
+                if(parameterEl._id == paramId)
+                {
+                    console.log("ENTRY IF")
+                    let extractParameterLocal = {...parameterEl}
+                    extractParameterLocal.selectedValue = newValue
+                    console.log("extractParameterLocal:",extractParameterLocal)
+                    updatedParameters.push(extractParameterLocal)
+                }
+                else 
+                {
+                    updatedParameters.push(parameterEl)
+                }
             })
+            // console.log("updatedParameters:",updatedParameters)
+            selectedLocal[layerId].parameters = [...updatedParameters]
 
             let state_copy = {...prev}
-            state_copy.selected = selectedLocalUpdated
+            state_copy.selected = selectedLocal
 
             return state_copy
         })
@@ -227,6 +250,7 @@ class DragArea extends Component {
                                                                 provided.draggableProps.style
                                                             )}>
                                                             <DragItem 
+                                                            layerIndex={null}
                                                             handleParameterValueChange={()=>{}}
                                                             data={item} hyperParamsActive={false}
                                                             deleteIcon={false}
@@ -281,6 +305,7 @@ class DragArea extends Component {
                                                 }
                                                     >
                                                     <DragItem 
+                                                        layerIndex={index}
                                                         handleParameterValueChange={this.handleParameterValueChange}
                                                         data={item} 
                                                         hyperParamsActive={true}

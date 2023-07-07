@@ -80,8 +80,14 @@ app.post('/signup',async(req,res)=>{
 })
 
 app.post('/check-token',async(req,res)=>{
+
+  console.log("check token route")
+  
   try{
     let {token} = req.body;
+    
+    console.log("token:", token)
+
     if(token)
     {
       jwt.verify(token, process.env.SECRET_TOKEN,async (err,decodedToken)=>{
@@ -93,7 +99,25 @@ app.post('/check-token',async(req,res)=>{
         {
           //user user id from token to find user role
           // let userRole = await axios.post(`http://${hostPOV}:3003/collect-user-data`,{id:decodedToken.id})
-          let userRole = await axios.get(`http://${hostPOV}:3003/user/${decodedToken.id}`)
+          console.log("before user role")
+          let userRole = undefined;
+          try{
+            userRole = await axios.get(`http://${hostPOV}:3003/user/${decodedToken.id}`)
+          }
+          catch(err)
+          {
+            console.log("catch ramura")
+            return res.status(403).send("Wrong token!");
+          }
+
+          console.log("afer user role:", userRole)
+          console.log("magic check:", userRole.data)
+          
+          if(userRole.data == undefined){
+            console.log("Caz magic")
+            return res.status(403).send("Wrong token!");
+          }
+
           let user_rank = {
             id:decodedToken.id,
             role: userRole.data.role
