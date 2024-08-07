@@ -1,1 +1,0 @@
-Machine Learning Bots Ecosystem (Build, Deploy, Supervise) for Stock Market Prediction 
