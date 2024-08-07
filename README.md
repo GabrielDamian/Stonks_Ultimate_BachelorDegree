@@ -36,4 +36,4 @@ Web Platform to automate creation and deployment flow of TensorFlow models in do
 
 ![alt text](./readmeImgs/img8.png)
 
-![alt text](./readmeImgs/img11.pn)
+![alt text](./readmeImgs/img11.png)
