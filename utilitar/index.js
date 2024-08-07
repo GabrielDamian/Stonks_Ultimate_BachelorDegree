@@ -4,9 +4,6 @@ const { exec } = require('child_process');
 async function startDockerContainers(action) {
     console.log("start docker entry")   
     try {
-        
-
-        
         const response = await axios.get('http://localhost:3005/node');
         const { data } = response;
         console.log("Data:",data)

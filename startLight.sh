@@ -1,4 +1,4 @@
-dockerMongo="docker start c7445e90b472 && docker exec -it c7445e90b472 mongosh"
+dockerMongo="docker start c8b2cdd84f9f && docker exec -it c8b2cdd84f9f mongosh"
 
 UserDbService="cd back-end/core/db/UsersDbService && npm run dev"
 NodesDbService="cd back-end/core/db/NodesDbService && npm run dev"

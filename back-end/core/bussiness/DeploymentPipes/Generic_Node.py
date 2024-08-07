@@ -8,7 +8,8 @@ from Tasks import TasksCore
 import sys
 
 if __name__ == '__main__':
-
+    print("TEST:", sys.argv)
+    
     my_node_name = sys.argv[1]
     receive_from = sys.argv[2]
     send_to = sys.argv[3]

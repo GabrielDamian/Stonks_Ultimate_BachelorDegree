@@ -69,6 +69,11 @@ function ChartComponentElem({source,realData}){
       values: []
     }
   })
+
+  useEffect(()=>{
+    console.log("ChartComponentElem innerState:",innerState)
+  },[innerState])
+
     useEffect(()=>{
       if(realData !== undefined && realData !== null)
       {
@@ -149,6 +154,8 @@ export function ChartComponent({source,realData}){
   },[source, realData])
 
   const [innerState, setInnerState] = useState([[],[]])
+
+  
 
   return (
     <div className="custom-char-component-container">

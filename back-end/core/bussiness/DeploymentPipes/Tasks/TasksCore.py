@@ -19,7 +19,7 @@ def createFile(fileName, content):
 
 dockerFileTemplate = """
 # syntax=docker/dockerfile:1
-FROM tensorflow/tensorflow
+FROM tensorflow/tensorflow:2.11.0
 WORKDIR /app
 COPY requirements.txt requirements.txt
 RUN pip3 install -r requirements.txt
@@ -40,9 +40,8 @@ pandas-datareader==0.9.0
 tensorflow==2.11.0
 scikit-learn==1.2.0
 dnspython==2.2.1
-yfinance
+yfinance==0.2.40
 """
-
 
 code_template_replace_layers = '<< Replace_code_layers >>'
 code_template_replace_company = '<< Replace_code_company >>'
