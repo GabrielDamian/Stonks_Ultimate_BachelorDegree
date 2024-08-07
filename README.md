@@ -5,7 +5,7 @@
 Web Platform to automate creation and deployment flow of TensorFlow models in docker nodes.
 
 - Layers microservice architecture (presentation | business | persistence)
-- API Gateway (heart beat mecanism) 
+- API gateway (heart beat mecanism) 
 - Deployment pipe for nodes in Docker (Kafka based)
 - Live node status and preice predictions
 
