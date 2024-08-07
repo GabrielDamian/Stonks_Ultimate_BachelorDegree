@@ -18,7 +18,7 @@ Web Platform to automate creation and deployment flow of TensorFlow models in do
 | --- | --- | mongoose |--- |
 | --- | --- | mongoDb |--- |
 
-![alt text](https://raw.githubusercontent.com/GabrielDamian/Stonks_Ultimate-bachelor-degree/main/readmeImgs/img10.png?token=GHSAT0AAAAAACVYWUT3RJHAD7O7I5ZFDQTYZVTKZ5Q)
+![alt text](./readmeImgs/img10.png)
 
 ![alt text](https://raw.githubusercontent.com/GabrielDamian/Stonks_Ultimate-bachelor-degree/main/readmeImgs/img1.png?token=GHSAT0AAAAAACVYWUT3NLVKW3CODOMGPLESZVTJCDQ)
 
