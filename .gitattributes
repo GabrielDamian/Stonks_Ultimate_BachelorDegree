@@ -1,5 +1,1 @@
-node_modules/* linguist-vendored
-
-*.xyz linguist-language=Python
-
-*.data linguist-detectable=false
+*.html linguist-detectable=false
