@@ -20,20 +20,20 @@ Web Platform to automate creation and deployment flow of TensorFlow models in do
 
 ![alt text](./readmeImgs/img10.png)
 
-![alt text](https://raw.githubusercontent.com/GabrielDamian/Stonks_Ultimate-bachelor-degree/main/readmeImgs/img1.png?token=GHSAT0AAAAAACVYWUT3NLVKW3CODOMGPLESZVTJCDQ)
+![alt text](./readmeImgs/img1.png)
 
-![alt text](https://raw.githubusercontent.com/GabrielDamian/Stonks_Ultimate-bachelor-degree/main/readmeImgs/img2.png?token=GHSAT0AAAAAACVYWUT26SLTLRJM4QTYWO7KZVTJCEA)
+![alt text](./readmeImgs/img2.png)
 
-![alt text](https://raw.githubusercontent.com/GabrielDamian/Stonks_Ultimate-bachelor-degree/main/readmeImgs/img3.png?token=GHSAT0AAAAAACVYWUT2FD5DKVOYALQEWHW4ZVTJCEQ)
+![alt text](./readmeImgs/img3.png)
 
-![alt text](https://raw.githubusercontent.com/GabrielDamian/Stonks_Ultimate-bachelor-degree/main/readmeImgs/img4.png?token=GHSAT0AAAAAACVYWUT3M5PLBSJZKP2G4OWKZVTJCEQ)
+![alt text](./readmeImgs/img4.png)
 
-![alt text](https://raw.githubusercontent.com/GabrielDamian/Stonks_Ultimate-bachelor-degree/main/readmeImgs/img5.png?token=GHSAT0AAAAAACVYWUT32NAFBUXWR6WPXG62ZVTJCFA)
+![alt text](/readmeImgs/img5.png)
 
-![alt text](https://raw.githubusercontent.com/GabrielDamian/Stonks_Ultimate-bachelor-degree/main/readmeImgs/img9.png?token=GHSAT0AAAAAACVYWUT3GUEY4OSLSW3BB4DQZVTKZ5A)
+![alt text](./readmeImgs/img9.png)
 
-![alt text](https://raw.githubusercontent.com/GabrielDamian/Stonks_Ultimate-bachelor-degree/main/readmeImgs/img7.png?token=GHSAT0AAAAAACVYWUT3LUQKGUHIJ7FJYAOIZVTKZ4A)
+![alt text](./readmeImgs/img7.png)
 
-![alt text](https://raw.githubusercontent.com/GabrielDamian/Stonks_Ultimate-bachelor-degree/main/readmeImgs/img8.png?token=GHSAT0AAAAAACVYWUT2G72AOCIVD46UBBMGZVTKZ5A)
+![alt text](./readmeImgs/img8.png)
 
-![alt text](https://raw.githubusercontent.com/GabrielDamian/Stonks_Ultimate-bachelor-degree/main/readmeImgs/img11.png?token=GHSAT0AAAAAACVYWUT2MKTVI2SQO7NUFTH6ZVTKZ5Q)
+![alt text](./readmeImgs/img11.pn)
