@@ -1,10 +1,6 @@
 # Machine Learning Bots Ecosystem
-### _for Stock Market Prediction_
-#### TBuild, Deploy, Supervise
-
-[![N|Solid](https://cldup.com/dTxpPi9lDf.thumb.png)](https://nodesource.com/products/nsolid)
-
-[![Build Status](https://travis-ci.org/joemccann/dillinger.svg?branch=master)](https://travis-ci.org/joemccann/dillinger)
+###### _for Stock Market Prediction_
+### Build, Deploy, Supervise
 
 Dillinger is a cloud-enabled, mobile-ready, offline-storage compatible,
 AngularJS-powered HTML5 Markdown editor.
@@ -15,11 +11,26 @@ AngularJS-powered HTML5 Markdown editor.
 
 ## Features
 
-- Import a HTML file and watch it magically convert to Markdown
-- Drag and drop images (requires your Dropbox account be linked)
-- Import and save files from GitHub, Dropbox, Google Drive and One Drive
-- Drag and drop markdown and HTML files into Dillinger
-- Export documents as Markdown, HTML and PDF
+- feature 1
+- feature 1
+- feature 1
+- feature 1
+
+
+![alt text](https://raw.githubusercontent.com/GabrielDamian/Stonks_Ultimate-bachelor-degree/main/readmeImgs/img1.png?token=GHSAT0AAAAAACVYWUT3NLVKW3CODOMGPLESZVTJCDQ)
+
+![alt text](https://raw.githubusercontent.com/GabrielDamian/Stonks_Ultimate-bachelor-degree/main/readmeImgs/img2.png?token=GHSAT0AAAAAACVYWUT26SLTLRJM4QTYWO7KZVTJCEA)
+
+![alt text](https://raw.githubusercontent.com/GabrielDamian/Stonks_Ultimate-bachelor-degree/main/readmeImgs/img3.png?token=GHSAT0AAAAAACVYWUT2FD5DKVOYALQEWHW4ZVTJCEQ)
+
+![alt text](https://raw.githubusercontent.com/GabrielDamian/Stonks_Ultimate-bachelor-degree/main/readmeImgs/img4.png?token=GHSAT0AAAAAACVYWUT3M5PLBSJZKP2G4OWKZVTJCEQ)
+
+![alt text](https://raw.githubusercontent.com/GabrielDamian/Stonks_Ultimate-bachelor-degree/main/readmeImgs/img5.png?token=GHSAT0AAAAAACVYWUT32NAFBUXWR6WPXG62ZVTJCFA)
+
+
+
+
+
 
 Markdown is a lightweight markup language based on the formatting conventions
 that people naturally use in email.
